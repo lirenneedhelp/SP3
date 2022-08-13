@@ -1,0 +1,237 @@
+﻿  Player2D.cpp
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3\SP3_Framework\App\Source\Scene2D\Player2D.cpp(191,70): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3\SP3_Framework\App\Source\Scene2D\Player2D.cpp(291,70): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3\SP3_Framework\App\Source\Scene2D\Player2D.cpp(349,79): warning C4244: 'argument': conversion from 'T' to 'const int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3\SP3_Framework\App\Source\Scene2D\Player2D.cpp(350,79): warning C4244: 'argument': conversion from 'T' to 'const int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3\SP3_Framework\App\Source\Scene2D\Player2D.cpp(424,52): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3\SP3_Framework\App\Source\Scene2D\Player2D.cpp(432,52): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3\SP3_Framework\App\Source\Scene2D\Player2D.cpp(462,49): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3\SP3_Framework\App\Source\Scene2D\Player2D.cpp(462,36): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3\SP3_Framework\App\Source\Scene2D\Player2D.cpp(471,50): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3\SP3_Framework\App\Source\Scene2D\Player2D.cpp(471,37): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3\SP3_Framework\App\Source\Scene2D\Player2D.cpp(472,51): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3\SP3_Framework\App\Source\Scene2D\Player2D.cpp(472,37): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3\SP3_Framework\App\Source\Scene2D\Player2D.cpp(491,52): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3\SP3_Framework\App\Source\Scene2D\Player2D.cpp(491,36): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3\SP3_Framework\App\Source\Scene2D\Player2D.cpp(500,53): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3\SP3_Framework\App\Source\Scene2D\Player2D.cpp(500,37): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3\SP3_Framework\App\Source\Scene2D\Player2D.cpp(501,54): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3\SP3_Framework\App\Source\Scene2D\Player2D.cpp(501,37): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3\SP3_Framework\App\Source\Scene2D\Player2D.cpp(521,53): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3\SP3_Framework\App\Source\Scene2D\Player2D.cpp(521,39): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3\SP3_Framework\App\Source\Scene2D\Player2D.cpp(530,54): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3\SP3_Framework\App\Source\Scene2D\Player2D.cpp(530,40): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3\SP3_Framework\App\Source\Scene2D\Player2D.cpp(531,54): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3\SP3_Framework\App\Source\Scene2D\Player2D.cpp(531,37): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3\SP3_Framework\App\Source\Scene2D\Player2D.cpp(543,49): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3\SP3_Framework\App\Source\Scene2D\Player2D.cpp(543,36): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3\SP3_Framework\App\Source\Scene2D\Player2D.cpp(552,50): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3\SP3_Framework\App\Source\Scene2D\Player2D.cpp(552,37): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3\SP3_Framework\App\Source\Scene2D\Player2D.cpp(553,50): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3\SP3_Framework\App\Source\Scene2D\Player2D.cpp(553,34): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3\SP3_Framework\App\Source\Scene2D\Player2D.cpp(576,47): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3\SP3_Framework\App\Source\Scene2D\Player2D.cpp(576,34): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3\SP3_Framework\App\Source\Scene2D\Player2D.cpp(597,24): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3\SP3_Framework\App\Source\Scene2D\Player2D.cpp(617,29): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3\SP3_Framework\App\Source\Scene2D\Player2D.cpp(621,18): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3\SP3_Framework\App\Source\Scene2D\Player2D.cpp(651,24): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3\SP3_Framework\App\Source\Scene2D\Player2D.cpp(658,57): warning C4244: '-=': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3\SP3_Framework\App\Source\Scene2D\Player2D.cpp(661,70): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3\SP3_Framework\App\Source\Scene2D\Player2D.cpp(671,29): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3\SP3_Framework\App\Source\Scene2D\Player2D.cpp(675,18): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3\SP3_Framework\App\Source\Scene2D\Player2D.cpp(681,22): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3\SP3_Framework\App\Source\Scene2D\Player2D.cpp(697,51): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3\SP3_Framework\App\Source\Scene2D\Player2D.cpp(697,38): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3\SP3_Framework\App\Source\Scene2D\Player2D.cpp(701,44): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3\SP3_Framework\App\Source\Scene2D\Player2D.cpp(701,31): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3\SP3_Framework\App\Source\Scene2D\Player2D.cpp(713,44): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3\SP3_Framework\App\Source\Scene2D\Player2D.cpp(713,31): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+  App.vcxproj -> C:\Users\kohli\OneDrive\Desktop\SP3\SP3\SP3_Framework\Debug\App.exe
