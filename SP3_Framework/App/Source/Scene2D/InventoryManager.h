@@ -8,7 +8,6 @@
 
 // Include SingletonTemplate
 #include "DesignPatterns\SingletonTemplate.h"
-
 #include <map>
 #include <string>
 #include "InventoryItem.h"

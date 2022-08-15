@@ -204,7 +204,7 @@ bool CMenuState::Update(const double dElapsedTime)
 		cout << "Quitting the game from MenuState" << endl;
 		return false;
 	}
-
+	
 	return true;
 }
 

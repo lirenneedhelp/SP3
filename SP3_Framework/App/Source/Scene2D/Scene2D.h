@@ -33,6 +33,12 @@
 // Include CWoodCrawler
 #include "WoodCrawler.h"
 
+// Include CGlutton
+#include "Glutton.h"
+
+// Include the MiniBoss
+#include "BloodDeer.h"
+
 
 // Include vector
 #include <vector>

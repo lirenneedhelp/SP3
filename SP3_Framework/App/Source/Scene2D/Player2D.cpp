@@ -31,6 +31,7 @@ CPlayer2D::CPlayer2D(void)
 	, cInventoryManager(NULL)
 	, cInventoryItem(NULL)
 	, cSoundController(NULL)
+//	, cProjectile(NULL)
 {
 	transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
 
@@ -202,7 +203,6 @@ void CPlayer2D::Update(const double dElapsedTime)
 
 			// Constraint the player's position within the screen boundary
 			Constraint(LEFT);
-
 			// If the new position is not feasible, then revert to old position
 			if (CheckPosition(LEFT) == false)
 			{
@@ -244,6 +244,7 @@ void CPlayer2D::Update(const double dElapsedTime)
 			if (CheckPosition(RIGHT) == false)
 			{
 				vec2NumMicroSteps.x = 0;
+
 			}
 
 			// Check if player is in mid-air, such as walking off a platform
@@ -337,6 +338,13 @@ void CPlayer2D::Update(const double dElapsedTime)
 					cSoundController->PlaySoundByID(3);
 				}
 			}
+		}
+		if (cKeyboardController->IsKeyPressed(GLFW_KEY_M))
+		{
+			cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 299);
+		/*	cProjectile->PreRender();
+			cProjectile->Render();
+			cProjectile->PostRender();*/
 		}
 	}
 	// Update Jump or Fall

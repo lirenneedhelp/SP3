@@ -165,6 +165,40 @@ bool CScene2D::Init(void)
 
 
 	}
+	while (true)
+	{
+		CGlutton* cGlutton = new CGlutton();
+		cGlutton->SetShader("Shader2D_Colour");
+
+		if (cGlutton->Init() == true)
+		{
+			cGlutton->SetPlayer2D(cPlayer2D);
+			enemyVector.push_back(cGlutton);
+		}
+		else
+		{
+			// Break out of this loop if the enemy has all been loaded
+			break;
+		}
+
+
+	}
+	while (true)
+	{
+		CBloodDeer* cBloodDear = new CBloodDeer();
+		cBloodDear->SetShader("Shader2D_Colour");
+
+		if (cBloodDear->Init() == true)
+		{
+			cBloodDear->SetPlayer2D(cPlayer2D);
+			enemyVector.push_back(cBloodDear);
+		}
+		else
+		{
+			// Break out of this loop if the enemy has all been loaded
+			break;
+		}
+	}
 
 	// Store the keyboard controller singleton instance here
 	cKeyboardController = CKeyboardController::GetInstance();

@@ -40,6 +40,7 @@ class CMap2D;
 
 // Include SoundController
 #include "..\SoundController\SoundController.h"
+//#include "Projectile.h"
 
 class CPlayer2D : public CSingletonTemplate<CPlayer2D>, public CEntity2D
 {
@@ -99,6 +100,9 @@ protected:
 
 	// InventoryItem
 	CInventoryItem* cInventoryItem;
+
+	// Projectile Handler
+	//CProjectile* cProjectile;
 
 	// Count the number of jumps
 	int iJumpCount;

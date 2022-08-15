@@ -1,10 +1,10 @@
 /**
- CWoodCrawler
+ CGlutton
  @brief A class which represents the enemy object
  By: Toh Da Jun
  Date: Mar 2020
  */
-#include "WoodCrawler.h"
+#include "Glutton.h"
 
 #include <iostream>
 using namespace std;
@@ -28,7 +28,7 @@ using namespace std;
 /**
  @brief Constructor This constructor has protected access modifier as this class will be a Singleton
  */
-CWoodCrawler::CWoodCrawler(void)
+CGlutton::CGlutton(void)
 	: bIsActive(false)
 	, cMap2D(NULL)
 	, cSettings(NULL)
@@ -55,7 +55,7 @@ CWoodCrawler::CWoodCrawler(void)
 /**
  @brief Destructor This destructor has protected access modifier as this class will be a Singleton
  */
-CWoodCrawler::~CWoodCrawler(void)
+CGlutton::~CGlutton(void)
 {
 	// Delete the quadMesh
 	if (quadMesh)
@@ -79,7 +79,7 @@ CWoodCrawler::~CWoodCrawler(void)
 /**
   @brief Initialise this instance
   */
-bool CWoodCrawler::Init(void)
+bool CGlutton::Init(void)
 {
 	// Get the handler to the CSettings instance
 	cSettings = CSettings::GetInstance();
@@ -89,7 +89,7 @@ bool CWoodCrawler::Init(void)
 	// Find the indices for the player in arrMapInfo, and assign it to cPlayer2D
 	unsigned int uiRow = -1;
 	unsigned int uiCol = -1;
-	if (cMap2D->FindValue(301, uiRow, uiCol) == false) // This is the TreeSlinger Indexs
+	if (cMap2D->FindValue(302, uiRow, uiCol) == false)
 		return false;	// Unable to find the start position of the player, so quit this game
 
 	// Erase the value of the player in the arrMapInfo
@@ -124,32 +124,16 @@ bool CWoodCrawler::Init(void)
 	// If this class is initialised properly, then set the bIsActive to true
 	bIsActive = true;
 
-	hitInterval = 2.0f;
-	
-	hit = false;
-
-	movementSpeed = 0.4;
-
 	return true;
 }
 
 /**
  @brief Update this instance
  */
-void CWoodCrawler::Update(const double dElapsedTime)
+void CGlutton::Update(const double dElapsedTime)
 {
 	if (!bIsActive)
 		return;
-
-	if (hit)
-	{
-		hitInterval -= dElapsedTime;
-		if (hitInterval <= 0.f)
-		{
-			hitInterval = 2.0f;
-			hit = false;
-		}
-	}
 
 	switch (sCurrentFSM)
 	{
@@ -169,12 +153,7 @@ void CWoodCrawler::Update(const double dElapsedTime)
 			iFSMCounter = 0;
 			cout << "Switching to Idle State" << endl;
 		}
-		else if (cPhysics2D.CalculateDistance(vec2Index, cPlayer2D->vec2Index) < 10.0f && vec2Index.x == cPlayer2D->vec2Index.x) //Ensure that the enemy is directly above the player
-		{
-			sCurrentFSM = PULLING;
-			iFSMCounter = 0;
-		}
-		else if (cPhysics2D.CalculateDistance(vec2Index, cPlayer2D->vec2Index) < 10.0f && vec2Index.y <= cPlayer2D->vec2Index.y)
+		else if (cPhysics2D.CalculateDistance(vec2Index, cPlayer2D->vec2Index) < 5.0f)
 		{
 			sCurrentFSM = ATTACK;
 			iFSMCounter = 0;
@@ -183,32 +162,13 @@ void CWoodCrawler::Update(const double dElapsedTime)
 		{
 			// Patrol around
 			// Update the Enemy2D's position for patrol
- 			UpdatePosition();
+			UpdatePosition();
 		}
 		iFSMCounter++;
 		break;
-	case PULLING:
-		if (vec2Index.y > cPlayer2D->vec2Index.y)
-		{
-			i32vec2Direction = glm::i32vec2(0); // Stop updating the position of the enemy
-			cPlayer2D->isMoving = false; // Means player is caught
-			cPlayer2D->vec2Index.y++;
-			cPlayer2D->vec2NumMicroSteps.y += 0.2;			
-		}
-		else
-		{
-			//Reduces health
-			damageOnPlayer = cPlayer2D->returnPlayerHealth();
-			playerHP = damageOnPlayer->GetItem("Health");
-			playerHP->Remove(10);
-
-			//Switch to Attack state
-			sCurrentFSM = ATTACK;
-		}
 	case ATTACK:
 		if (cPhysics2D.CalculateDistance(vec2Index, cPlayer2D->vec2Index) < 5.0f)
 		{
-			cPlayer2D->isMoving = true;
 			// Calculate a path to the player
 			//cMap2D->PrintSelf();
 			//cout << "StartPos: " << vec2Index.x << ", " << vec2Index.y << endl;
@@ -269,6 +229,8 @@ void CWoodCrawler::Update(const double dElapsedTime)
 			iFSMCounter++;
 		}
 		break;
+	case SHOOT:
+
 	default:
 		break;
 	}
@@ -284,7 +246,7 @@ void CWoodCrawler::Update(const double dElapsedTime)
 /**
  @brief Set up the OpenGL display environment before rendering
  */
-void CWoodCrawler::PreRender(void)
+void CGlutton::PreRender(void)
 {
 	if (!bIsActive)
 		return;
@@ -303,7 +265,7 @@ void CWoodCrawler::PreRender(void)
 /**
  @brief Render this instance
  */
-void CWoodCrawler::Render(void)
+void CGlutton::Render(void)
 {
 	if (!bIsActive)
 		return;
@@ -336,7 +298,7 @@ void CWoodCrawler::Render(void)
 /**
  @brief PostRender Set up the OpenGL display environment after rendering.
  */
-void CWoodCrawler::PostRender(void)
+void CGlutton::PostRender(void)
 {
 	if (!bIsActive)
 		return;
@@ -350,7 +312,7 @@ void CWoodCrawler::PostRender(void)
 @param iIndex_XAxis A const int variable which stores the index in the x-axis
 @param iIndex_YAxis A const int variable which stores the index in the y-axis
 */
-void CWoodCrawler::Seti32vec2Index(const int iIndex_XAxis, const int iIndex_YAxis)
+void CGlutton::Seti32vec2Index(const int iIndex_XAxis, const int iIndex_YAxis)
 {
 	this->vec2Index.x = iIndex_XAxis;
 	this->vec2Index.y = iIndex_YAxis;
@@ -361,7 +323,7 @@ void CWoodCrawler::Seti32vec2Index(const int iIndex_XAxis, const int iIndex_YAxi
 @param iNumMicroSteps_XAxis A const int variable storing the current microsteps in the X-axis
 @param iNumMicroSteps_YAxis A const int variable storing the current microsteps in the Y-axis
 */
-void CWoodCrawler::Seti32vec2NumMicroSteps(const int iNumMicroSteps_XAxis, const int iNumMicroSteps_YAxis)
+void CGlutton::Seti32vec2NumMicroSteps(const int iNumMicroSteps_XAxis, const int iNumMicroSteps_YAxis)
 {
 	this->i32vec2NumMicroSteps.x = iNumMicroSteps_XAxis;
 	this->i32vec2NumMicroSteps.y = iNumMicroSteps_YAxis;
@@ -371,7 +333,7 @@ void CWoodCrawler::Seti32vec2NumMicroSteps(const int iNumMicroSteps_XAxis, const
  @brief Set the handle to cPlayer to this class instance
  @param cPlayer2D A CPlayer2D* variable which contains the pointer to the CPlayer2D instance
  */
-void CWoodCrawler::SetPlayer2D(CPlayer2D* cPlayer2D)
+void CGlutton::SetPlayer2D(CPlayer2D* cPlayer2D)
 {
 	this->cPlayer2D = cPlayer2D;
 
@@ -384,7 +346,7 @@ void CWoodCrawler::SetPlayer2D(CPlayer2D* cPlayer2D)
  @brief Constraint the enemy2D's position within a boundary
  @param eDirection A DIRECTION enumerated data type which indicates the direction to check
  */
-void CWoodCrawler::Constraint(DIRECTION eDirection)
+void CGlutton::Constraint(DIRECTION eDirection)
 {
 	if (eDirection == LEFT)
 	{
@@ -420,7 +382,7 @@ void CWoodCrawler::Constraint(DIRECTION eDirection)
 	}
 	else
 	{
-		cout << "CWoodCrawler::Constraint: Unknown direction." << endl;
+		cout << "CGlutton::Constraint: Unknown direction." << endl;
 	}
 }
 
@@ -428,7 +390,7 @@ void CWoodCrawler::Constraint(DIRECTION eDirection)
  @brief Check if a position is possible to move into
  @param eDirection A DIRECTION enumerated data type which indicates the direction to check
  */
-bool CWoodCrawler::CheckPosition(DIRECTION eDirection)
+bool CGlutton::CheckPosition(DIRECTION eDirection)
 {
 	if (eDirection == LEFT)
 	{
@@ -535,14 +497,14 @@ bool CWoodCrawler::CheckPosition(DIRECTION eDirection)
 	}
 	else
 	{
-		cout << "CWoodCrawler::CheckPosition: Unknown direction." << endl;
+		cout << "CGlutton::CheckPosition: Unknown direction." << endl;
 	}
 
 	return true;
 }
 
 // Check if the enemy2D is in mid-air
-bool CWoodCrawler::IsMidAir(void)
+bool CGlutton::IsMidAir(void)
 {
 	// if the player is at the bottom row, then he is not in mid-air for sure
 	if (vec2Index.y == 0)
@@ -559,7 +521,7 @@ bool CWoodCrawler::IsMidAir(void)
 }
 
 // Update Jump or Fall
-void CWoodCrawler::UpdateJumpFall(const double dElapsedTime)
+void CGlutton::UpdateJumpFall(const double dElapsedTime)
 {
 	if (cPhysics2D.GetStatus() == CPhysics2D::STATUS::JUMP)
 	{
@@ -668,7 +630,7 @@ void CWoodCrawler::UpdateJumpFall(const double dElapsedTime)
 /**
  @brief Let enemy2D interact with the player.
  */
-bool CWoodCrawler::InteractWithPlayer(void)
+bool CGlutton::InteractWithPlayer(void)
 {
 	glm::i32vec2 i32vec2PlayerPos = cPlayer2D->vec2Index;
 	
@@ -677,17 +639,11 @@ bool CWoodCrawler::InteractWithPlayer(void)
 		(vec2Index.x <= i32vec2PlayerPos.x + 0.5))
 		&& 
 		((vec2Index.y >= i32vec2PlayerPos.y - 0.5) &&
-		(vec2Index.y <= i32vec2PlayerPos.y + 0.5))
-		&& !hit)
+		(vec2Index.y <= i32vec2PlayerPos.y + 0.5)))
 	{
-		cout << "Attack!" << endl;
-		
-		playerHP = damageOnPlayer->GetItem("Health");
-		playerHP->Remove(20);
-		hit = true; // hit cooldown
-
-	
+		cout << "Gotcha!" << endl;
 		// Since the player has been caught, then reset the FSM
+		sCurrentFSM = IDLE;
 		iFSMCounter = 0;
 		return true;
 	}
@@ -697,7 +653,7 @@ bool CWoodCrawler::InteractWithPlayer(void)
 /**
  @brief Update the enemy's direction.
  */
-void CWoodCrawler::UpdateDirection(void)
+void CGlutton::UpdateDirection(void)
 {
 	// Set the destination to the player
 	i32vec2Destination = cPlayer2D->vec2Index;
@@ -724,7 +680,7 @@ void CWoodCrawler::UpdateDirection(void)
 /**
  @brief Flip horizontal direction. For patrol use only
  */
-void CWoodCrawler::FlipHorizontalDirection(void)
+void CGlutton::FlipHorizontalDirection(void)
 {
 	i32vec2Direction.x *= -1;
 }
@@ -732,7 +688,7 @@ void CWoodCrawler::FlipHorizontalDirection(void)
 /**
 @brief Update position.
 */
-void CWoodCrawler::UpdatePosition(void)
+void CGlutton::UpdatePosition(void)
 {
 	// Store the old position
 	i32vec2OldIndex = vec2Index;
@@ -744,7 +700,7 @@ void CWoodCrawler::UpdatePosition(void)
 		const int iOldIndex = vec2Index.x;
 		if (vec2Index.x >= 0)
 		{
-			i32vec2NumMicroSteps.x -= movementSpeed;
+			i32vec2NumMicroSteps.x--;
 			if (i32vec2NumMicroSteps.x < 0)
 			{
 				i32vec2NumMicroSteps.x = ((int)cSettings->NUM_STEPS_PER_TILE_XAXIS) - 1;
@@ -778,7 +734,7 @@ void CWoodCrawler::UpdatePosition(void)
 		const int iOldIndex = vec2Index.x;
 		if (vec2Index.x < (int)cSettings->NUM_TILES_XAXIS)
 		{
-			i32vec2NumMicroSteps.x += movementSpeed;
+			i32vec2NumMicroSteps.x++;
 
 			if (i32vec2NumMicroSteps.x >= cSettings->NUM_STEPS_PER_TILE_XAXIS)
 			{
@@ -816,10 +772,5 @@ void CWoodCrawler::UpdatePosition(void)
 			cPhysics2D.SetStatus(CPhysics2D::STATUS::JUMP);
 			cPhysics2D.SetInitialVelocity(glm::vec2(0.0f, 3.5f));
 		}
-	}
-	else
-	{
-		cPhysics2D.SetStatus(CPhysics2D::STATUS::FALL);
-
 	}
 }
