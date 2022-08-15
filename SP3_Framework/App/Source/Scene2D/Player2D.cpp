@@ -31,7 +31,7 @@ CPlayer2D::CPlayer2D(void)
 	, cInventoryManager(NULL)
 	, cInventoryItem(NULL)
 	, cSoundController(NULL)
-//	, cProjectile(NULL)
+	//, cProjectile(NULL)
 {
 	transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
 
