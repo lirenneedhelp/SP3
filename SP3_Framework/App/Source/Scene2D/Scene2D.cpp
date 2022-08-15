@@ -147,6 +147,24 @@ bool CScene2D::Init(void)
 			break;
 		}
 	}
+	while (true)
+	{
+		CWoodCrawler* cWoodCrawler = new CWoodCrawler();
+		cWoodCrawler->SetShader("Shader2D_Colour");
+		
+		if (cWoodCrawler->Init() == true)
+		{
+			cWoodCrawler->SetPlayer2D(cPlayer2D);
+			enemyVector.push_back(cWoodCrawler);
+		}
+		else
+		{
+			// Break out of this loop if the enemy has all been loaded
+			break;
+		}
+
+
+	}
 
 	// Store the keyboard controller singleton instance here
 	cKeyboardController = CKeyboardController::GetInstance();

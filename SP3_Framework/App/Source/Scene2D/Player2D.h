@@ -64,6 +64,10 @@ public:
 	// PostRender
 	void PostRender(void);
 
+	bool isMoving;
+
+	CInventoryManager* returnPlayerHealth(void);
+
 protected:
 	enum DIRECTION
 	{
@@ -75,7 +79,6 @@ protected:
 	};
 
 	glm::vec2 vec2OldIndex;
-
 	// Handler to the CMap2D instance
 	CMap2D* cMap2D;
 
@@ -93,6 +96,7 @@ protected:
 
 	// InventoryManager
 	CInventoryManager* cInventoryManager;
+
 	// InventoryItem
 	CInventoryItem* cInventoryItem;
 

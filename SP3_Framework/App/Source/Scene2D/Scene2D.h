@@ -30,6 +30,10 @@
 // Include CEnemy2D
 #include "Enemy2D.h"
 
+// Include CWoodCrawler
+#include "WoodCrawler.h"
+
+
 // Include vector
 #include <vector>
 

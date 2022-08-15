@@ -28,6 +28,7 @@
     <ClCompile Include="Source\Scene2D\Physics2D.cpp" />
     <ClCompile Include="Source\Scene2D\Player2D.cpp" />
     <ClCompile Include="Source\Scene2D\Scene2D.cpp" />
+    <ClCompile Include="Source\Scene2D\WoodCrawler.cpp" />
     <ClCompile Include="Source\SoundController\SoundController.cpp" />
     <ClCompile Include="Source\SoundController\SoundInfo.cpp" />
   </ItemGroup>
@@ -49,6 +50,7 @@
     <ClInclude Include="Source\Scene2D\Physics2D.h" />
     <ClInclude Include="Source\Scene2D\Player2D.h" />
     <ClInclude Include="Source\Scene2D\Scene2D.h" />
+    <ClInclude Include="Source\Scene2D\WoodCrawler.h" />
     <ClInclude Include="Source\SoundController\SoundController.h" />
     <ClInclude Include="Source\SoundController\SoundInfo.h" />
   </ItemGroup>

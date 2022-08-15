@@ -1,1 +1,255 @@
-﻿
+﻿  WoodCrawler.cpp
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3_Framework\App\Source\Scene2D\WoodCrawler.cpp(131,21): warning C4305: '=': truncation from 'double' to 'float'
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3_Framework\App\Source\Scene2D\WoodCrawler.cpp(146,30): warning C4244: '-=': conversion from 'const double' to 'float', possible loss of data
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3_Framework\App\Source\Scene2D\WoodCrawler.cpp(191,35): warning C4552: '/': result of expression not used
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3_Framework\App\Source\Scene2D\WoodCrawler.cpp(274,79): warning C4244: 'argument': conversion from 'T' to 'const int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3_Framework\App\Source\Scene2D\WoodCrawler.cpp(275,79): warning C4244: 'argument': conversion from 'T' to 'const int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3_Framework\App\Source\Scene2D\WoodCrawler.cpp(349,22): warning C4244: '=': conversion from 'const int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3_Framework\App\Source\Scene2D\WoodCrawler.cpp(350,22): warning C4244: '=': conversion from 'const int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3_Framework\App\Source\Scene2D\WoodCrawler.cpp(360,33): warning C4244: '=': conversion from 'const int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3_Framework\App\Source\Scene2D\WoodCrawler.cpp(361,33): warning C4244: '=': conversion from 'const int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3_Framework\App\Source\Scene2D\WoodCrawler.cpp(395,52): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3_Framework\App\Source\Scene2D\WoodCrawler.cpp(403,52): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3_Framework\App\Source\Scene2D\WoodCrawler.cpp(433,49): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3_Framework\App\Source\Scene2D\WoodCrawler.cpp(433,36): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3_Framework\App\Source\Scene2D\WoodCrawler.cpp(442,50): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3_Framework\App\Source\Scene2D\WoodCrawler.cpp(442,37): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3_Framework\App\Source\Scene2D\WoodCrawler.cpp(443,51): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3_Framework\App\Source\Scene2D\WoodCrawler.cpp(443,37): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3_Framework\App\Source\Scene2D\WoodCrawler.cpp(462,52): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3_Framework\App\Source\Scene2D\WoodCrawler.cpp(462,36): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3_Framework\App\Source\Scene2D\WoodCrawler.cpp(471,53): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3_Framework\App\Source\Scene2D\WoodCrawler.cpp(471,37): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3_Framework\App\Source\Scene2D\WoodCrawler.cpp(472,54): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3_Framework\App\Source\Scene2D\WoodCrawler.cpp(472,37): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3_Framework\App\Source\Scene2D\WoodCrawler.cpp(492,53): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3_Framework\App\Source\Scene2D\WoodCrawler.cpp(492,39): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3_Framework\App\Source\Scene2D\WoodCrawler.cpp(501,54): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3_Framework\App\Source\Scene2D\WoodCrawler.cpp(501,40): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3_Framework\App\Source\Scene2D\WoodCrawler.cpp(502,54): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3_Framework\App\Source\Scene2D\WoodCrawler.cpp(502,37): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3_Framework\App\Source\Scene2D\WoodCrawler.cpp(514,49): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3_Framework\App\Source\Scene2D\WoodCrawler.cpp(514,36): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3_Framework\App\Source\Scene2D\WoodCrawler.cpp(523,50): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3_Framework\App\Source\Scene2D\WoodCrawler.cpp(523,37): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3_Framework\App\Source\Scene2D\WoodCrawler.cpp(524,50): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3_Framework\App\Source\Scene2D\WoodCrawler.cpp(524,34): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3_Framework\App\Source\Scene2D\WoodCrawler.cpp(547,49): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3_Framework\App\Source\Scene2D\WoodCrawler.cpp(547,35): warning C4244: 'argument': conversion from 'T' to 'const unsigned int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3_Framework\App\Source\Scene2D\WoodCrawler.cpp(568,24): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3_Framework\App\Source\Scene2D\WoodCrawler.cpp(588,29): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3_Framework\App\Source\Scene2D\WoodCrawler.cpp(592,18): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3_Framework\App\Source\Scene2D\WoodCrawler.cpp(622,24): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3_Framework\App\Source\Scene2D\WoodCrawler.cpp(629,60): warning C4244: '-=': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3_Framework\App\Source\Scene2D\WoodCrawler.cpp(632,73): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3_Framework\App\Source\Scene2D\WoodCrawler.cpp(642,29): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3_Framework\App\Source\Scene2D\WoodCrawler.cpp(646,18): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3_Framework\App\Source\Scene2D\WoodCrawler.cpp(652,22): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3_Framework\App\Source\Scene2D\WoodCrawler.cpp(708,34): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3_Framework\App\Source\Scene2D\WoodCrawler.cpp(709,34): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3_Framework\App\Source\Scene2D\WoodCrawler.cpp(738,34): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3_Framework\App\Source\Scene2D\WoodCrawler.cpp(738,23): warning C4244: 'initializing': conversion from 'T' to 'const int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3_Framework\App\Source\Scene2D\WoodCrawler.cpp(744,73): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3_Framework\App\Source\Scene2D\WoodCrawler.cpp(772,34): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\kohli\OneDrive\Desktop\SP3\SP3_Framework\App\Source\Scene2D\WoodCrawler.cpp(772,23): warning C4244: 'initializing': conversion from 'T' to 'const int', possible loss of data
+          with
+          [
+              T=float
+          ]
+  App.vcxproj -> C:\Users\kohli\OneDrive\Desktop\SP3\SP3_Framework\Debug\App.exe
