@@ -128,8 +128,19 @@ bool CPlayer2D::Init(void)
 
 	// Get the handler to the CInventoryManager instance
 	cInventoryManager = CInventoryManager::GetInstance();
-	// Add a Lives icon as one of the inventory items
 	cInventoryItem = cInventoryManager->Add("Lives", "Image/Scene2D_Lives.tga", 3, 0);
+	cInventoryItem->vec2Size = glm::vec2(25, 25);
+
+	cInventoryItem = cInventoryManager->Add("HealthPotion", "Image/Big_red.tga", 3, 0);
+	cInventoryItem->vec2Size = glm::vec2(25, 25);
+
+	cInventoryItem = cInventoryManager->Add("StrengthPotion", "Image/Big_green.tga", 3, 0);
+	cInventoryItem->vec2Size = glm::vec2(25, 25);
+
+	cInventoryItem = cInventoryManager->Add("SpeedPotion", "Image/Big_yellow.tga", 3, 0);
+	cInventoryItem->vec2Size = glm::vec2(25, 25);
+
+	cInventoryItem = cInventoryManager->Add("JumpPotion", "Image/Big_blue.tga", 3, 0);
 	cInventoryItem->vec2Size = glm::vec2(25, 25);
 
 	// Add a Health icon as one of the inventory items
@@ -333,6 +344,23 @@ void CPlayer2D::Update(const double dElapsedTime)
 				{
 					cPhysics2D.SetStatus(CPhysics2D::STATUS::JUMP);
 					cPhysics2D.SetInitialVelocity(glm::vec2(0.0f, 1.5f));
+					iJumpCount += 1;
+					// Play a jump sound
+					cSoundController->PlaySoundByID(3);
+				}
+			}
+			if ((cPhysics2D.GetStatus() == CPhysics2D::STATUS::JUMP) && (highjump = true))
+			{
+				cPhysics2D.SetInitialVelocity(glm::vec2(0.0f, 4.5f));
+				iJumpCount += 1;
+				// Play a jump sound
+				cSoundController->PlaySoundByID(3);
+			}
+			else
+			{
+				if (iJumpCount < 2)
+				{
+					cPhysics2D.SetInitialVelocity(glm::vec2(0.0f, 4.5f));
 					iJumpCount += 1;
 					// Play a jump sound
 					cSoundController->PlaySoundByID(3);
@@ -720,11 +748,39 @@ void CPlayer2D::InteractWithMap(void)
 	switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x))
 	{
 	case 2:
-		// Erase the tree from this position
+		// Erase the Potion from this position
 		cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
-		// Increase the Tree by 1
-		cInventoryItem = cInventoryManager->GetItem("Tree");
+		// Increase the potion by 1
+		cInventoryItem = cInventoryManager->GetItem("Health");
+		cInventoryItem->Add(20);
+		//// Play a bell sound
+		//cSoundController->PlaySoundByID(1);
+		break;
+	case 3:
+		// Erase the potion from this position
+		cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
+		// Increase the potion by 1
+		cInventoryItem = cInventoryManager->GetItem("SpeedPotion");
 		cInventoryItem->Add(1);
+		// Play a bell sound
+		cSoundController->PlaySoundByID(1);
+		break;
+	case 4:
+		// Erase the potion from this position
+		cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
+		// Increase the potion by 1
+		cInventoryItem = cInventoryManager->GetItem("StrengthPotion");
+		cInventoryItem->Add(1);
+		// Play a bell sound
+		cSoundController->PlaySoundByID(1);
+		break;
+	case 5:
+		// Erase the potion from this position
+		cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
+		// Increase the potion by 1
+		cInventoryItem = cInventoryManager->GetItem("JumpPotion");
+		cInventoryItem->Add(1);
+		highjump = true;
 		// Play a bell sound
 		cSoundController->PlaySoundByID(1);
 		break;
@@ -739,11 +795,6 @@ void CPlayer2D::InteractWithMap(void)
 		// Decrease the health by 1
 		cInventoryItem = cInventoryManager->GetItem("Health");
 		cInventoryItem->Remove(1);
-		break;
-	case 21:
-		// Increase the health
-		cInventoryItem = cInventoryManager->GetItem("Health");
-		cInventoryItem->Add(1);
 		break;
 	case 99:
 		// Level has been completed
@@ -764,8 +815,6 @@ void CPlayer2D::UpdateHealthLives(void)
 	// Check if a life is lost
 	if (cInventoryItem->GetCount() <= 0)
 	{
-		// Reset the Health to max value
-		cInventoryItem->iItemCount = cInventoryItem->GetMaxCount();
 		// But we reduce the lives by 1.
 		cInventoryItem = cInventoryManager->GetItem("Lives");
 		cInventoryItem->Remove(1);

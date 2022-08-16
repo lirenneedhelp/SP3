@@ -117,17 +117,53 @@ bool CMap2D::Init(	const unsigned int uiNumLevels,
 		// Store the texture ID into MapOfTextureIDs
 		MapOfTextureIDs.insert(pair<int, int>(100, iTextureID));
 	}
-	// Load the tree texture
-	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Scene2D_TreeTile.tga", true);
+	// Load the health potion texture
+	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Big_red.tga", true);
 	if (iTextureID == 0)
 	{
-		cout << "Unable to load Image/Scene2D_TreeTile.tga" << endl;
+		cout << "Unable to load Image/Big_red.tga" << endl;
 		return false;
 	}
 	else
 	{
 		// Store the texture ID into MapOfTextureIDs
 		MapOfTextureIDs.insert(pair<int, int>(2, iTextureID));
+	}
+	// Load the speed potion texture
+	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Big_yellow.tga", true);
+	if (iTextureID == 0)
+	{
+		cout << "Unable to load Image/Big_yellow.tga" << endl;
+		return false;
+	}
+	else
+	{
+		// Store the texture ID into MapOfTextureIDs
+		MapOfTextureIDs.insert(pair<int, int>(3, iTextureID));
+	}
+	// Load the strength potion texture
+	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Big_green.tga", true);
+	if (iTextureID == 0)
+	{
+		cout << "Unable to load Image/Big_green.tga" << endl;
+		return false;
+	}
+	else
+	{
+		// Store the texture ID into MapOfTextureIDs
+		MapOfTextureIDs.insert(pair<int, int>(4, iTextureID));
+	}
+	// Load the jump potion texture
+	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Big_blue.tga", true);
+	if (iTextureID == 0)
+	{
+		cout << "Unable to load Image/Big_blue.tga" << endl;
+		return false;
+	}
+	else
+	{
+		// Store the texture ID into MapOfTextureIDs
+		MapOfTextureIDs.insert(pair<int, int>(5, iTextureID));
 	}
 	// Load the Life texture
 	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Scene2D_Lives.tga", true);

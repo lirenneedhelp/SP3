@@ -67,6 +67,8 @@ public:
 
 	bool isMoving;
 
+	bool highjump;
+
 	CInventoryManager* returnPlayerHealth(void);
 
 protected:
