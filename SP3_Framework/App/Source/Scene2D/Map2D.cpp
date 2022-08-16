@@ -455,8 +455,8 @@ bool CMap2D::FindValue(const int iValue, unsigned int& uirRow, unsigned int& uir
 					uirRow = cSettings->NUM_TILES_YAXIS - uiRow - 1;
 				else
 					uirRow = uiRow;
-				    uirCol = uiCol;
-				    return true;	// Return true immediately if the value has been found
+				uirCol = uiCol;
+				return true;	// Return true immediately if the value has been found
 			}
 		}
 	}

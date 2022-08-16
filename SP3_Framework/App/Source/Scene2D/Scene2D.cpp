@@ -211,12 +211,6 @@ bool CScene2D::Init(void)
 	cGameManager = CGameManager::GetInstance();
 	cGameManager->Init();
 
-	bgColor = glm::vec3(0.2f, 0, 1.0f);
-
-	day = true;
-
-	dayCounter = 0.0f;
-
 	// Load the sounds into CSoundController
 	cSoundController = CSoundController::GetInstance();
 	cSoundController->LoadSound(FileSystem::getPath("Sounds\\Sound_Bell.ogg"), 1, true);
@@ -284,7 +278,6 @@ bool CScene2D::Update(const double dElapsedTime)
 		cSoundController->PlaySoundByID(2);
 		return false;
 	}
-	dayCounter += dElapsedTime;
 
 	return true;
 }
@@ -298,7 +291,7 @@ void CScene2D::PreRender(void)
 	glLoadIdentity();
 
 	// Clear the screen and buffer
-	glClearColor(bgColor.x,bgColor.y,bgColor.z, 1.0f);
+	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	// Enable 2D texture rendering
@@ -347,24 +340,4 @@ void CScene2D::Render(void)
  */
 void CScene2D::PostRender(void)
 {
-}
-
-bool CScene2D::getTime(void)
-{
-	return day;
-}
-
-void CScene2D::setTime(bool time)
-{
-	day = time;
-}
-
-float CScene2D::getDuration(void)
-{
-	return dayCounter;
-}
-
-void CScene2D::resetDuration(void)
-{
-	dayCounter = 0.0f;
 }

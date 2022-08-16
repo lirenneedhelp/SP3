@@ -69,7 +69,6 @@ public:
 
 	bool highjump;
 
-	bool speedup;
 	CInventoryManager* returnPlayerHealth(void);
 
 protected:
