@@ -108,7 +108,6 @@ protected:
 
 	// Count the number of jumps
 	int iJumpCount;
-	int jumps;
 
 	// Handler to the CSoundController
 	CSoundController* cSoundController;

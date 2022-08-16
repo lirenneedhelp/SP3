@@ -95,9 +95,7 @@ bool CPlayer2D::Init(void)
 	vec2Index = glm::i32vec2(uiCol, uiRow);
 
 	isMoving = true; // Check if woodCrawler has pulled the player.
-	highjump = false;
-	jumps = 0;
-	
+
 	
 	// By default, microsteps should be zero
 	vec2NumMicroSteps = glm::i32vec2(0, 0);
@@ -332,55 +330,41 @@ void CPlayer2D::Update(const double dElapsedTime)
 		}
 		if (cKeyboardController->IsKeyPressed(GLFW_KEY_SPACE))
 		{
-			if (highjump == false)
+			if (cPhysics2D.GetStatus() == CPhysics2D::STATUS::IDLE)
 			{
-				if ((cPhysics2D.GetStatus() == CPhysics2D::STATUS::IDLE))
+				cPhysics2D.SetStatus(CPhysics2D::STATUS::JUMP);
+				cPhysics2D.SetInitialVelocity(glm::vec2(0.0f, 3.5f));
+				iJumpCount += 1;
+				// Play a jump sound
+				cSoundController->PlaySoundByID(3);
+			}
+			else
+			{
+				if (iJumpCount < 2)
 				{
-					std::cout << "not highjumping" << endl;
 					cPhysics2D.SetStatus(CPhysics2D::STATUS::JUMP);
-					cPhysics2D.SetInitialVelocity(glm::vec2(0.0f, 3.f));
+					cPhysics2D.SetInitialVelocity(glm::vec2(0.0f, 1.5f));
 					iJumpCount += 1;
 					// Play a jump sound
 					cSoundController->PlaySoundByID(3);
-				}
-				else
-				{
-					if (iJumpCount < 2)
-					{
-						cPhysics2D.SetStatus(CPhysics2D::STATUS::JUMP);
-						cPhysics2D.SetInitialVelocity(glm::vec2(0.0f, 3.f));
-						iJumpCount += 1;
-						// Play a jump sound
-						cSoundController->PlaySoundByID(3);
-					}
 				}
 			}
-			if (highjump == true) 
+			if ((cPhysics2D.GetStatus() == CPhysics2D::STATUS::JUMP) && (highjump = true))
 			{
-				if ((cPhysics2D.GetStatus() == CPhysics2D::STATUS::IDLE))
+				cPhysics2D.SetInitialVelocity(glm::vec2(0.0f, 4.5f));
+				iJumpCount += 1;
+				// Play a jump sound
+				cSoundController->PlaySoundByID(3);
+			}
+			else
+			{
+				if (iJumpCount < 2)
 				{
-					cPhysics2D.SetStatus(CPhysics2D::STATUS::JUMP);
 					cPhysics2D.SetInitialVelocity(glm::vec2(0.0f, 4.5f));
 					iJumpCount += 1;
-					++jumps;
 					// Play a jump sound
 					cSoundController->PlaySoundByID(3);
 				}
-				else
-				{
-					if (iJumpCount < 2)
-					{
-						cPhysics2D.SetInitialVelocity(glm::vec2(0.0f, 4.5f));
-						iJumpCount += 1;
-						// Play a jump sound
-						cSoundController->PlaySoundByID(3);
-					}
-				}
-				if (jumps == 3)
-				{
-					highjump = false;
-				}
-				
 			}
 		}
 		if (cKeyboardController->IsKeyPressed(GLFW_KEY_M))
@@ -755,9 +739,6 @@ void CPlayer2D::UpdateJumpFall(const double dElapsedTime)
 		}
 	}
 }
-
-
-
 
 /**
  @brief Let player interact with the map. You can add collectibles such as powerups and health here.
