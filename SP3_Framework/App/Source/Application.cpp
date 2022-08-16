@@ -309,6 +309,31 @@ void Application::Run(void)
 		// Update the FPS Counter
 		dTotalFrameTime = dElapsedTime + dDelayTime * 0.001;
 		cFPSCounter->Update(dTotalFrameTime);
+		if (CScene2D::GetInstance()->getTime()) // Day converting to Night Time
+		{
+			if (CScene2D::GetInstance()->getDuration() >= 12.0f)
+			{
+				CScene2D::GetInstance()->bgColor.z -= 0.1;
+				CScene2D::GetInstance()->resetDuration();
+			}
+		}
+		else if (!CScene2D::GetInstance()->getTime()) // Night converting to Day Time
+		{
+			if (CScene2D::GetInstance()->getDuration() >= 12.0f)
+			{
+				CScene2D::GetInstance()->bgColor.z += 0.1;
+				CScene2D::GetInstance()->resetDuration();
+
+			}
+		}
+		if (CScene2D::GetInstance()->bgColor.z >= 1.0f)
+		{
+			CScene2D::GetInstance()->setTime(true);
+		}
+		else if (CScene2D::GetInstance()->bgColor.z <= 0.0f)
+		{
+			CScene2D::GetInstance()->setTime(false);
+		}
 	}
 }
 
