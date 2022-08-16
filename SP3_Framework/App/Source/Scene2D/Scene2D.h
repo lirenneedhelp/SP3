@@ -55,6 +55,8 @@
 // Include SoundController
 #include "..\SoundController\SoundController.h"
 
+#include "EnemyProjectile.h"
+
 class CScene2D : public CSingletonTemplate<CScene2D>
 {
 	friend CSingletonTemplate<CScene2D>;
@@ -95,6 +97,9 @@ protected:
 	// A transformation matrix for controlling where to render the entities
 	glm::mat4 transform;
 
+	// Projectile Handler
+    CEnemyProjectile* enemyProjectile;
+
 	// GUI_Scene2D
 	CGUI_Scene2D* cGUI_Scene2D;
 
@@ -105,6 +110,8 @@ protected:
 	CSoundController* cSoundController;
 
 	bool day;
+
+	float enemySpawnTimeCounter;
 
 	float dayCounter; // helps with gradual change in the brightness when it changes from day to night vice versa
 

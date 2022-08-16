@@ -21,6 +21,7 @@ using namespace std;
 
 // Include Game Manager
 #include "GameManager.h"
+#include "BloodDeer.h"
 
 /**
  @brief Constructor This constructor has protected access modifier as this class will be a Singleton
@@ -148,6 +149,7 @@ bool CPlayer2D::Init(void)
 	cInventoryItem->vec2Size = glm::vec2(25, 25);
 
 	iJumpCount = 0;
+
 
 	// Get the handler to the CSoundController
 	cSoundController = CSoundController::GetInstance();
@@ -349,15 +351,12 @@ void CPlayer2D::Update(const double dElapsedTime)
 					cSoundController->PlaySoundByID(3);
 				}
 			}
-			if ((cPhysics2D.GetStatus() == CPhysics2D::STATUS::JUMP) && (highjump = true))
+			if ((cPhysics2D.GetStatus() == CPhysics2D::STATUS::JUMP) && (highjump == true))
 			{
 				cPhysics2D.SetInitialVelocity(glm::vec2(0.0f, 4.5f));
 				iJumpCount += 1;
 				// Play a jump sound
 				cSoundController->PlaySoundByID(3);
-			}
-			else
-			{
 				if (iJumpCount < 2)
 				{
 					cPhysics2D.SetInitialVelocity(glm::vec2(0.0f, 4.5f));
@@ -366,13 +365,7 @@ void CPlayer2D::Update(const double dElapsedTime)
 					cSoundController->PlaySoundByID(3);
 				}
 			}
-		}
-		if (cKeyboardController->IsKeyPressed(GLFW_KEY_M))
-		{
-			cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 299);
-		/*	cProjectile->PreRender();
-			cProjectile->Render();
-			cProjectile->PostRender();*/
+
 		}
 	}
 	// Update Jump or Fall

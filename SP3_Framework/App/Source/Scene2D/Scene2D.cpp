@@ -117,6 +117,7 @@ bool CScene2D::Init(void)
 	// Load Scene2DColour into ShaderManager
 	CShaderManager::GetInstance()->Use("Shader2D_Colour");
 	//CShaderManager::GetInstance()->activeShader->setInt("texture1", 0);
+	
 	// Create and initialise the CPlayer2D
 	cPlayer2D = CPlayer2D::GetInstance();
 	// Pass shader to cPlayer2D
@@ -199,6 +200,9 @@ bool CScene2D::Init(void)
 			break;
 		}
 	}
+	enemyProjectile = new CEnemyProjectile();
+	enemyProjectile->SetShader("Shader2D_Colour");
+	enemyProjectile->Init();
 
 	// Store the keyboard controller singleton instance here
 	cKeyboardController = CKeyboardController::GetInstance();
@@ -211,11 +215,13 @@ bool CScene2D::Init(void)
 	cGameManager = CGameManager::GetInstance();
 	cGameManager->Init();
 
-	bgColor = glm::vec3(0.2f, 0, 1.0f);
+	bgColor = glm::vec3(0.0f, 0, 1.0f);
 
 	day = true;
 
 	dayCounter = 0.0f;
+
+	enemySpawnTimeCounter = 15.f;
 
 	// Load the sounds into CSoundController
 	cSoundController = CSoundController::GetInstance();
@@ -233,7 +239,9 @@ bool CScene2D::Update(const double dElapsedTime)
 {
 	// Call the cPlayer2D's update method before Map2D as we want to capture the inputs before map2D update
 	cPlayer2D->Update(dElapsedTime);
-
+	
+	//enemyProjectile->Update(dElapsedTime);
+	
 	// Call all the cEnemy2D's update method before Map2D 
 	// as we want to capture the updates before map2D update
 	for (int i = 0; i < enemyVector.size(); i++)
@@ -261,6 +269,13 @@ bool CScene2D::Update(const double dElapsedTime)
 			return false;
 		}
 	}
+	if (cKeyboardController->IsKeyReleased(GLFW_KEY_M))
+	{
+		enemyProjectile->PreRender();
+		enemyProjectile->Render();
+		enemyProjectile->PostRender();
+
+	}
 
 	// Call the cGUI_Scene2D's update method
 	cGUI_Scene2D->Update(dElapsedTime);
@@ -285,6 +300,30 @@ bool CScene2D::Update(const double dElapsedTime)
 		return false;
 	}
 	dayCounter += dElapsedTime;
+
+	if (!day)
+	{
+		enemySpawnTimeCounter -= dElapsedTime;
+	}
+	if (enemySpawnTimeCounter <= 0)
+	{ 
+		while (true)
+		{
+			srand((unsigned)time(NULL));
+
+			float randcol = rand() * CSettings::GetInstance()->NUM_TILES_XAXIS; // no of col
+			float randrow = rand() * CSettings::GetInstance()->NUM_TILES_YAXIS; // no of rows
+			if (cMap2D->GetMapInfo(randrow, randcol) != 0)
+			{
+				continue;
+			}
+			else
+			{
+
+				break;
+			}
+		}
+	}
 
 	return true;
 }
