@@ -74,6 +74,13 @@ public:
 	// PostRender
 	void PostRender(void);
 
+	glm::vec3 bgColor;
+
+	bool getTime(void);
+	void setTime(bool time);
+	float getDuration(void); // How long has it been day / night
+	void resetDuration(void); //Reset the counter ^
+
 protected:
 	// The handler containing the instance of the 2D Map
 	CMap2D* cMap2D;
@@ -96,6 +103,10 @@ protected:
 
 	// Handler to the CSoundController
 	CSoundController* cSoundController;
+
+	bool day;
+
+	float dayCounter; // helps with gradual change in the brightness when it changes from day to night vice versa
 
 	// Constructor
 	CScene2D(void);

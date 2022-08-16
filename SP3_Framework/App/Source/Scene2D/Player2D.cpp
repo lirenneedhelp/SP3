@@ -95,8 +95,12 @@ bool CPlayer2D::Init(void)
 	vec2Index = glm::i32vec2(uiCol, uiRow);
 
 	isMoving = true; // Check if woodCrawler has pulled the player.
-	highjump = false;
-	jumps = 0;
+	//check if potion has been taken
+	highjump = false; 
+	jumps = 0; // counts number of highjumps 
+	speedup = false;
+	
+	
 	
 	
 	// By default, microsteps should be zero
@@ -336,7 +340,6 @@ void CPlayer2D::Update(const double dElapsedTime)
 			{
 				if ((cPhysics2D.GetStatus() == CPhysics2D::STATUS::IDLE))
 				{
-					std::cout << "not highjumping" << endl;
 					cPhysics2D.SetStatus(CPhysics2D::STATUS::JUMP);
 					cPhysics2D.SetInitialVelocity(glm::vec2(0.0f, 3.f));
 					iJumpCount += 1;
@@ -781,6 +784,7 @@ void CPlayer2D::InteractWithMap(void)
 		// Increase the potion by 1
 		cInventoryItem = cInventoryManager->GetItem("SpeedPotion");
 		cInventoryItem->Add(1);
+		speedup = true;
 		// Play a bell sound
 		cSoundController->PlaySoundByID(1);
 		break;
