@@ -68,7 +68,7 @@ public:
 	void PostRender(void);
 
 	bool isMoving;
-
+	bool speed;
 	bool highjump;
 	int jumps;
 
@@ -143,6 +143,18 @@ protected:
 
 	// Update the health and lives
 	void UpdateHealthLives(void);
+
+	/*
+		!CODE CHANGES START!
+		functions for the breaking and building of blocks
+	*/
+	int direction;
+	double breakinterval;
+	void BreakBlocks(const double dElapsedTime);
+	void BuildBlocks();
+	/*
+		!CODE CHANGES END!
+	*/
 
 	CEntity2D* returnNearestEnemy(void);
 };

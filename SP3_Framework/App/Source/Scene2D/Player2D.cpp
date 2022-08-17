@@ -106,6 +106,7 @@ bool CPlayer2D::Init(void)
 	isMoving = true; // Check if woodCrawler has pulled the player.
 	highjump = false;
 	jumps = 0;
+	speed = false;
 	
 	// By default, microsteps should be zero
 	vec2NumMicroSteps = glm::i32vec2(0, 0);
@@ -160,6 +161,8 @@ bool CPlayer2D::Init(void)
 	iJumpCount = 0;
 	attackSpeed = 1.0f;
 
+	direction = 0;
+	breakinterval = 0.2f;
 
 	// Get the handler to the CSoundController
 	cSoundController = CSoundController::GetInstance();
@@ -212,17 +215,31 @@ void CPlayer2D::Update(const double dElapsedTime)
 	{
 		if (cKeyboardController->IsKeyDown(GLFW_KEY_A))
 		{
-			// Calculate the new position to the left
-			if (vec2Index.x >= 0)
+			if (speed == true)
 			{
-				vec2NumMicroSteps.x--;
-				if (vec2NumMicroSteps.x < 0)
+				if (vec2Index.x >= 0)
 				{
-					vec2NumMicroSteps.x = ((int)cSettings->NUM_STEPS_PER_TILE_XAXIS) - 1;
-					vec2Index.x--;
+					vec2NumMicroSteps.x--;
+					if (vec2NumMicroSteps.x < 0)
+					{
+						vec2NumMicroSteps.x = ((int)cSettings->NUM_STEPS_PER_TILE_XAXIS) - 2;
+						vec2Index.x--;
+					}
 				}
 			}
-
+			else if (speed == false)
+			{
+				// Calculate the new position to the left
+				if (vec2Index.x >= 0)
+				{
+					vec2NumMicroSteps.x--;
+					if (vec2NumMicroSteps.x < 0)
+					{
+						vec2NumMicroSteps.x = ((int)cSettings->NUM_STEPS_PER_TILE_XAXIS) - 1;
+						vec2Index.x--;
+					}
+				}
+			}
 			// Constraint the player's position within the screen boundary
 			Constraint(LEFT);
 			// If the new position is not feasible, then revert to old position
@@ -247,18 +264,35 @@ void CPlayer2D::Update(const double dElapsedTime)
 		}
 		else if (cKeyboardController->IsKeyDown(GLFW_KEY_D))
 		{
-			// Calculate the new position to the right
-			if (vec2Index.x < (int)cSettings->NUM_TILES_XAXIS)
+			if (speed == true)
 			{
-				vec2NumMicroSteps.x++;
-
-				if (vec2NumMicroSteps.x >= cSettings->NUM_STEPS_PER_TILE_XAXIS)
+				if (vec2Index.x < (int)cSettings->NUM_TILES_XAXIS)
 				{
-					vec2NumMicroSteps.x = 0;
-					vec2Index.x++;
+					vec2NumMicroSteps.x++;
+
+					if (vec2NumMicroSteps.x >= cSettings->NUM_STEPS_PER_TILE_XAXIS)
+					{
+						vec2NumMicroSteps.x = 2;
+						vec2Index.x++;
+					}
+				}
+			}
+			else if (speed == false)
+			{
+				// Calculate the new position to the right
+				if (vec2Index.x < (int)cSettings->NUM_TILES_XAXIS)
+				{
+					vec2NumMicroSteps.x++;
+
+					if (vec2NumMicroSteps.x >= cSettings->NUM_STEPS_PER_TILE_XAXIS)
+					{
+						vec2NumMicroSteps.x = 0;
+						vec2Index.x++;
+					}
 				}
 			}
 
+			direction = 2;
 			// Constraint the player's position within the screen boundary
 			Constraint(RIGHT);
 
@@ -281,116 +315,119 @@ void CPlayer2D::Update(const double dElapsedTime)
 
 			//CS: Change Color
 			runtimeColour = glm::vec4(1.0, 1.0, 0.0, 1.0);
+
 		}
-		if (cKeyboardController->IsKeyDown(GLFW_KEY_W))
-		{
-			// Calculate the new position up
-			if (vec2Index.y < (int)cSettings->NUM_TILES_YAXIS)
+			
+			if (cKeyboardController->IsKeyDown(GLFW_KEY_W))
 			{
-				vec2NumMicroSteps.y++;
-				if (vec2NumMicroSteps.y > cSettings->NUM_STEPS_PER_TILE_YAXIS)
+				// Calculate the new position up
+				if (vec2Index.y < (int)cSettings->NUM_TILES_YAXIS)
+				{
+					vec2NumMicroSteps.y++;
+					if (vec2NumMicroSteps.y > cSettings->NUM_STEPS_PER_TILE_YAXIS)
+					{
+						vec2NumMicroSteps.y = 0;
+						vec2Index.y++;
+					}
+				}
+
+				// Constraint the player's position within the screen boundary
+				Constraint(UP);
+
+				// If the new position is not feasible, then revert to old position
+				if (CheckPosition(UP) == false)
 				{
 					vec2NumMicroSteps.y = 0;
-					vec2Index.y++;
 				}
+
+				//CS: Play the "idle" animation
+				animatedSprites->PlayAnimation("idle", -1, 1.0f);
+
+				//CS: Change Color
+				runtimeColour = glm::vec4(0.0, 1.0, 1.0, 0.5);
 			}
-
-			// Constraint the player's position within the screen boundary
-			Constraint(UP);
-
-			// If the new position is not feasible, then revert to old position
-			if (CheckPosition(UP) == false)
+			else if (cKeyboardController->IsKeyDown(GLFW_KEY_S))
 			{
-				vec2NumMicroSteps.y = 0;
-			}
-
-			//CS: Play the "idle" animation
-			animatedSprites->PlayAnimation("idle", -1, 1.0f);
-
-			//CS: Change Color
-			runtimeColour = glm::vec4(0.0, 1.0, 1.0, 0.5);
-		}
-		else if (cKeyboardController->IsKeyDown(GLFW_KEY_S))
-		{
-			// Calculate the new position down
-			if (vec2Index.y >= 0)
-			{
-				vec2NumMicroSteps.y--;
-				if (vec2NumMicroSteps.y < 0)
+				// Calculate the new position down
+				if (vec2Index.y >= 0)
 				{
-					vec2NumMicroSteps.y = ((int)cSettings->NUM_STEPS_PER_TILE_YAXIS) - 1;
-					vec2Index.y--;
+					vec2NumMicroSteps.y--;
+					if (vec2NumMicroSteps.y < 0)
+					{
+						vec2NumMicroSteps.y = ((int)cSettings->NUM_STEPS_PER_TILE_YAXIS) - 1;
+						vec2Index.y--;
+					}
 				}
-			}
 
-			// Constraint the player's position within the screen boundary
-			Constraint(DOWN);
+				// Constraint the player's position within the screen boundary
+				Constraint(DOWN);
 
-			// If the new position is not feasible, then revert to old position
-			if (CheckPosition(DOWN) == false)
-			{
-				vec2Index = vec2OldIndex;
-				vec2NumMicroSteps.y = 0;
-			}
-
-			//CS: Play the "idle" animation
-			animatedSprites->PlayAnimation("idle", -1, 1.0f);
-
-			//CS: Change Color
-			runtimeColour = glm::vec4(1.0, 0.0, 1.0, 0.5);
-		}
-		if (cKeyboardController->IsKeyPressed(GLFW_KEY_SPACE))
-		{
-			if (highjump == false)
-			{
-				if ((cPhysics2D.GetStatus() == CPhysics2D::STATUS::IDLE))
+				// If the new position is not feasible, then revert to old position
+				if (CheckPosition(DOWN) == false)
 				{
-					cPhysics2D.SetStatus(CPhysics2D::STATUS::JUMP);
-					cPhysics2D.SetInitialVelocity(glm::vec2(0.0f, 3.f));
-					iJumpCount += 1;
-					// Play a jump sound
-					cSoundController->PlaySoundByID(3);
+					vec2Index = vec2OldIndex;
+					vec2NumMicroSteps.y = 0;
 				}
-				else
+
+				//CS: Play the "idle" animation
+				animatedSprites->PlayAnimation("idle", -1, 1.0f);
+
+				//CS: Change Color
+				runtimeColour = glm::vec4(1.0, 0.0, 1.0, 0.5);
+			}
+			if (cKeyboardController->IsKeyPressed(GLFW_KEY_SPACE))
+			{
+				if (highjump == false)
 				{
-					if (iJumpCount < 2)
+					if ((cPhysics2D.GetStatus() == CPhysics2D::STATUS::IDLE))
+					{
+						cPhysics2D.SetStatus(CPhysics2D::STATUS::JUMP);
+						cPhysics2D.SetInitialVelocity(glm::vec2(0.0f, 2.f));
+						iJumpCount += 1;
+						// Play a jump sound
+						cSoundController->PlaySoundByID(3);
+					}
+					else
+					{
+						if (iJumpCount < 2)
+						{
+							cPhysics2D.SetStatus(CPhysics2D::STATUS::JUMP);
+							cPhysics2D.SetInitialVelocity(glm::vec2(0.0f, 2.f));
+							iJumpCount += 1;
+							// Play a jump sound
+							cSoundController->PlaySoundByID(3);
+						}
+					}
+				}
+				if (highjump == true)
+				{
+					if ((cPhysics2D.GetStatus() == CPhysics2D::STATUS::IDLE))
 					{
 						cPhysics2D.SetStatus(CPhysics2D::STATUS::JUMP);
 						cPhysics2D.SetInitialVelocity(glm::vec2(0.0f, 3.f));
 						iJumpCount += 1;
+						++jumps;
 						// Play a jump sound
 						cSoundController->PlaySoundByID(3);
 					}
-				}
-			}
-			if (highjump == true)
-			{
-				if ((cPhysics2D.GetStatus() == CPhysics2D::STATUS::IDLE))
-				{
-					cPhysics2D.SetStatus(CPhysics2D::STATUS::JUMP);
-					cPhysics2D.SetInitialVelocity(glm::vec2(0.0f, 4.5f));
-					iJumpCount += 1;
-					++jumps;
-					// Play a jump sound
-					cSoundController->PlaySoundByID(3);
-				}
-				else
-				{
-					if (iJumpCount < 2)
+					else
 					{
-						cPhysics2D.SetInitialVelocity(glm::vec2(0.0f, 4.5f));
-						iJumpCount += 1;
-						// Play a jump sound
-						cSoundController->PlaySoundByID(3);
+						if (iJumpCount < 2)
+						{
+							cPhysics2D.SetInitialVelocity(glm::vec2(0.0f, 3.f));
+							iJumpCount += 1;
+							// Play a jump sound
+							cSoundController->PlaySoundByID(3);
+						}
 					}
-				}
-				if (jumps == 3)
-				{
-					highjump = false;
-				}
+					if (jumps == 3)
+					{
+						highjump = false;
+					}
 
+				}
 			}
-		}
+		
 	}
 	//Put mouse inputs here
 	if (cMouseController->IsButtonDown(0))
@@ -806,6 +843,8 @@ void CPlayer2D::InteractWithMap(void)
 		cInventoryItem->Add(1);
 		// Play a bell sound
 		cSoundController->PlaySoundByID(1);
+		speed = true;
+		
 		break;
 	case 4:
 		// Erase the potion from this position
@@ -868,21 +907,85 @@ void CPlayer2D::UpdateHealthLives(void)
 		}
 	}
 }
+/*
+	!CODE CHANGES START!
+	code here should handle the breaking and placing of blocks
+*/
+void CPlayer2D::BuildBlocks() {
+	if (cKeyboardController->IsKeyDown(GLFW_KEY_E)) {
+		if (direction == 1) {
+			switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x - 1))
+			{
+			case 0:
+				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 100);
+				break;
+			}
+		}
+		else if (direction == 2) {
+			switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x + 1))
+			{
+			case 0:
+				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 100);
+				break;
+			}
+		}
+	}
+}
 
-CEntity2D* CPlayer2D::returnNearestEnemy(void)
-{
-	for (int i = 0; i < enemyList.size(); ++i)
-	{
-		if (cPhysics2D.CalculateDistance(vec2Index, enemyList.front()->vec2Index) < cPhysics2D.CalculateDistance(vec2Index, enemyList[i + 1]->vec2Index))
-		{
-			continue;
+void CPlayer2D::BreakBlocks(const double dElapsedTime) {
+	breakinterval -= dElapsedTime;
+	if (cKeyboardController->IsKeyDown(GLFW_KEY_L) && breakinterval <= 0.f) {
+
+		if (direction == 1) {
+			switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x - 1))
+			{
+
+			case 100:
+				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 102);
+				break;
+			case 102:
+				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 103);
+				break;
+			case 103:
+				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 0);
+				break;
+			}
 		}
-		else
-		{
-			CEntity2D* temp = enemyList.front();
-			enemyList[i + 1] = temp;
-			enemyList.front() = enemyList[i + 1];
+		else if (direction == 2) {
+			switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x + 1))
+			{
+			case 100:
+				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 102);
+				break;
+			case 102:
+				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 103);
+				break;
+			case 103:
+				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 0);
+				break;
+			}
 		}
+		breakinterval = 0.2f;
+	}
+	if (cKeyboardController->IsKeyDown(GLFW_KEY_K) && breakinterval <= 0.f) {
+		if (direction == 1) {
+			switch (cMap2D->GetMapInfo(vec2Index.y - 1, vec2Index.x))
+			{
+			case 100:
+				cMap2D->SetMapInfo(vec2Index.y - 1, vec2Index.x, 102);
+				break;
+			case 102:
+				cMap2D->SetMapInfo(vec2Index.y - 1, vec2Index.x, 103);
+				break;
+			case 103:
+				cMap2D->SetMapInfo(vec2Index.y - 1, vec2Index.x, 0);
+				break;
+			}
+		}
+		breakinterval = 0.2f;
 	}
 	return enemyList.front();
 }
+/*
+	!CODE CHANGES END!
+*/
