@@ -232,6 +232,9 @@ void CPlayer2D::Update(const double dElapsedTime)
 					}
 				}
 			}
+
+			direction = 1;
+
 			// Constraint the player's position within the screen boundary
 			Constraint(LEFT);
 			// If the new position is not feasible, then revert to old position
@@ -421,7 +424,7 @@ void CPlayer2D::Update(const double dElapsedTime)
 			}
 		
 	}
-
+	
 	BuildBlocks();
 	BreakBlocks(dElapsedTime);
 
@@ -883,7 +886,7 @@ void CPlayer2D::UpdateHealthLives(void)
 	code here should handle the breaking and placing of blocks
 */
 void CPlayer2D::BuildBlocks() {
-	if (cKeyboardController->IsKeyDown(GLFW_KEY_E)) {
+	if (cKeyboardController->IsKeyDown(GLFW_KEY_O)) {
 		if (direction == 1) {
 			switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x - 1))
 			{
@@ -899,6 +902,40 @@ void CPlayer2D::BuildBlocks() {
 				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 100);
 				break;
 			}
+		}
+	}
+	if (cKeyboardController->IsKeyDown(GLFW_KEY_H)) {
+		if (direction == 1) {
+			switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x + 1))
+			{
+			case 0:
+				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 100);
+				break;
+			}
+		}
+		else if (direction == 2) {
+			switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x - 1))
+			{
+			case 0:
+				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 100);
+				break;
+			}
+		}
+	}
+	if (cKeyboardController->IsKeyDown(GLFW_KEY_U)) {
+		switch (cMap2D->GetMapInfo(vec2Index.y + 1, vec2Index.x))
+		{
+		case 0:
+			cMap2D->SetMapInfo(vec2Index.y + 1, vec2Index.x, 100);
+			break;
+		}
+	}
+	if (cKeyboardController->IsKeyDown(GLFW_KEY_P)) {
+		switch (cMap2D->GetMapInfo(vec2Index.y - 1, vec2Index.x))
+		{
+		case 0:
+			cMap2D->SetMapInfo(vec2Index.y - 1, vec2Index.x, 100);
+			break;
 		}
 	}
 }
@@ -953,6 +990,23 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime) {
 				break;
 			}
 		}
+		breakinterval = 0.2f;
+	}
+	if (cKeyboardController->IsKeyDown(GLFW_KEY_I) && breakinterval <= 0.f) {
+
+		switch (cMap2D->GetMapInfo(vec2Index.y + 1, vec2Index.x))
+		{
+		case 100:
+			cMap2D->SetMapInfo(vec2Index.y + 1, vec2Index.x, 102);
+			break;
+		case 102:
+			cMap2D->SetMapInfo(vec2Index.y + 1, vec2Index.x, 103);
+			break;
+		case 103:
+			cMap2D->SetMapInfo(vec2Index.y + 1, vec2Index.x, 0);
+			break;
+		}
+
 		breakinterval = 0.2f;
 	}
 }
