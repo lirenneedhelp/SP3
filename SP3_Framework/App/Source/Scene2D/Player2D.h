@@ -65,7 +65,7 @@ public:
 	void PostRender(void);
 
 	bool isMoving;
-
+	bool speed;
 	bool highjump;
 	int jumps;
 

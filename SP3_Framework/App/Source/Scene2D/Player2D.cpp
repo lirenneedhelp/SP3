@@ -98,6 +98,7 @@ bool CPlayer2D::Init(void)
 	isMoving = true; // Check if woodCrawler has pulled the player.
 	highjump = false;
 	jumps = 0;
+	speed = false;
 	
 	// By default, microsteps should be zero
 	vec2NumMicroSteps = glm::i32vec2(0, 0);
@@ -204,17 +205,31 @@ void CPlayer2D::Update(const double dElapsedTime)
 	{
 		if (cKeyboardController->IsKeyDown(GLFW_KEY_A))
 		{
-			// Calculate the new position to the left
-			if (vec2Index.x >= 0)
+			if (speed == true)
 			{
-				vec2NumMicroSteps.x--;
-				if (vec2NumMicroSteps.x < 0)
+				if (vec2Index.x >= 0)
 				{
-					vec2NumMicroSteps.x = ((int)cSettings->NUM_STEPS_PER_TILE_XAXIS) - 1;
-					vec2Index.x--;
+					vec2NumMicroSteps.x--;
+					if (vec2NumMicroSteps.x < 0)
+					{
+						vec2NumMicroSteps.x = ((int)cSettings->NUM_STEPS_PER_TILE_XAXIS) - 2;
+						vec2Index.x--;
+					}
 				}
 			}
-
+			else if (speed == false)
+			{
+				// Calculate the new position to the left
+				if (vec2Index.x >= 0)
+				{
+					vec2NumMicroSteps.x--;
+					if (vec2NumMicroSteps.x < 0)
+					{
+						vec2NumMicroSteps.x = ((int)cSettings->NUM_STEPS_PER_TILE_XAXIS) - 1;
+						vec2Index.x--;
+					}
+				}
+			}
 			// Constraint the player's position within the screen boundary
 			Constraint(LEFT);
 			// If the new position is not feasible, then revert to old position
@@ -239,17 +254,35 @@ void CPlayer2D::Update(const double dElapsedTime)
 		}
 		else if (cKeyboardController->IsKeyDown(GLFW_KEY_D))
 		{
-			// Calculate the new position to the right
-			if (vec2Index.x < (int)cSettings->NUM_TILES_XAXIS)
+			if (speed == true)
 			{
-				vec2NumMicroSteps.x++;
-
-				if (vec2NumMicroSteps.x >= cSettings->NUM_STEPS_PER_TILE_XAXIS)
+				if (vec2Index.x < (int)cSettings->NUM_TILES_XAXIS)
 				{
-					vec2NumMicroSteps.x = 0;
-					vec2Index.x++;
+					vec2NumMicroSteps.x++;
+
+					if (vec2NumMicroSteps.x >= cSettings->NUM_STEPS_PER_TILE_XAXIS)
+					{
+						vec2NumMicroSteps.x = 2;
+						vec2Index.x++;
+					}
 				}
 			}
+			else if(speed == false)
+			{
+				// Calculate the new position to the right
+				if (vec2Index.x < (int)cSettings->NUM_TILES_XAXIS)
+				{
+					vec2NumMicroSteps.x++;
+
+					if (vec2NumMicroSteps.x >= cSettings->NUM_STEPS_PER_TILE_XAXIS)
+					{
+						vec2NumMicroSteps.x = 0;
+						vec2Index.x++;
+					}
+				}
+			}
+			
+			
 
 			// Constraint the player's position within the screen boundary
 			Constraint(RIGHT);
@@ -338,7 +371,7 @@ void CPlayer2D::Update(const double dElapsedTime)
 				if ((cPhysics2D.GetStatus() == CPhysics2D::STATUS::IDLE))
 				{
 					cPhysics2D.SetStatus(CPhysics2D::STATUS::JUMP);
-					cPhysics2D.SetInitialVelocity(glm::vec2(0.0f, 3.f));
+					cPhysics2D.SetInitialVelocity(glm::vec2(0.0f, 2.f));
 					iJumpCount += 1;
 					// Play a jump sound
 					cSoundController->PlaySoundByID(3);
@@ -348,7 +381,7 @@ void CPlayer2D::Update(const double dElapsedTime)
 					if (iJumpCount < 2)
 					{
 						cPhysics2D.SetStatus(CPhysics2D::STATUS::JUMP);
-						cPhysics2D.SetInitialVelocity(glm::vec2(0.0f, 3.f));
+						cPhysics2D.SetInitialVelocity(glm::vec2(0.0f, 2.f));
 						iJumpCount += 1;
 						// Play a jump sound
 						cSoundController->PlaySoundByID(3);
@@ -360,7 +393,7 @@ void CPlayer2D::Update(const double dElapsedTime)
 				if ((cPhysics2D.GetStatus() == CPhysics2D::STATUS::IDLE))
 				{
 					cPhysics2D.SetStatus(CPhysics2D::STATUS::JUMP);
-					cPhysics2D.SetInitialVelocity(glm::vec2(0.0f, 4.5f));
+					cPhysics2D.SetInitialVelocity(glm::vec2(0.0f, 3.f));
 					iJumpCount += 1;
 					++jumps;
 					// Play a jump sound
@@ -370,7 +403,7 @@ void CPlayer2D::Update(const double dElapsedTime)
 				{
 					if (iJumpCount < 2)
 					{
-						cPhysics2D.SetInitialVelocity(glm::vec2(0.0f, 4.5f));
+						cPhysics2D.SetInitialVelocity(glm::vec2(0.0f, 3.f));
 						iJumpCount += 1;
 						// Play a jump sound
 						cSoundController->PlaySoundByID(3);
@@ -773,6 +806,8 @@ void CPlayer2D::InteractWithMap(void)
 		cInventoryItem->Add(1);
 		// Play a bell sound
 		cSoundController->PlaySoundByID(1);
+		speed = true;
+		
 		break;
 	case 4:
 		// Erase the potion from this position
