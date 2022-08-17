@@ -431,3 +431,8 @@ void CScene2D::resetDuration(void)
 {
 	dayCounter = 0.0f;
 }
+
+vector<CEntity2D*> CScene2D::returnEnemyVector(void)
+{
+	return enemyVector;
+}
