@@ -932,6 +932,26 @@ void CPlayer2D::BuildBlocks() {
 	}
 }
 
+CEntity2D* CPlayer2D::returnNearestEnemy(void)
+{
+	for (int i = 0; i != enemyList.size(); ++i)
+	{
+		if (cPhysics2D.CalculateDistance(vec2Index, enemyList.front()->vec2Index) < (cPhysics2D.CalculateDistance(vec2Index, enemyList[i + 1]->vec2Index)))
+		{
+			continue;
+		}
+		else
+		{
+			CEntity2D* temp = enemyList.front();
+			enemyList.front() = enemyList[i + 1];
+			enemyList[i + 1] = temp;
+			
+		}
+	}
+	 return enemyList.front();
+	
+}
+
 void CPlayer2D::BreakBlocks(const double dElapsedTime) {
 	breakinterval -= dElapsedTime;
 	if (cKeyboardController->IsKeyDown(GLFW_KEY_L) && breakinterval <= 0.f) {
@@ -984,7 +1004,6 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime) {
 		}
 		breakinterval = 0.2f;
 	}
-	return enemyList.front();
 }
 /*
 	!CODE CHANGES END!
