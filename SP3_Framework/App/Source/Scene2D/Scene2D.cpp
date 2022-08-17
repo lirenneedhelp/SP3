@@ -222,7 +222,7 @@ bool CScene2D::Init(void)
 	dayCounter = 0.0f;
 
 	enemySpawnTimeCounter = 15.f;
-
+	
 	// Load the sounds into CSoundController
 	cSoundController = CSoundController::GetInstance();
 	cSoundController->LoadSound(FileSystem::getPath("Sounds\\Sound_Bell.ogg"), 1, true);
@@ -271,9 +271,9 @@ bool CScene2D::Update(const double dElapsedTime)
 	}
 	if (cKeyboardController->IsKeyReleased(GLFW_KEY_M))
 	{
-		enemyProjectile->PreRender();
+		/*enemyProjectile->PreRender();
 		enemyProjectile->Render();
-		enemyProjectile->PostRender();
+		enemyProjectile->PostRender();*/
 
 	}
 
@@ -301,25 +301,49 @@ bool CScene2D::Update(const double dElapsedTime)
 	}
 	dayCounter += dElapsedTime;
 
-	if (!day)
-	{
+	//if (!day)
+	//{
 		enemySpawnTimeCounter -= dElapsedTime;
-	}
+	//}
+	//else
+	//{
+	//	enemySpawnTimeCounter = 15.f;
+	//}
+
 	if (enemySpawnTimeCounter <= 0)
 	{ 
 		while (true)
 		{
 			srand((unsigned)time(NULL));
 
-			float randcol = rand() * CSettings::GetInstance()->NUM_TILES_XAXIS; // no of col
-			float randrow = rand() * CSettings::GetInstance()->NUM_TILES_YAXIS; // no of rows
+			float randcol = rand() % (CSettings::GetInstance()->NUM_TILES_XAXIS - 1); // no of col
+			float randrow = rand() % (CSettings::GetInstance()->NUM_TILES_YAXIS - 1); // no of rows
+			//cout << randcol << " , " << randrow << endl;
 			if (cMap2D->GetMapInfo(randrow, randcol) != 0)
 			{
 				continue;
 			}
 			else
 			{
+				cout << "Spawn Enemy\n";
+				CWoodCrawler* cWoodCrawler = new CWoodCrawler();
+				cWoodCrawler->Seti32vec2Index(randcol, randrow);
+				cWoodCrawler->SetShader("Shader2D_Colour");
+				cWoodCrawler->SetPlayer2D(cPlayer2D);
+			
+				enemyVector.push_back(cWoodCrawler);
+				
+				
 
+				enemySpawnTimeCounter = 15.f;
+				/*float randEnemy = rand() * 3 + 1;
+				cout << randEnemy << endl;
+				if (randEnemy == 1)
+				{
+					CGlutton* cGlutton = new CGlutton();
+					cGlutton->SetShader("Shader2D_Colour");
+				}*/
+				cout << enemyVector.size() << endl;
 				break;
 			}
 		}

@@ -22,6 +22,7 @@ using namespace std;
 // Include Game Manager
 #include "GameManager.h"
 #include "BloodDeer.h"
+#include "Scene2D.h" 
 
 /**
  @brief Constructor This constructor has protected access modifier as this class will be a Singleton
@@ -32,6 +33,7 @@ CPlayer2D::CPlayer2D(void)
 	, cInventoryManager(NULL)
 	, cInventoryItem(NULL)
 	, cSoundController(NULL)
+	, cMouseController(NULL)
 	//, cProjectile(NULL)
 {
 	transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
@@ -62,6 +64,9 @@ CPlayer2D::~CPlayer2D(void)
 	cKeyboardController = NULL;
 
 	// We won't delete this since it was created elsewhere
+	cMouseController = NULL;
+
+	// We won't delete this since it was created elsewhere
 	cMap2D = NULL;
 
 	// optional: de-allocate all resources once they've outlived their purpose:
@@ -77,6 +82,9 @@ bool CPlayer2D::Init(void)
 	cKeyboardController = CKeyboardController::GetInstance();
 	// Reset all keys since we are starting a new game
 	cKeyboardController->Reset();
+
+	// Store the mouse controller singleton instance here
+	cMouseController = CMouseController::GetInstance();
 
 	// Get the handler to the CSettings instance
 	cSettings = CSettings::GetInstance();
@@ -150,6 +158,7 @@ bool CPlayer2D::Init(void)
 	cInventoryItem->vec2Size = glm::vec2(25, 25);
 
 	iJumpCount = 0;
+	attackSpeed = 1.0f;
 
 
 	// Get the handler to the CSoundController
@@ -198,7 +207,6 @@ void CPlayer2D::Update(const double dElapsedTime)
 {
 	// Store the old position
 	vec2OldIndex = vec2Index;
-
 	// Get keyboard updates
 	if (isMoving)
 	{
@@ -384,6 +392,31 @@ void CPlayer2D::Update(const double dElapsedTime)
 			}
 		}
 	}
+	//Put mouse inputs here
+	if (cMouseController->IsButtonDown(0))
+	{	
+		attackSpeed -= dElapsedTime;
+		if (attackSpeed <= 0.f)
+		{
+			cout << "hello I've LEFT CLICKED\n";
+			//damage the enemy and reset the interval
+			attackSpeed = 1.0f;
+			//if (cPhysics2D.CalculateDistance(vec2Index,))
+			//enemyList = CScene2D::GetInstance()->returnEnemyVector();
+			//returnNearestEnemy();
+			
+		}
+	}
+    else if (cMouseController->IsButtonUp(0))
+	{
+		//cout << "Hello I've released my left click\n";	
+	}
+
+	//cMouseController->PostUpdate();
+
+
+	//cMouseController->PostUpdate();
+	
 	// Update Jump or Fall
 	//CS: Will cause error when debugging. Set to default elapsed time
 	UpdateJumpFall(dElapsedTime);
@@ -834,4 +867,22 @@ void CPlayer2D::UpdateHealthLives(void)
 			CGameManager::GetInstance()->bPlayerLost = true;
 		}
 	}
+}
+
+CEntity2D* CPlayer2D::returnNearestEnemy(void)
+{
+	for (int i = 0; i < enemyList.size(); ++i)
+	{
+		if (cPhysics2D.CalculateDistance(vec2Index, enemyList.front()->vec2Index) < cPhysics2D.CalculateDistance(vec2Index, enemyList[i + 1]->vec2Index))
+		{
+			continue;
+		}
+		else
+		{
+			CEntity2D* temp = enemyList.front();
+			enemyList[i + 1] = temp;
+			enemyList.front() = enemyList[i + 1];
+		}
+	}
+	return enemyList.front();
 }
