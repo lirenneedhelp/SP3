@@ -681,7 +681,7 @@ bool CWoodCrawler::InteractWithPlayer(void)
 		&& !hit)
 	{
 		cout << "Attack!" << endl;
-		
+		damageOnPlayer = cPlayer2D->returnPlayerHealth();
 		playerHP = damageOnPlayer->GetItem("Health");
 		playerHP->Remove(20);
 		hit = true; // hit cooldown

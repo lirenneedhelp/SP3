@@ -969,10 +969,11 @@ void CPlayer2D::BuildBlocks() {
 		case 0:
 			cMap2D->SetMapInfo(vec2Index.y - 1, vec2Index.x, 100);
 			break;
-			}
+			
 		}
 	}
 }
+
 
 CEntity2D* CPlayer2D::returnNearestEnemy(void)
 {
