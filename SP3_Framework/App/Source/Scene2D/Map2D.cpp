@@ -106,7 +106,7 @@ bool CMap2D::Init(	const unsigned int uiNumLevels,
 
 	// Load and create textures
 	// Load the ground texture
-	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Scene2D_GroundTile.tga", true);
+	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/dirtblock.png", true);
 	if (iTextureID == 0)
 	{
 		cout << "Unable to load Image/Scene2D_GroundTile.tga" << endl;
@@ -212,6 +212,40 @@ bool CMap2D::Init(	const unsigned int uiNumLevels,
 	{
 		// Store the texture ID into MapOfTextureIDs
 		MapOfTextureIDs.insert(pair<int, int>(99, iTextureID));
+	}
+	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/bedrock.png", true);
+	if (iTextureID == 0)
+	{
+		cout << "Unable to load Image/bedrock.png" << endl;
+		return false;
+	}
+	else
+	{
+		// Store the texture ID into MapOfTextureIDs
+		MapOfTextureIDs.insert(pair<int, int>(101, iTextureID));
+	}
+	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/dirtbroken1.png", true);
+	if (iTextureID == 0)
+	{
+		cout << "Unable to load Image/dirtbroken1.png" << endl;
+		return false;
+	}
+	else
+	{
+		// Store the texture ID into MapOfTextureIDs
+		MapOfTextureIDs.insert(pair<int, int>(102, iTextureID));
+	}
+	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/dirtbroken2.png", true);
+	if (iTextureID == 0)
+	{
+		cout << "Unable to load Image/dirtbroken2.png" << endl;
+		return false;
+	}
+	else
+	{
+		// Store the texture ID into MapOfTextureIDs
+		MapOfTextureIDs.insert(pair<int, int>(103, iTextureID));
+
 	}
 
 	// Initialise the variables for AStar

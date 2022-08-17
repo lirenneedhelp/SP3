@@ -21,7 +21,7 @@ using namespace std;
 
 // Include Game Manager
 #include "GameManager.h"
-#include "BloodDeer.h"
+//#include "BloodDeer.h"
 
 /**
  @brief Constructor This constructor has protected access modifier as this class will be a Singleton
@@ -152,6 +152,8 @@ bool CPlayer2D::Init(void)
 
 	iJumpCount = 0;
 
+	direction = 0;
+	breakinterval = 0.2f;
 
 	// Get the handler to the CSoundController
 	cSoundController = CSoundController::GetInstance();
@@ -274,16 +276,13 @@ void CPlayer2D::Update(const double dElapsedTime)
 				{
 					vec2NumMicroSteps.x++;
 
-					if (vec2NumMicroSteps.x >= cSettings->NUM_STEPS_PER_TILE_XAXIS)
-					{
-						vec2NumMicroSteps.x = 0;
-						vec2Index.x++;
-					}
+				if (vec2NumMicroSteps.x >= cSettings->NUM_STEPS_PER_TILE_XAXIS)
+				{
+					vec2NumMicroSteps.x = 0;
+					vec2Index.x++;
 				}
 			}
-			
-			
-
+			direction = 2;
 			// Constraint the player's position within the screen boundary
 			Constraint(RIGHT);
 
@@ -417,6 +416,10 @@ void CPlayer2D::Update(const double dElapsedTime)
 			}
 		}
 	}
+
+	BuildBlocks();
+	BreakBlocks(dElapsedTime);
+
 	// Update Jump or Fall
 	//CS: Will cause error when debugging. Set to default elapsed time
 	UpdateJumpFall(dElapsedTime);
@@ -870,3 +873,84 @@ void CPlayer2D::UpdateHealthLives(void)
 		}
 	}
 }
+/*
+	!CODE CHANGES START!
+	code here should handle the breaking and placing of blocks
+*/
+void CPlayer2D::BuildBlocks() {
+	if (cKeyboardController->IsKeyDown(GLFW_KEY_E)) {
+		if (direction == 1) {
+			switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x - 1))
+			{
+			case 0:
+				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 100);
+				break;
+			}
+		}
+		else if (direction == 2) {
+			switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x + 1))
+			{
+			case 0:
+				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 100);
+				break;
+			}
+		}
+	}
+}
+
+void CPlayer2D::BreakBlocks(const double dElapsedTime) {
+	breakinterval -= dElapsedTime;
+	if (cKeyboardController->IsKeyDown(GLFW_KEY_L) && breakinterval <= 0.f) {
+
+		if (direction == 1) {
+			switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x - 1))
+			{
+
+			case 100:
+				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 102);
+				break;
+			case 102:
+				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 103);
+				break;
+			case 103:
+				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 0);
+				break;
+			}
+		}
+		else if (direction == 2) {
+			switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x + 1))
+			{
+			case 100:
+				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 102);
+				break;
+			case 102:
+				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 103);
+				break;
+			case 103:
+				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 0);
+				break;
+			}
+		}
+		breakinterval = 0.2f;
+	}
+	if (cKeyboardController->IsKeyDown(GLFW_KEY_K) && breakinterval <= 0.f) {
+		if (direction == 1) {
+			switch (cMap2D->GetMapInfo(vec2Index.y - 1, vec2Index.x))
+			{
+			case 100:
+				cMap2D->SetMapInfo(vec2Index.y - 1, vec2Index.x, 102);
+				break;
+			case 102:
+				cMap2D->SetMapInfo(vec2Index.y - 1, vec2Index.x, 103);
+				break;
+			case 103:
+				cMap2D->SetMapInfo(vec2Index.y - 1, vec2Index.x, 0);
+				break;
+			}
+		}
+		breakinterval = 0.2f;
+	}
+}
+/*
+	!CODE CHANGES END!
+*/
