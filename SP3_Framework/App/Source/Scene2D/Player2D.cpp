@@ -269,115 +269,105 @@ void CPlayer2D::Update(const double dElapsedTime)
 					}
 				}
 			}
-			else if(speed == false)
+			else if (speed == false)
 			{
 				// Calculate the new position to the right
 				if (vec2Index.x < (int)cSettings->NUM_TILES_XAXIS)
 				{
 					vec2NumMicroSteps.x++;
 
-				if (vec2NumMicroSteps.x >= cSettings->NUM_STEPS_PER_TILE_XAXIS)
+					if (vec2NumMicroSteps.x >= cSettings->NUM_STEPS_PER_TILE_XAXIS)
+					{
+						vec2NumMicroSteps.x = 0;
+						vec2Index.x++;
+					}
+				}
+				direction = 2;
+				// Constraint the player's position within the screen boundary
+				Constraint(RIGHT);
+
+				// If the new position is not feasible, then revert to old position
+				if (CheckPosition(RIGHT) == false)
 				{
 					vec2NumMicroSteps.x = 0;
-					vec2Index.x++;
+
 				}
+
+				// Check if player is in mid-air, such as walking off a platform
+				if (IsMidAir() == true)
+				{
+					if (cPhysics2D.GetStatus() != CPhysics2D::STATUS::JUMP)
+						cPhysics2D.SetStatus(CPhysics2D::STATUS::FALL);
+				}
+
+				//CS: Play the "right" animation
+				animatedSprites->PlayAnimation("right", -1, 1.0f);
+
+				//CS: Change Color
+				runtimeColour = glm::vec4(1.0, 1.0, 0.0, 1.0);
 			}
-			direction = 2;
-			// Constraint the player's position within the screen boundary
-			Constraint(RIGHT);
-
-			// If the new position is not feasible, then revert to old position
-			if (CheckPosition(RIGHT) == false)
+			if (cKeyboardController->IsKeyDown(GLFW_KEY_W))
 			{
-				vec2NumMicroSteps.x = 0;
+				// Calculate the new position up
+				if (vec2Index.y < (int)cSettings->NUM_TILES_YAXIS)
+				{
+					vec2NumMicroSteps.y++;
+					if (vec2NumMicroSteps.y > cSettings->NUM_STEPS_PER_TILE_YAXIS)
+					{
+						vec2NumMicroSteps.y = 0;
+						vec2Index.y++;
+					}
+				}
 
-			}
+				// Constraint the player's position within the screen boundary
+				Constraint(UP);
 
-			// Check if player is in mid-air, such as walking off a platform
-			if (IsMidAir() == true)
-			{
-				if (cPhysics2D.GetStatus() != CPhysics2D::STATUS::JUMP)
-					cPhysics2D.SetStatus(CPhysics2D::STATUS::FALL);
-			}
-
-			//CS: Play the "right" animation
-			animatedSprites->PlayAnimation("right", -1, 1.0f);
-
-			//CS: Change Color
-			runtimeColour = glm::vec4(1.0, 1.0, 0.0, 1.0);
-		}
-		if (cKeyboardController->IsKeyDown(GLFW_KEY_W))
-		{
-			// Calculate the new position up
-			if (vec2Index.y < (int)cSettings->NUM_TILES_YAXIS)
-			{
-				vec2NumMicroSteps.y++;
-				if (vec2NumMicroSteps.y > cSettings->NUM_STEPS_PER_TILE_YAXIS)
+				// If the new position is not feasible, then revert to old position
+				if (CheckPosition(UP) == false)
 				{
 					vec2NumMicroSteps.y = 0;
-					vec2Index.y++;
 				}
+
+				//CS: Play the "idle" animation
+				animatedSprites->PlayAnimation("idle", -1, 1.0f);
+
+				//CS: Change Color
+				runtimeColour = glm::vec4(0.0, 1.0, 1.0, 0.5);
 			}
-
-			// Constraint the player's position within the screen boundary
-			Constraint(UP);
-
-			// If the new position is not feasible, then revert to old position
-			if (CheckPosition(UP) == false)
+			else if (cKeyboardController->IsKeyDown(GLFW_KEY_S))
 			{
-				vec2NumMicroSteps.y = 0;
-			}
-
-			//CS: Play the "idle" animation
-			animatedSprites->PlayAnimation("idle", -1, 1.0f);
-
-			//CS: Change Color
-			runtimeColour = glm::vec4(0.0, 1.0, 1.0, 0.5);
-		}
-		else if (cKeyboardController->IsKeyDown(GLFW_KEY_S))
-		{
-			// Calculate the new position down
-			if (vec2Index.y >= 0)
-			{
-				vec2NumMicroSteps.y--;
-				if (vec2NumMicroSteps.y < 0)
+				// Calculate the new position down
+				if (vec2Index.y >= 0)
 				{
-					vec2NumMicroSteps.y = ((int)cSettings->NUM_STEPS_PER_TILE_YAXIS) - 1;
-					vec2Index.y--;
+					vec2NumMicroSteps.y--;
+					if (vec2NumMicroSteps.y < 0)
+					{
+						vec2NumMicroSteps.y = ((int)cSettings->NUM_STEPS_PER_TILE_YAXIS) - 1;
+						vec2Index.y--;
+					}
 				}
-			}
 
-			// Constraint the player's position within the screen boundary
-			Constraint(DOWN);
+				// Constraint the player's position within the screen boundary
+				Constraint(DOWN);
 
-			// If the new position is not feasible, then revert to old position
-			if (CheckPosition(DOWN) == false)
-			{
-				vec2Index = vec2OldIndex;
-				vec2NumMicroSteps.y = 0;
-			}
-
-			//CS: Play the "idle" animation
-			animatedSprites->PlayAnimation("idle", -1, 1.0f);
-
-			//CS: Change Color
-			runtimeColour = glm::vec4(1.0, 0.0, 1.0, 0.5);
-		}
-		if (cKeyboardController->IsKeyPressed(GLFW_KEY_SPACE))
-		{
-			if (highjump == false)
-			{
-				if ((cPhysics2D.GetStatus() == CPhysics2D::STATUS::IDLE))
+				// If the new position is not feasible, then revert to old position
+				if (CheckPosition(DOWN) == false)
 				{
-					cPhysics2D.SetStatus(CPhysics2D::STATUS::JUMP);
-					cPhysics2D.SetInitialVelocity(glm::vec2(0.0f, 2.f));
-					iJumpCount += 1;
-					// Play a jump sound
-					cSoundController->PlaySoundByID(3);
+					vec2Index = vec2OldIndex;
+					vec2NumMicroSteps.y = 0;
 				}
-				else
+
+				//CS: Play the "idle" animation
+				animatedSprites->PlayAnimation("idle", -1, 1.0f);
+
+				//CS: Change Color
+				runtimeColour = glm::vec4(1.0, 0.0, 1.0, 0.5);
+			}
+			if (cKeyboardController->IsKeyPressed(GLFW_KEY_SPACE))
+			{
+				if (highjump == false)
 				{
-					if (iJumpCount < 2)
+					if ((cPhysics2D.GetStatus() == CPhysics2D::STATUS::IDLE))
 					{
 						cPhysics2D.SetStatus(CPhysics2D::STATUS::JUMP);
 						cPhysics2D.SetInitialVelocity(glm::vec2(0.0f, 2.f));
@@ -385,34 +375,45 @@ void CPlayer2D::Update(const double dElapsedTime)
 						// Play a jump sound
 						cSoundController->PlaySoundByID(3);
 					}
-				}
-			}
-			if (highjump == true)
-			{
-				if ((cPhysics2D.GetStatus() == CPhysics2D::STATUS::IDLE))
-				{
-					cPhysics2D.SetStatus(CPhysics2D::STATUS::JUMP);
-					cPhysics2D.SetInitialVelocity(glm::vec2(0.0f, 3.f));
-					iJumpCount += 1;
-					++jumps;
-					// Play a jump sound
-					cSoundController->PlaySoundByID(3);
-				}
-				else
-				{
-					if (iJumpCount < 2)
+					else
 					{
+						if (iJumpCount < 2)
+						{
+							cPhysics2D.SetStatus(CPhysics2D::STATUS::JUMP);
+							cPhysics2D.SetInitialVelocity(glm::vec2(0.0f, 2.f));
+							iJumpCount += 1;
+							// Play a jump sound
+							cSoundController->PlaySoundByID(3);
+						}
+					}
+				}
+				if (highjump == true)
+				{
+					if ((cPhysics2D.GetStatus() == CPhysics2D::STATUS::IDLE))
+					{
+						cPhysics2D.SetStatus(CPhysics2D::STATUS::JUMP);
 						cPhysics2D.SetInitialVelocity(glm::vec2(0.0f, 3.f));
 						iJumpCount += 1;
+						++jumps;
 						// Play a jump sound
 						cSoundController->PlaySoundByID(3);
 					}
-				}
-				if (jumps == 3)
-				{
-					highjump = false;
-				}
+					else
+					{
+						if (iJumpCount < 2)
+						{
+							cPhysics2D.SetInitialVelocity(glm::vec2(0.0f, 3.f));
+							iJumpCount += 1;
+							// Play a jump sound
+							cSoundController->PlaySoundByID(3);
+						}
+					}
+					if (jumps == 3)
+					{
+						highjump = false;
+					}
 
+				}
 			}
 		}
 	}
