@@ -48,5 +48,10 @@ protected:
 	};
 
 	ButtonData VolumeIncreaseButtonData;
+
+	ButtonData ResumeButtonData;
+	ButtonData OptionsButtonData;
+	ButtonData ExitButtonData;
+
 	ButtonData VolumeDecreaseButtonData;
 };

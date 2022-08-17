@@ -29,6 +29,9 @@ class CMap2D;
 // Include Keyboard controller
 #include "Inputs\KeyboardController.h"
 
+//Include Mouse controller
+#include "Inputs\MouseController.h"
+
 // Include Physics2D
 #include "Physics2D.h"
 
@@ -88,6 +91,9 @@ protected:
 	// Keyboard Controller singleton instance
 	CKeyboardController* cKeyboardController;
 
+	// Mouse Controlelr singleton instance
+	CMouseController* cMouseController;
+
 	// Physics
 	CPhysics2D cPhysics2D;
 
@@ -103,6 +109,10 @@ protected:
 	// InventoryItem
 	CInventoryItem* cInventoryItem;
 
+	// List of enemies
+	vector <CEntity2D*> enemyList;
+	// Attack Speed of the player
+	float attackSpeed;
 
 	// Count the number of jumps
 	int iJumpCount;
@@ -145,5 +155,7 @@ protected:
 	/*
 		!CODE CHANGES END!
 	*/
+
+	CEntity2D* returnNearestEnemy(void);
 };
 

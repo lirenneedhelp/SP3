@@ -82,6 +82,7 @@ public:
 	void setTime(bool time);
 	float getDuration(void); // How long has it been day / night
 	void resetDuration(void); //Reset the counter ^
+	vector<CEntity2D*>returnEnemyVector(void);
 
 protected:
 	// The handler containing the instance of the 2D Map
@@ -110,6 +111,7 @@ protected:
 	CSoundController* cSoundController;
 
 	bool day;
+
 
 	float enemySpawnTimeCounter;
 

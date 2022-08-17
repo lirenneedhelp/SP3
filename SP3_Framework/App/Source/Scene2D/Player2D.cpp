@@ -21,7 +21,8 @@ using namespace std;
 
 // Include Game Manager
 #include "GameManager.h"
-//#include "BloodDeer.h"
+#include "BloodDeer.h"
+#include "Scene2D.h" 
 
 /**
  @brief Constructor This constructor has protected access modifier as this class will be a Singleton
@@ -32,6 +33,7 @@ CPlayer2D::CPlayer2D(void)
 	, cInventoryManager(NULL)
 	, cInventoryItem(NULL)
 	, cSoundController(NULL)
+	, cMouseController(NULL)
 	//, cProjectile(NULL)
 {
 	transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
@@ -62,6 +64,9 @@ CPlayer2D::~CPlayer2D(void)
 	cKeyboardController = NULL;
 
 	// We won't delete this since it was created elsewhere
+	cMouseController = NULL;
+
+	// We won't delete this since it was created elsewhere
 	cMap2D = NULL;
 
 	// optional: de-allocate all resources once they've outlived their purpose:
@@ -77,6 +82,9 @@ bool CPlayer2D::Init(void)
 	cKeyboardController = CKeyboardController::GetInstance();
 	// Reset all keys since we are starting a new game
 	cKeyboardController->Reset();
+
+	// Store the mouse controller singleton instance here
+	cMouseController = CMouseController::GetInstance();
 
 	// Get the handler to the CSettings instance
 	cSettings = CSettings::GetInstance();
@@ -151,6 +159,7 @@ bool CPlayer2D::Init(void)
 	cInventoryItem->vec2Size = glm::vec2(25, 25);
 
 	iJumpCount = 0;
+	attackSpeed = 1.0f;
 
 	direction = 0;
 	breakinterval = 0.2f;
@@ -201,7 +210,6 @@ void CPlayer2D::Update(const double dElapsedTime)
 {
 	// Store the old position
 	vec2OldIndex = vec2Index;
-
 	// Get keyboard updates
 	if (isMoving)
 	{
@@ -232,6 +240,9 @@ void CPlayer2D::Update(const double dElapsedTime)
 					}
 				}
 			}
+
+			direction = 1;
+
 			// Constraint the player's position within the screen boundary
 			Constraint(LEFT);
 			// If the new position is not feasible, then revert to old position
@@ -421,7 +432,32 @@ void CPlayer2D::Update(const double dElapsedTime)
 		}
 		
 	}
+	//Put mouse inputs here
+	if (cMouseController->IsButtonDown(0))
+	{	
+		attackSpeed -= dElapsedTime;
+		if (attackSpeed <= 0.f)
+		{
+			cout << "hello I've LEFT CLICKED\n";
+			//damage the enemy and reset the interval
+			attackSpeed = 1.0f;
+			//if (cPhysics2D.CalculateDistance(vec2Index,))
+			//enemyList = CScene2D::GetInstance()->returnEnemyVector();
+			//returnNearestEnemy();
+			
+		}
+	}
+    else if (cMouseController->IsButtonUp(0))
+	{
+		//cout << "Hello I've released my left click\n";	
+	}
 
+	//cMouseController->PostUpdate();
+
+
+	//cMouseController->PostUpdate();
+	
+	
 	BuildBlocks();
 	BreakBlocks(dElapsedTime);
 
@@ -883,7 +919,7 @@ void CPlayer2D::UpdateHealthLives(void)
 	code here should handle the breaking and placing of blocks
 */
 void CPlayer2D::BuildBlocks() {
-	if (cKeyboardController->IsKeyDown(GLFW_KEY_E)) {
+	if (cKeyboardController->IsKeyDown(GLFW_KEY_O)) {
 		if (direction == 1) {
 			switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x - 1))
 			{
@@ -901,6 +937,62 @@ void CPlayer2D::BuildBlocks() {
 			}
 		}
 	}
+	if (cKeyboardController->IsKeyDown(GLFW_KEY_H)) {
+		if (direction == 1) {
+			switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x + 1))
+			{
+			case 0:
+				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 100);
+				break;
+			}
+		}
+		else if (direction == 2) {
+			switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x - 1))
+			{
+			case 0:
+				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 100);
+				break;
+			}
+		}
+	}
+	if (cKeyboardController->IsKeyDown(GLFW_KEY_U)) {
+		switch (cMap2D->GetMapInfo(vec2Index.y + 1, vec2Index.x))
+		{
+		case 0:
+			cMap2D->SetMapInfo(vec2Index.y + 1, vec2Index.x, 100);
+			break;
+		}
+	}
+	if (cKeyboardController->IsKeyDown(GLFW_KEY_P)) {
+		switch (cMap2D->GetMapInfo(vec2Index.y - 1, vec2Index.x))
+		{
+		case 0:
+			cMap2D->SetMapInfo(vec2Index.y - 1, vec2Index.x, 100);
+			break;
+			
+		}
+	}
+}
+
+
+CEntity2D* CPlayer2D::returnNearestEnemy(void)
+{
+	for (int i = 0; i != enemyList.size(); ++i)
+	{
+		if (cPhysics2D.CalculateDistance(vec2Index, enemyList.front()->vec2Index) < (cPhysics2D.CalculateDistance(vec2Index, enemyList[i + 1]->vec2Index)))
+		{
+			continue;
+		}
+		else
+		{
+			CEntity2D* temp = enemyList.front();
+			enemyList.front() = enemyList[i + 1];
+			enemyList[i + 1] = temp;
+			
+		}
+	}
+	 return enemyList.front();
+	
 }
 
 void CPlayer2D::BreakBlocks(const double dElapsedTime) {
@@ -953,6 +1045,23 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime) {
 				break;
 			}
 		}
+		breakinterval = 0.2f;
+	}
+	if (cKeyboardController->IsKeyDown(GLFW_KEY_I) && breakinterval <= 0.f) {
+
+		switch (cMap2D->GetMapInfo(vec2Index.y + 1, vec2Index.x))
+		{
+		case 100:
+			cMap2D->SetMapInfo(vec2Index.y + 1, vec2Index.x, 102);
+			break;
+		case 102:
+			cMap2D->SetMapInfo(vec2Index.y + 1, vec2Index.x, 103);
+			break;
+		case 103:
+			cMap2D->SetMapInfo(vec2Index.y + 1, vec2Index.x, 0);
+			break;
+		}
+
 		breakinterval = 0.2f;
 	}
 }
