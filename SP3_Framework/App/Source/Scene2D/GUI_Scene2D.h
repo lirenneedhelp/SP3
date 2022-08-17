@@ -39,6 +39,9 @@
 #endif
 
 #include "GameControl/Settings.h"
+// Include ImageLoader
+#include "System\ImageLoader.h"
+#include <vector>
 
 #include <string>
 using namespace std;
@@ -82,4 +85,12 @@ protected:
 	CInventoryManager* cInventoryManager;
 	// The handler containing the instance of CInventoryItem
 	CInventoryItem* cInventoryItem;
+	struct ButtonData
+	{
+		std::string fileName;
+		unsigned textureID;
+	};
+
+	vector<CInventoryItem*> playerInventory;
+	CInventoryItem* emptyInventorySlot;
 };
