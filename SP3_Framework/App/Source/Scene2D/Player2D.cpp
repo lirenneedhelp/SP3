@@ -282,30 +282,34 @@ void CPlayer2D::Update(const double dElapsedTime)
 						vec2Index.x++;
 					}
 				}
-				direction = 2;
-				// Constraint the player's position within the screen boundary
-				Constraint(RIGHT);
-
-				// If the new position is not feasible, then revert to old position
-				if (CheckPosition(RIGHT) == false)
-				{
-					vec2NumMicroSteps.x = 0;
-
-				}
-
-				// Check if player is in mid-air, such as walking off a platform
-				if (IsMidAir() == true)
-				{
-					if (cPhysics2D.GetStatus() != CPhysics2D::STATUS::JUMP)
-						cPhysics2D.SetStatus(CPhysics2D::STATUS::FALL);
-				}
-
-				//CS: Play the "right" animation
-				animatedSprites->PlayAnimation("right", -1, 1.0f);
-
-				//CS: Change Color
-				runtimeColour = glm::vec4(1.0, 1.0, 0.0, 1.0);
 			}
+
+			direction = 2;
+			// Constraint the player's position within the screen boundary
+			Constraint(RIGHT);
+
+			// If the new position is not feasible, then revert to old position
+			if (CheckPosition(RIGHT) == false)
+			{
+				vec2NumMicroSteps.x = 0;
+
+			}
+
+			// Check if player is in mid-air, such as walking off a platform
+			if (IsMidAir() == true)
+			{
+				if (cPhysics2D.GetStatus() != CPhysics2D::STATUS::JUMP)
+					cPhysics2D.SetStatus(CPhysics2D::STATUS::FALL);
+			}
+
+			//CS: Play the "right" animation
+			animatedSprites->PlayAnimation("right", -1, 1.0f);
+
+			//CS: Change Color
+			runtimeColour = glm::vec4(1.0, 1.0, 0.0, 1.0);
+
+		}
+			
 			if (cKeyboardController->IsKeyDown(GLFW_KEY_W))
 			{
 				// Calculate the new position up
@@ -415,7 +419,7 @@ void CPlayer2D::Update(const double dElapsedTime)
 
 				}
 			}
-		}
+		
 	}
 
 	BuildBlocks();
