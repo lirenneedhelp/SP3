@@ -107,6 +107,7 @@ bool CPlayer2D::Init(void)
 	highjump = false;
 	jumps = 0;
 	speed = false;
+	strength = false;
 	attackRange = 1.0f;
 	hitEnemy = false;
 	firstAttack = true; // Check if it's the first click
@@ -162,6 +163,15 @@ bool CPlayer2D::Init(void)
 	cInventoryItem->vec2Size = glm::vec2(25, 25);
 
 	cInventoryItem = cInventoryManager->Add("JumpPotion", "Image/Big_blue.tga", 3, 0);
+	cInventoryItem->vec2Size = glm::vec2(25, 25);
+
+	cInventoryItem = cInventoryManager->Add("sword", "Image/sword.tga", 100, 100);
+	cInventoryItem->vec2Size = glm::vec2(25, 25);
+
+	cInventoryItem = cInventoryManager->Add("axe", "Image/axe.tga", 100, 100);
+	cInventoryItem->vec2Size = glm::vec2(25, 25);
+
+	cInventoryItem = cInventoryManager->Add("spear", "Image/spear.tga", 100, 100);
 	cInventoryItem->vec2Size = glm::vec2(25, 25);
 
 	// Add a Health icon as one of the inventory items
@@ -885,6 +895,7 @@ void CPlayer2D::InteractWithMap(void)
 		// Increase the potion by 1
 		cInventoryItem = cInventoryManager->GetItem("StrengthPotion");
 		cInventoryItem->Add(1);
+		strength = true;
 		// Play a bell sound
 		cSoundController->PlaySoundByID(1);
 		break;
@@ -895,6 +906,33 @@ void CPlayer2D::InteractWithMap(void)
 		cInventoryItem = cInventoryManager->GetItem("JumpPotion");
 		cInventoryItem->Add(1);
 		highjump = true;
+		// Play a bell sound
+		cSoundController->PlaySoundByID(1);
+		break;
+	case 30:
+		// Erase the potion from this position
+		cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
+		// Increase the potion by 1
+		cInventoryItem = cInventoryManager->GetItem("sword");
+		cInventoryItem->Add(1);
+		// Play a bell sound
+		cSoundController->PlaySoundByID(1);
+		break;
+	case 31:
+		// Erase the potion from this position
+		cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
+		// Increase the potion by 1
+		cInventoryItem = cInventoryManager->GetItem("spear");
+		cInventoryItem->Add(1);
+		// Play a bell sound
+		cSoundController->PlaySoundByID(1);
+		break;
+	case 32:
+		// Erase the potion from this position
+		cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
+		// Increase the potion by 1
+		cInventoryItem = cInventoryManager->GetItem("axe");
+		cInventoryItem->Add(1);
 		// Play a bell sound
 		cSoundController->PlaySoundByID(1);
 		break;
