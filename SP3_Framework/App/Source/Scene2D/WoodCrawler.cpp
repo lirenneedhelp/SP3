@@ -36,6 +36,7 @@ CWoodCrawler::CWoodCrawler(void)
 	, sCurrentFSM(FSM::IDLE)
 	, iFSMCounter(0)
 	, quadMesh(NULL)
+	, woodAnimatedSprites(NULL)
 {
 	transform = glm::mat4(1.0f);	// make sure to initialize matrix to identity matrix first
 
@@ -64,6 +65,8 @@ CWoodCrawler::~CWoodCrawler(void)
 		quadMesh = NULL;
 	}
 
+	//
+	woodAnimatedSprites = NULL;
 	// We won't delete this since it was created elsewhere
 	cPlayer2D = NULL;
 
@@ -107,12 +110,19 @@ bool CWoodCrawler::Init(void)
 	quadMesh = CMeshBuilder::GenerateQuad(glm::vec4(1, 1, 1, 1), cSettings->TILE_WIDTH, cSettings->TILE_HEIGHT);
 
 	// Load the enemy2D texture
-	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Scene2D_EnemyTile.tga", true);
+	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/woodcrawler.png", true);
 	if (iTextureID == 0)
 	{
-		cout << "Unable to load Image/Scene2D_EnemyTile.tga" << endl;
+		cout << "Unable to load Image/woodcrawler.png" << endl;
 		return false;
 	}
+	woodAnimatedSprites = CMeshBuilder::GenerateSpriteAnimation(4, 3, cSettings->TILE_WIDTH, cSettings->TILE_HEIGHT);
+	woodAnimatedSprites->AddAnimation("Left", 0, 2);
+	woodAnimatedSprites->AddAnimation("Right", 3, 5);
+	woodAnimatedSprites->AddAnimation("Pull", 6, 8);
+	woodAnimatedSprites->AddAnimation("Idle", 9, 11);
+
+	woodAnimatedSprites->PlayAnimation("Left", -1, 1.0f);
 
 	//CS: Init the color to white
 	runtimeColour = glm::vec4(1.0, 1.0, 1.0, 1.0);
@@ -154,6 +164,7 @@ void CWoodCrawler::Update(const double dElapsedTime)
 	switch (sCurrentFSM)
 	{
 	case IDLE:
+		woodAnimatedSprites->PlayAnimation("Idle", -1, 5);
 		if (iFSMCounter > iMaxFSMCounter)
 		{
 			sCurrentFSM = PATROL;
@@ -190,6 +201,7 @@ void CWoodCrawler::Update(const double dElapsedTime)
 	case PULLING:
 		if (vec2Index.y > cPlayer2D->vec2Index.y)
 		{
+			woodAnimatedSprites->PlayAnimation("Pull", -1, 5);
 			i32vec2Direction = glm::i32vec2(0); // Stop updating the position of the enemy
 			cPlayer2D->isMoving = false; // Means player is caught
 			cPlayer2D->vec2Index.y++;
@@ -276,6 +288,8 @@ void CWoodCrawler::Update(const double dElapsedTime)
 	// Update Jump or Fall
 	UpdateJumpFall(dElapsedTime);
 
+	woodAnimatedSprites->Update(dElapsedTime);
+
 	// Update the UV Coordinates
 	vec2UVCoordinate.x = cSettings->ConvertIndexToUVSpace(cSettings->x, vec2Index.x, false, i32vec2NumMicroSteps.x*cSettings->MICRO_STEP_XAXIS);
 	vec2UVCoordinate.y = cSettings->ConvertIndexToUVSpace(cSettings->y, vec2Index.y, false, i32vec2NumMicroSteps.y*cSettings->MICRO_STEP_YAXIS);
@@ -324,12 +338,14 @@ void CWoodCrawler::Render(void)
 
 	// Get the texture to be rendered
 	glBindTexture(GL_TEXTURE_2D, iTextureID);
-
 	// Render the tile
 	//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-	quadMesh->Render();
-
+    //CS: Render the animated sprite
+	glBindVertexArray(VAO);
+	woodAnimatedSprites->Render();
 	glBindVertexArray(0);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
 
 }
 
@@ -684,6 +700,7 @@ bool CWoodCrawler::InteractWithPlayer(void)
 		damageOnPlayer = cPlayer2D->returnPlayerHealth();
 		playerHP = damageOnPlayer->GetItem("Health");
 		playerHP->Remove(20);
+		woodAnimatedSprites->PlayAnimation("Pull", -1, 5);
 		hit = true; // hit cooldown
 
 	
@@ -748,6 +765,7 @@ void CWoodCrawler::UpdatePosition(void)
 			if (i32vec2NumMicroSteps.x < 0)
 			{
 				i32vec2NumMicroSteps.x = ((int)cSettings->NUM_STEPS_PER_TILE_XAXIS) - 1;
+				woodAnimatedSprites->PlayAnimation("Left", -1, 5);
 				vec2Index.x--;
 			}
 		}
@@ -783,6 +801,7 @@ void CWoodCrawler::UpdatePosition(void)
 			if (i32vec2NumMicroSteps.x >= cSettings->NUM_STEPS_PER_TILE_XAXIS)
 			{
 				i32vec2NumMicroSteps.x = 0;
+				woodAnimatedSprites->PlayAnimation("Right", -1, 5);
 				vec2Index.x++;
 			}
 		}

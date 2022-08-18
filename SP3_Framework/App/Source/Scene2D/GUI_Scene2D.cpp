@@ -84,6 +84,18 @@ bool CGUI_Scene2D::Init(void)
 	cInventoryItem = cInventoryManager->Add("Tree", "Image/Scene2D_TreeTile.tga", 5, 0);
 	cInventoryItem->vec2Size = glm::vec2(25, 25);
 
+	emptyInventorySlot = cInventoryManager->Add("Empty", "Image\\GUI\\itemhotbar.png", 1, 1);
+	emptyInventorySlot->vec2Size = glm::vec2(25, 25);
+
+	for (int i = 0; i < 9; ++i)
+	{
+		playerInventory.push_back(emptyInventorySlot);
+	}
+	// Store the keyboard controller singleton instance here
+	cKeyboardController = CKeyboardController::GetInstance();
+	// Reset all keys since we are starting a new game
+	cKeyboardController->Reset();
+
 	return true;
 }
 
@@ -161,28 +173,39 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 	ImGui::TextColored(ImVec4(1, 1, 0, 1), "%d / %d",
 		cInventoryItem->GetCount(), cInventoryItem->GetMaxCount());
 	ImGui::End();
+	
+	ImGuiWindowFlags window_flags = 0;
+	window_flags |= ImGuiWindowFlags_NoTitleBar;
+	window_flags |= ImGuiWindowFlags_NoScrollbar;
+	//window_flags |= ImGuiWindowFlags_MenuBar;
+	window_flags |= ImGuiWindowFlags_NoBackground;
+	window_flags |= ImGuiWindowFlags_NoMove;
+	window_flags |= ImGuiWindowFlags_NoCollapse;
+	window_flags |= ImGuiWindowFlags_NoNav;
+	ImGui::Begin("Inventory", NULL, window_flags);
+	for (int i = 0; i < playerInventory.size(); ++i)
+	{
+	
+		ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth / 3, cSettings->iWindowHeight * 0.94f));
+		ImGui::SetWindowSize(ImVec2(cSettings->iWindowWidth, 25.0f * relativeScale_y));
+		if (cKeyboardController->IsKeyPressed(GLFW_KEY_1))
+		{
+			ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(1.0f, 0.0f, 0.0f, 1.0f));
+			ImGui::PopStyleColor();
+			ImGui::SameLine();
 
-	// Render the inventory items
-	cInventoryItem = cInventoryManager->GetItem("Tree");
-	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 1.0f, 1.0f));  // Set a background color
-	ImGuiWindowFlags inventoryWindowFlags = ImGuiWindowFlags_AlwaysAutoResize |
-		ImGuiWindowFlags_NoTitleBar |
-		ImGuiWindowFlags_NoMove |
-		ImGuiWindowFlags_NoResize |
-		ImGuiWindowFlags_NoCollapse |
-		ImGuiWindowFlags_NoScrollbar;
-	ImGui::Begin("Image", NULL, inventoryWindowFlags);
-	ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * 0.03f, cSettings->iWindowHeight * 0.9f));
-	ImGui::SetWindowSize(ImVec2(200.0f * relativeScale_x, 25.0f * relativeScale_y));
-	ImGui::Image((void*)(intptr_t)cInventoryItem->GetTextureID(),
-		ImVec2(cInventoryItem->vec2Size.x * relativeScale_x, cInventoryItem->vec2Size.y * relativeScale_y),
-		ImVec2(0, 1), ImVec2(1, 0));
-	ImGui::SameLine();
-	ImGui::SetWindowFontScale(1.5f * relativeScale_y);
-	ImGui::TextColored(ImVec4(1, 1, 0, 1), "Tree: %d / %d",
-		cInventoryItem->GetCount(), cInventoryItem->GetMaxCount());
+		}
+		ImGui::Image((void*)(intptr_t)emptyInventorySlot->GetTextureID(),
+			ImVec2(emptyInventorySlot->vec2Size.x * relativeScale_x, emptyInventorySlot->vec2Size.y * relativeScale_y),
+			ImVec2(0, 1), ImVec2(1, 0));
+		ImGui::SameLine();
+	}
 	ImGui::End();
-	ImGui::PopStyleColor();
+	
+
+	
+
+	
 
 	ImGui::End();
 }

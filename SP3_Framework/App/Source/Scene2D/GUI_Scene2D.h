@@ -39,6 +39,10 @@
 #endif
 
 #include "GameControl/Settings.h"
+// Include ImageLoader
+#include "System\ImageLoader.h"
+#include <vector>
+#include "Inputs/KeyboardController.h"
 
 #include <string>
 using namespace std;
@@ -69,6 +73,8 @@ protected:
 	// Destructor
 	virtual ~CGUI_Scene2D(void);
 
+	CKeyboardController* cKeyboardController;
+
 	// FPS Control
 	CFPSCounter* cFPSCounter;
 
@@ -82,4 +88,12 @@ protected:
 	CInventoryManager* cInventoryManager;
 	// The handler containing the instance of CInventoryItem
 	CInventoryItem* cInventoryItem;
+	struct ButtonData
+	{
+		std::string fileName;
+		unsigned textureID;
+	};
+
+	vector<CInventoryItem*> playerInventory;
+	CInventoryItem* emptyInventorySlot;
 };

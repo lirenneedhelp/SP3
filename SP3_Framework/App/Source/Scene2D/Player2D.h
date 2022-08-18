@@ -111,11 +111,20 @@ protected:
 
 	// List of enemies
 	vector <CEntity2D*> enemyList;
+
+	//Check whether the enemy is within range
+	bool hitEnemy;
+
+	//Players Attack Range
+	float attackRange;
+
 	// Attack Speed of the player
 	float attackSpeed;
 
 	// Count the number of jumps
 	int iJumpCount;
+
+	bool firstAttack;
 
 	// Handler to the CSoundController
 	CSoundController* cSoundController;

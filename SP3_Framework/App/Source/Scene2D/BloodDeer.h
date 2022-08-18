@@ -17,6 +17,9 @@
 // Include CEntity2D
 #include "Primitives/Entity2D.h"
 
+//Include SpriteAnimation
+#include "Primitives/SpriteAnimation.h"
+
 // Include the Map2D as we will use it to check the player's movements and actions
 class CMap2D;
 
@@ -127,6 +130,10 @@ protected:
 
 	// Physics
 	CPhysics2D cPhysics2D;
+
+	//Sprite Animation
+
+	CSpriteAnimation* deerAnimationSprites;
 
 	// Current color
 	glm::vec4 runtimeColour;
