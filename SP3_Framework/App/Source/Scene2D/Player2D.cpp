@@ -232,10 +232,10 @@ void CPlayer2D::Update(const double dElapsedTime)
 			{
 				if (vec2Index.x >= 0)
 				{
-					vec2NumMicroSteps.x--;
+					vec2NumMicroSteps.x-=2;
 					if (vec2NumMicroSteps.x < 0)
 					{
-						vec2NumMicroSteps.x = ((int)cSettings->NUM_STEPS_PER_TILE_XAXIS) - 2;
+						vec2NumMicroSteps.x = ((int)cSettings->NUM_STEPS_PER_TILE_XAXIS);
 						vec2Index.x--;
 					}
 				}
@@ -284,11 +284,11 @@ void CPlayer2D::Update(const double dElapsedTime)
 			{
 				if (vec2Index.x < (int)cSettings->NUM_TILES_XAXIS)
 				{
-					vec2NumMicroSteps.x++;
+					vec2NumMicroSteps.x += 2;
 
 					if (vec2NumMicroSteps.x >= cSettings->NUM_STEPS_PER_TILE_XAXIS)
 					{
-						vec2NumMicroSteps.x = 2;
+						vec2NumMicroSteps.x = 0;
 						vec2Index.x++;
 					}
 				}
