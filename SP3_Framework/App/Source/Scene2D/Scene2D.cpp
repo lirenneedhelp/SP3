@@ -93,7 +93,7 @@ bool CScene2D::Init(void)
 	// Set a shader to this class
 	cMap2D->SetShader("Shader2D");
 	// Initialise the instance
-	if (cMap2D->Init(2, 24, 32) == false)
+	if (cMap2D->Init(8, 24, 32) == false)
 	{
 		cout << "Failed to load CMap2D" << endl;
 		return false;
@@ -106,6 +106,42 @@ bool CScene2D::Init(void)
 	}
 	// Load the map into an array
 	if (cMap2D->LoadMap("Maps/DM2213_Map_Level_02.csv", 1) == false)
+	{
+		// The loading of a map has failed. Return false
+		return false;
+	}
+	// Load the map into an array
+	if (cMap2D->LoadMap("Maps/DM2213_Map_Level_cave.csv", 2) == false)
+	{
+		// The loading of a map has failed. Return false
+		return false;
+	}
+	// Load the map into an array
+	if (cMap2D->LoadMap("Maps/DM2213_Map_Level_forest.csv", 3) == false)
+	{
+		// The loading of a map has failed. Return false
+		return false;
+	}
+	// Load the map into an array
+	if (cMap2D->LoadMap("Maps/DM2213_Map_Level_hills.csv", 4) == false)
+	{
+		// The loading of a map has failed. Return false
+		return false;
+	}
+	// Load the map into an array
+	if (cMap2D->LoadMap("Maps/DM2213_Map_Level_islands.csv", 5) == false)
+	{
+		// The loading of a map has failed. Return false
+		return false;
+	}
+	// Load the map into an array
+	if (cMap2D->LoadMap("Maps/DM2213_Map_Level_plains.csv", 6) == false)
+	{
+		// The loading of a map has failed. Return false
+		return false;
+	}
+	// Load the map into an array
+	if (cMap2D->LoadMap("Maps/DM2213_Map_Level_valley.csv", 7) == false)
 	{
 		// The loading of a map has failed. Return false
 		return false;

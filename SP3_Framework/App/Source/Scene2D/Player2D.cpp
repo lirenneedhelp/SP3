@@ -933,6 +933,10 @@ void CPlayer2D::InteractWithMap(void)
 		// Level has been completed
 		CGameManager::GetInstance()->bLevelCompleted = true;
 		break;
+	case 98:
+		// Level has been completed
+		CGameManager::GetInstance()->bPlayerLost = true;
+		break;
 	default:
 		break;
 	}
@@ -964,7 +968,7 @@ void CPlayer2D::UpdateHealthLives(void)
 	code here should handle the breaking and placing of blocks
 */
 void CPlayer2D::BuildBlocks() {
-	if (cKeyboardController->IsKeyDown(GLFW_KEY_O)) {
+	if (cKeyboardController->IsKeyDown(GLFW_KEY_L)) {
 		if (direction == 1) {
 			switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x - 1))
 			{
@@ -982,7 +986,7 @@ void CPlayer2D::BuildBlocks() {
 			}
 		}
 	}
-	if (cKeyboardController->IsKeyDown(GLFW_KEY_H)) {
+	if (cKeyboardController->IsKeyDown(GLFW_KEY_J)) {
 		if (direction == 1) {
 			switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x + 1))
 			{
@@ -1000,7 +1004,7 @@ void CPlayer2D::BuildBlocks() {
 			}
 		}
 	}
-	if (cKeyboardController->IsKeyDown(GLFW_KEY_U)) {
+	if (cKeyboardController->IsKeyDown(GLFW_KEY_I)) {
 		switch (cMap2D->GetMapInfo(vec2Index.y + 1, vec2Index.x))
 		{
 		case 0:
@@ -1008,7 +1012,7 @@ void CPlayer2D::BuildBlocks() {
 			break;
 		}
 	}
-	if (cKeyboardController->IsKeyDown(GLFW_KEY_P)) {
+	if (cKeyboardController->IsKeyDown(GLFW_KEY_K)) {
 		switch (cMap2D->GetMapInfo(vec2Index.y - 1, vec2Index.x))
 		{
 		case 0:
@@ -1042,7 +1046,7 @@ CEntity2D* CPlayer2D::returnNearestEnemy(void)
 
 void CPlayer2D::BreakBlocks(const double dElapsedTime) {
 	breakinterval -= dElapsedTime;
-	if (cKeyboardController->IsKeyDown(GLFW_KEY_L) && breakinterval <= 0.f) {
+	if (cKeyboardController->IsKeyDown(GLFW_KEY_O) && breakinterval <= 0.f) {
 
 		if (direction == 1) {
 			switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x - 1))
@@ -1075,7 +1079,7 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime) {
 		}
 		breakinterval = 0.2f;
 	}
-	if (cKeyboardController->IsKeyDown(GLFW_KEY_K) && breakinterval <= 0.f) {
+	if (cKeyboardController->IsKeyDown(GLFW_KEY_U) && breakinterval <= 0.f) {
 		if (direction == 1) {
 			switch (cMap2D->GetMapInfo(vec2Index.y - 1, vec2Index.x))
 			{
@@ -1092,7 +1096,7 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime) {
 		}
 		breakinterval = 0.2f;
 	}
-	if (cKeyboardController->IsKeyDown(GLFW_KEY_I) && breakinterval <= 0.f) {
+	if (cKeyboardController->IsKeyDown(GLFW_KEY_P) && breakinterval <= 0.f) {
 
 		switch (cMap2D->GetMapInfo(vec2Index.y + 1, vec2Index.x))
 		{
