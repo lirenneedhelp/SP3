@@ -247,6 +247,30 @@ bool CMap2D::Init(	const unsigned int uiNumLevels,
 		MapOfTextureIDs.insert(pair<int, int>(103, iTextureID));
 
 	}
+	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/tree.png", true);
+	if (iTextureID == 0)
+	{
+		cout << "Unable to load Image/tree.png" << endl;
+		return false;
+	}
+	else
+	{
+		// Store the texture ID into MapOfTextureIDs
+		MapOfTextureIDs.insert(pair<int, int>(50, iTextureID));
+
+	}
+	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/wood.png", true);
+	if (iTextureID == 0)
+	{
+		cout << "Unable to load Image/wood.png" << endl;
+		return false;
+	}
+	else
+	{
+		// Store the texture ID into MapOfTextureIDs
+		MapOfTextureIDs.insert(pair<int, int>(51, iTextureID));
+
+	}
 
 	// Initialise the variables for AStar
 	m_weight = 1;
