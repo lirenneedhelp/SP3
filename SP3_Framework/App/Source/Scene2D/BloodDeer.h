@@ -77,6 +77,14 @@ public:
 	// Set the handle to cPlayer to this class instance
 	void SetPlayer2D(CPlayer2D* cPlayer2D);
 
+	// Get Deer HP
+
+	float getHP(void);
+
+    // Set Deer HP
+
+	void setHP(float newHealth);
+
 	// boolean flag to indicate if this enemy is active
 	bool bIsActive;
 
@@ -163,6 +171,7 @@ protected:
 	float buffDamage;
 	float buffSpeed;
 	float buffAtkSpeed;
+
 
 	// Current FSM
 	FSM sCurrentFSM;

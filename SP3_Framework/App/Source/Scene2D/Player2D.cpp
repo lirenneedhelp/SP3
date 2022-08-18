@@ -104,13 +104,22 @@ bool CPlayer2D::Init(void)
 	vec2Index = glm::i32vec2(uiCol, uiRow);
 
 	isMoving = true; // Check if woodCrawler has pulled the player.
-	highjump = false;
+
+	highjump = false; // Check Whether player has taken jump boost potion
 	jumps = 0;
 	speed = false;
 	strength = false;
 	attackRange = 1.0f;
 	hitEnemy = false;
 	firstAttack = true; // Check if it's the first click
+
+	//check if weapons are equiped
+	swordequip = false;
+	spearequip = false;
+	axeequip = false;
+	bowequip = false;
+
+	playerInitialDamage = 10;
 	
 	// By default, microsteps should be zero
 	vec2NumMicroSteps = glm::i32vec2(0, 0);
@@ -133,9 +142,6 @@ bool CPlayer2D::Init(void)
 	animatedSprites->AddAnimation("left", 7, 13);
 	animatedSprites->AddAnimation("jump", 14, 20);
 	animatedSprites->AddAnimation("Attack1", 42, 56);
-	//animatedSprites->AddAnimation("Attack2", 49, 56);
-	//animatedSprites->AddAnimation("Attack3", 42, 48);
-
 
 
 	//CS: Play the "idle" animation as default
@@ -239,10 +245,10 @@ void CPlayer2D::Update(const double dElapsedTime)
 			{
 				if (vec2Index.x >= 0)
 				{
-					vec2NumMicroSteps.x--;
+					vec2NumMicroSteps.x-=2;
 					if (vec2NumMicroSteps.x < 0)
 					{
-						vec2NumMicroSteps.x = ((int)cSettings->NUM_STEPS_PER_TILE_XAXIS) - 2;
+						vec2NumMicroSteps.x = ((int)cSettings->NUM_STEPS_PER_TILE_XAXIS);
 						vec2Index.x--;
 					}
 				}
@@ -291,11 +297,11 @@ void CPlayer2D::Update(const double dElapsedTime)
 			{
 				if (vec2Index.x < (int)cSettings->NUM_TILES_XAXIS)
 				{
-					vec2NumMicroSteps.x++;
+					vec2NumMicroSteps.x += 2;
 
 					if (vec2NumMicroSteps.x >= cSettings->NUM_STEPS_PER_TILE_XAXIS)
 					{
-						vec2NumMicroSteps.x = 2;
+						vec2NumMicroSteps.x = 0;
 						vec2Index.x++;
 					}
 				}
@@ -456,33 +462,134 @@ void CPlayer2D::Update(const double dElapsedTime)
 	//Put mouse inputs here
 	if (cMouseController->IsButtonDown(0))
 	{	
+		
+
 		if (firstAttack)
 		{
-			cout << "hello I've LEFT CLICKED\n";
+			//cout << "hello I've LEFT CLICKED\n";
 			animatedSprites->PlayAnimation("Attack1", -1, 1.0f);
 			firstAttack = false;
 		}
-		else
+		else 
+		{ 
+			attackSpeed -= dElapsedTime;
+			if (attackSpeed <= 0.f)
+			{
+				
+				//cout << "hello I'm holding left click\n";
+				//damage the enemy and reset the interval
+				attackSpeed = 1.0f;
+				//if (cPhysics2D.CalculateDistance(vec2Index,))
+				enemyList = CScene2D::GetInstance()->returnEnemyVector();
+				//returnNearestEnemy();
+				animatedSprites->PlayAnimation("Attack1", -1, 1.0f);
+				for (int enemyIndex = 0; enemyIndex != enemyList.size(); ++enemyIndex)
+				{
+
+					
+					/*if (strength = true)
+					{
+						playerInitialDamage *= 1.5;
+					}*/
+					if (cPhysics2D.CalculateDistance(vec2Index, enemyList[enemyIndex]->vec2Index) <= attackRange && vec2Index.y == enemyList[enemyIndex]->vec2Index.y) // Check if player and enemy are on the same level & check whether the enemy is within the player's range
+					{
+						cout << "Hit Enemy Once\n";
+						//TO DO: REDUCE THEIR HP
+						enemyList[enemyIndex]->health -= playerInitialDamage;
+						cout << enemyList[enemyIndex]->health << endl;
+						if (enemyList[enemyIndex]->health <= 0)
+						{
+							enemyList[enemyIndex]->~CEntity2D();					
+							enemyList.erase(enemyList.begin() + enemyIndex);
+							CScene2D::GetInstance()->setNewEnemyVector(enemyList);
+						}
+						break;
+					}
+				}
+			}
+		}
+
+		if (swordequip = true)
 		{
 			attackSpeed -= dElapsedTime;
 			if (attackSpeed <= 0.f)
 			{
-				cout << "hello I'm holding left click\n";
+				//cout << "hello I'm holding left click\n";
 				//damage the enemy and reset the interval
-				attackSpeed = 1.0f;
+				attackSpeed = 2.0f;
+				playerInitialDamage = 30;
+				attackRange *= 1.5;
 				//if (cPhysics2D.CalculateDistance(vec2Index,))
-				//enemyList = CScene2D::GetInstance()->returnEnemyVector();
+				enemyList = CScene2D::GetInstance()->returnEnemyVector();
 				//returnNearestEnemy();
 				animatedSprites->PlayAnimation("Attack1", -1, 1.0f);
-
+				for (int enemyIndex = 0; enemyIndex != enemyList.size(); ++enemyIndex)
+				{
+					/*if (strength = true)
+					{
+						playerInitialDamage *= 1.5;
+					}*/
+					if (cPhysics2D.CalculateDistance(vec2Index, enemyList[enemyIndex]->vec2Index) <= attackRange && vec2Index.y == enemyList[enemyIndex]->vec2Index.y) // Check if player and enemy are on the same level & check whether the enemy is within the player's range
+					{
+						cout << "Hit Enemy Once\n";
+						//TO DO: REDUCE THEIR HP
+						enemyList[enemyIndex]->health -= playerInitialDamage;
+						cout << enemyList[enemyIndex]->health << endl;
+						if (enemyList[enemyIndex]->health <= 0)
+						{
+							enemyList[enemyIndex]->~CEntity2D();
+							enemyList.erase(enemyList.begin() + enemyIndex);
+							CScene2D::GetInstance()->setNewEnemyVector(enemyList);
+						}
+						break;
+					}
+				}
 			}
 		}
+		else if (spearequip = true)
+		{
+			attackSpeed -= dElapsedTime;
+			if (attackSpeed <= 0.f)
+			{
+				//cout << "hello I'm holding left click\n";
+				//damage the enemy and reset the interval
+				attackSpeed = 1.0f;
+				playerInitialDamage = 40;
+				attackRange *= 2;
+				//if (cPhysics2D.CalculateDistance(vec2Index,))
+				enemyList = CScene2D::GetInstance()->returnEnemyVector();
+				//returnNearestEnemy();
+				animatedSprites->PlayAnimation("Attack1", -1, 1.0f);
+				for (int enemyIndex = 0; enemyIndex != enemyList.size(); ++enemyIndex)
+				{
+					/*if (strength = true)
+					{
+						playerInitialDamage *= 1.5;
+					}*/
+					if (cPhysics2D.CalculateDistance(vec2Index, enemyList[enemyIndex]->vec2Index) <= attackRange && vec2Index.y == enemyList[enemyIndex]->vec2Index.y) // Check if player and enemy are on the same level & check whether the enemy is within the player's range
+					{
+						cout << "Hit Enemy Once\n";
+						//TO DO: REDUCE THEIR HP
+						enemyList[enemyIndex]->health -= playerInitialDamage;
+						cout << enemyList[enemyIndex]->health << endl;
+						if (enemyList[enemyIndex]->health <= 0)
+						{
+							enemyList[enemyIndex]->~CEntity2D();
+							enemyList.erase(enemyList.begin() + enemyIndex);
+							CScene2D::GetInstance()->setNewEnemyVector(enemyList);
+						}
+						break;
+					}
+				}
+			}
+		}
+
 	}
     else if (cMouseController->IsButtonUp(0))
 	{
 		if (!firstAttack)
 		{
-			cout << "Hello I've released my left click\n";
+			//cout << "Hello I've released my left click\n";
 			animatedSprites->PlayAnimation("Idle", -1, 1.0f);
 			firstAttack = true;
 		}
@@ -896,8 +1003,7 @@ void CPlayer2D::InteractWithMap(void)
 		cInventoryItem = cInventoryManager->GetItem("StrengthPotion");
 		cInventoryItem->Add(1);
 		strength = true;
-		// Play a bell sound
-		cSoundController->PlaySoundByID(1);
+		// Play a aroller->PlaySoundByID(1);
 		break;
 	case 5:
 		// Erase the potion from this position
@@ -915,6 +1021,8 @@ void CPlayer2D::InteractWithMap(void)
 		// Increase the potion by 1
 		cInventoryItem = cInventoryManager->GetItem("sword");
 		cInventoryItem->Add(1);
+		swordequip = true;
+		std::cout << "sword equiped\n";
 		// Play a bell sound
 		cSoundController->PlaySoundByID(1);
 		break;
@@ -924,15 +1032,17 @@ void CPlayer2D::InteractWithMap(void)
 		// Increase the potion by 1
 		cInventoryItem = cInventoryManager->GetItem("spear");
 		cInventoryItem->Add(1);
+		spearequip = true;
 		// Play a bell sound
 		cSoundController->PlaySoundByID(1);
 		break;
-	case 32:
+	case 33:
 		// Erase the potion from this position
 		cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
 		// Increase the potion by 1
 		cInventoryItem = cInventoryManager->GetItem("axe");
 		cInventoryItem->Add(1);
+		axeequip = true;
 		// Play a bell sound
 		cSoundController->PlaySoundByID(1);
 		break;

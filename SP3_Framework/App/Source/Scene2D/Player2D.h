@@ -69,6 +69,11 @@ public:
 
 	bool isMoving;
 	bool speed;
+	bool strength;
+	bool swordequip;
+	bool spearequip;
+	bool axeequip;
+	bool bowequip;
 	bool highjump;
 	int jumps;
 
@@ -125,6 +130,10 @@ protected:
 	int iJumpCount;
 
 	bool firstAttack;
+
+	// Player Initial Damage
+
+	float playerInitialDamage;
 
 	// Handler to the CSoundController
 	CSoundController* cSoundController;

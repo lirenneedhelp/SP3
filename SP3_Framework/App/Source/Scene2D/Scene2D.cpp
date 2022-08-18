@@ -156,6 +156,7 @@ bool CScene2D::Init(void)
 		if (cWoodCrawler->Init() == true)
 		{
 			cWoodCrawler->SetPlayer2D(cPlayer2D);
+			cWoodCrawler->setHP(60);
 			enemyVector.push_back(cWoodCrawler);
 		}
 		else
@@ -186,13 +187,14 @@ bool CScene2D::Init(void)
 	}
 	while (true)
 	{
-		CBloodDeer* cBloodDear = new CBloodDeer();
-		cBloodDear->SetShader("Shader2D_Colour");
+		CBloodDeer* cBloodDeer = new CBloodDeer();
+		cBloodDeer->SetShader("Shader2D_Colour");
 
-		if (cBloodDear->Init() == true)
+		if (cBloodDeer->Init() == true)
 		{
-			cBloodDear->SetPlayer2D(cPlayer2D);
-			enemyVector.push_back(cBloodDear);
+			cBloodDeer->SetPlayer2D(cPlayer2D);
+			cBloodDeer->setHP(300);
+			enemyVector.push_back(cBloodDeer);
 		}
 		else
 		{
@@ -435,4 +437,9 @@ void CScene2D::resetDuration(void)
 vector<CEntity2D*> CScene2D::returnEnemyVector(void)
 {
 	return enemyVector;
+}
+
+void CScene2D::setNewEnemyVector(vector<CEntity2D*> newList)
+{
+	enemyVector = newList;
 }
