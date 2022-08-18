@@ -191,6 +191,8 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 		if (cKeyboardController->IsKeyPressed(GLFW_KEY_1))
 		{
 			ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(1.0f, 0.0f, 0.0f, 1.0f));
+			ImGui::PopStyleColor();
+			ImGui::SameLine();
 
 		}
 		ImGui::Image((void*)(intptr_t)emptyInventorySlot->GetTextureID(),

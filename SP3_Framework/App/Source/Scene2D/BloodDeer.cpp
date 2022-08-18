@@ -37,6 +37,7 @@ CBloodDeer::CBloodDeer(void)
 	, sCurrentFSM(FSM::IDLE)
 	, iFSMCounter(0)
 	, quadMesh(NULL)
+	, deerAnimationSprites(NULL)
 {
 	transform = glm::mat4(1.0f);	// make sure to initialize matrix to identity matrix first
 
@@ -64,6 +65,9 @@ CBloodDeer::~CBloodDeer(void)
 		delete quadMesh;
 		quadMesh = NULL;
 	}
+
+	// We won't delete this since it was created elsewhere
+	deerAnimationSprites = NULL;
 
 	// We won't delete this since it was created elsewhere
 	cPlayer2D = NULL;
@@ -108,12 +112,25 @@ bool CBloodDeer::Init(void)
 	quadMesh = CMeshBuilder::GenerateQuad(glm::vec4(1, 1, 1, 1), cSettings->TILE_WIDTH, cSettings->TILE_HEIGHT);
 
 	// Load the enemy2D texture
-	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Scene2D_EnemyTile.tga", true);
+	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/blooddeer.png", true);
 	if (iTextureID == 0)
 	{
-		cout << "Unable to load Image/Scene2D_EnemyTile.tga" << endl;
+		cout << "Unable to load blooddeer.png" << endl;
 		return false;
 	}
+
+	deerAnimationSprites = CMeshBuilder::GenerateSpriteAnimation(9, 3, cSettings->TILE_WIDTH, cSettings->TILE_HEIGHT);
+	deerAnimationSprites->AddAnimation("Left", 0, 2);
+	deerAnimationSprites->AddAnimation("Right", 3, 5);
+	deerAnimationSprites->AddAnimation("rageLeft", 6, 8);
+	deerAnimationSprites->AddAnimation("rageRight", 9, 11);
+	deerAnimationSprites->AddAnimation("AttackLeft", 12, 14);
+	deerAnimationSprites->AddAnimation("AttackRight", 15, 17);
+	deerAnimationSprites->AddAnimation("rageAttackLeft", 18, 20);
+	deerAnimationSprites->AddAnimation("rageAttackRight", 21, 23);
+	deerAnimationSprites->AddAnimation("Idle", 24, 26);
+
+	deerAnimationSprites->PlayAnimation("Idle", -1, 5);
 
 	//CS: Init the color to white
 	runtimeColour = glm::vec4(1.0, 1.0, 1.0, 1.0);
@@ -160,11 +177,12 @@ void CBloodDeer::Update(const double dElapsedTime)
 
 		}
 	}
-	cout << hitIntervals << endl;
+	//cout << hitIntervals << endl;
 	
 	switch (sCurrentFSM)
 	{
 	case IDLE:
+		deerAnimationSprites->PlayAnimation("Idle", -1, 5);
 		if (iFSMCounter > iMaxFSMCounter)
 		{
 			sCurrentFSM = PATROL;
@@ -353,6 +371,7 @@ void CBloodDeer::Update(const double dElapsedTime)
 
 	// Update Jump or Fall
 	UpdateJumpFall(dElapsedTime);
+	deerAnimationSprites->Update(dElapsedTime);
 
 	// Update the UV Coordinates
 	vec2UVCoordinate.x = cSettings->ConvertIndexToUVSpace(cSettings->x, vec2Index.x, false, i32vec2NumMicroSteps.x*cSettings->MICRO_STEP_XAXIS);
@@ -405,9 +424,11 @@ void CBloodDeer::Render(void)
 
 	// Render the tile
 	//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-	quadMesh->Render();
-
+	glBindVertexArray(VAO);
+	deerAnimationSprites->Render();
 	glBindVertexArray(0);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
 
 }
 
@@ -762,6 +783,28 @@ bool CBloodDeer::InteractWithPlayer(void)
 		playerHP = damageOnPlayer->GetItem("Health");
 		playerHP->Remove(30 * buffDamage);		
 		hit = true;
+		if (rage)
+		{
+			if (i32vec2Direction.x < 0)
+			{
+				deerAnimationSprites->PlayAnimation("rageAttackLeft", -1, 5);
+			}
+			else if (i32vec2Direction.x > 0)
+			{
+				deerAnimationSprites->PlayAnimation("rageAttackRight", -1, 5);
+			}
+		}
+		else
+		{
+			if (i32vec2Direction.x < 0)
+			{
+				deerAnimationSprites->PlayAnimation("AttackLeft", -1, 5);
+			}
+			else if (i32vec2Direction.x > 0)
+			{
+				deerAnimationSprites->PlayAnimation("AttackRight", -1, 5);
+			}
+		}
 		// Since the player has been caught, then reset the FSM
 		iFSMCounter = 0;
 		return true;
@@ -819,7 +862,7 @@ void CBloodDeer::UpdatePosition(void)
 		const int iOldIndex = vec2Index.x;
 		if (vec2Index.x >= 0)
 		{
-			i32vec2NumMicroSteps.x-= (1 * buffSpeed);
+			i32vec2NumMicroSteps.x-= (1 / buffSpeed);
 			if (i32vec2NumMicroSteps.x < 0)
 			{
 				i32vec2NumMicroSteps.x = ((int)cSettings->NUM_STEPS_PER_TILE_XAXIS) - 1;
@@ -844,6 +887,16 @@ void CBloodDeer::UpdatePosition(void)
 			cPhysics2D.SetStatus(CPhysics2D::STATUS::FALL);
 		}
 
+		if (rage)
+		{
+			deerAnimationSprites->PlayAnimation("rageLeft", -1, 5);
+		}
+		else
+		{
+			deerAnimationSprites->PlayAnimation("Left", -1, 5);
+
+		}
+
 		// Interact with the Player
 		InteractWithPlayer();
 	}
@@ -853,7 +906,7 @@ void CBloodDeer::UpdatePosition(void)
 		const int iOldIndex = vec2Index.x;
 		if (vec2Index.x < (int)cSettings->NUM_TILES_XAXIS)
 		{
-			i32vec2NumMicroSteps.x += (1 * buffSpeed);
+			i32vec2NumMicroSteps.x += (1 / buffSpeed);
 
 			if (i32vec2NumMicroSteps.x >= cSettings->NUM_STEPS_PER_TILE_XAXIS)
 			{
@@ -877,6 +930,15 @@ void CBloodDeer::UpdatePosition(void)
 		if (IsMidAir() == true)
 		{
 			cPhysics2D.SetStatus(CPhysics2D::STATUS::FALL);
+		}
+		if (rage)
+		{
+			deerAnimationSprites->PlayAnimation("rageRight", -1, 5);
+		}
+		else
+		{
+			deerAnimationSprites->PlayAnimation("Right", -1, 5);
+
 		}
 
 		// Interact with the Player
