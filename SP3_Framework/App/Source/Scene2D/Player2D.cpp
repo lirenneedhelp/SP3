@@ -138,8 +138,6 @@ bool CPlayer2D::Init(void)
 	animatedSprites->AddAnimation("left", 7, 13);
 	animatedSprites->AddAnimation("jump", 14, 20);
 	animatedSprites->AddAnimation("Attack1", 42, 56);
-
-
 	//CS: Play the "idle" animation as default
 	animatedSprites->PlayAnimation("idle", -1, 1.0f);
 
@@ -402,7 +400,6 @@ void CPlayer2D::Update(const double dElapsedTime)
 					iJumpCount += 1;
 					// Play a jump sound
 					cSoundController->PlaySoundByID(3);
-					animatedSprites->PlayAnimation("jump", -1, 0.5f);
 				}
 				else
 				{
@@ -443,6 +440,8 @@ void CPlayer2D::Update(const double dElapsedTime)
 				}
 
 			}
+			animatedSprites->PlayAnimation("jump", -1, 0.5f);
+
 		}
 		
 	}
@@ -481,7 +480,6 @@ void CPlayer2D::Update(const double dElapsedTime)
 							enemyList.erase(enemyList.begin() + enemyIndex);
 							CScene2D::GetInstance()->setNewEnemyVector(enemyList);
 						}
-						break;
 					}
 				}
 			}
