@@ -76,6 +76,10 @@ public:
 	// Set the handle to cPlayer to this class instance
 	void SetPlayer2D(CPlayer2D* cPlayer2D);
 
+	float getHP(void);
+
+	void setHP(float newHP);
+
 	// boolean flag to indicate if this enemy is active
 	bool bIsActive;
 

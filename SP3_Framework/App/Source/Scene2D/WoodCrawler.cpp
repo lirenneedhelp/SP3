@@ -51,6 +51,9 @@ CWoodCrawler::CWoodCrawler(void)
 
 	i32vec2Destination = glm::i32vec2(0, 0);	// Initialise the iDestination
 	i32vec2Direction = glm::i32vec2(0, 0);		// Initialise the iDirection
+
+	health = 0;
+
 }
 
 /**
@@ -137,6 +140,8 @@ bool CWoodCrawler::Init(void)
 	hitInterval = 2.0f;
 	
 	hit = false;
+
+	health = 60;
 
 	movementSpeed = 0.4;
 
@@ -393,6 +398,16 @@ void CWoodCrawler::SetPlayer2D(CPlayer2D* cPlayer2D)
 
 	// Update the enemy's direction
 	UpdateDirection();
+}
+
+float CWoodCrawler::getHP(void)
+{
+	return health;
+}
+
+void CWoodCrawler::setHP(float newHP)
+{
+	health = newHP;
 }
 
 

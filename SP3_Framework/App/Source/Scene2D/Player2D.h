@@ -126,6 +126,10 @@ protected:
 
 	bool firstAttack;
 
+	// Player Initial Damage
+
+	float playerInitialDamage;
+
 	// Handler to the CSoundController
 	CSoundController* cSoundController;
 

@@ -52,6 +52,8 @@ CBloodDeer::CBloodDeer(void)
 
 	i32vec2Destination = glm::i32vec2(0, 0);	// Initialise the iDestination
 	i32vec2Direction = glm::i32vec2(0, 0);		// Initialise the iDirection
+
+	health = 0;
 }
 
 /**
@@ -152,6 +154,7 @@ bool CBloodDeer::Init(void)
 
 	rage = false;
 	hit = false;
+
 
 	return true;
 }
@@ -476,6 +479,16 @@ void CBloodDeer::SetPlayer2D(CPlayer2D* cPlayer2D)
 
 	// Update the enemy's direction
 	UpdateDirection();
+}
+
+float CBloodDeer::getHP(void)
+{
+	return health;
+}
+
+void CBloodDeer::setHP(float newHealth)
+{
+	health = newHealth;
 }
 
 

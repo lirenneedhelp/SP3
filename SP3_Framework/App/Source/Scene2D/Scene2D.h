@@ -83,6 +83,7 @@ public:
 	float getDuration(void); // How long has it been day / night
 	void resetDuration(void); //Reset the counter ^
 	vector<CEntity2D*>returnEnemyVector(void);
+	void setNewEnemyVector(vector<CEntity2D*> newList);
 
 protected:
 	// The handler containing the instance of the 2D Map

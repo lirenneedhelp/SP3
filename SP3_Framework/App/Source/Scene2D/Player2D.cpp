@@ -104,12 +104,18 @@ bool CPlayer2D::Init(void)
 	vec2Index = glm::i32vec2(uiCol, uiRow);
 
 	isMoving = true; // Check if woodCrawler has pulled the player.
-	highjump = false;
+
+	highjump = false; // Check Whether player has taken jump boost potion
 	jumps = 0;
-	speed = false;
-	attackRange = 1.0f;
+
+	speed = false; // Check whether player has taken the speed boost potion
+
+	attackRange = 1.0f; // Player attack range
+
 	hitEnemy = false;
 	firstAttack = true; // Check if it's the first click
+
+	playerInitialDamage = 10;
 	
 	// By default, microsteps should be zero
 	vec2NumMicroSteps = glm::i32vec2(0, 0);
@@ -132,9 +138,6 @@ bool CPlayer2D::Init(void)
 	animatedSprites->AddAnimation("left", 7, 13);
 	animatedSprites->AddAnimation("jump", 14, 20);
 	animatedSprites->AddAnimation("Attack1", 42, 56);
-	//animatedSprites->AddAnimation("Attack2", 49, 56);
-	//animatedSprites->AddAnimation("Attack3", 42, 48);
-
 
 
 	//CS: Play the "idle" animation as default
@@ -448,7 +451,7 @@ void CPlayer2D::Update(const double dElapsedTime)
 	{	
 		if (firstAttack)
 		{
-			cout << "hello I've LEFT CLICKED\n";
+			//cout << "hello I've LEFT CLICKED\n";
 			animatedSprites->PlayAnimation("Attack1", -1, 1.0f);
 			firstAttack = false;
 		}
@@ -457,14 +460,30 @@ void CPlayer2D::Update(const double dElapsedTime)
 			attackSpeed -= dElapsedTime;
 			if (attackSpeed <= 0.f)
 			{
-				cout << "hello I'm holding left click\n";
+				//cout << "hello I'm holding left click\n";
 				//damage the enemy and reset the interval
 				attackSpeed = 1.0f;
 				//if (cPhysics2D.CalculateDistance(vec2Index,))
-				//enemyList = CScene2D::GetInstance()->returnEnemyVector();
+				enemyList = CScene2D::GetInstance()->returnEnemyVector();
 				//returnNearestEnemy();
 				animatedSprites->PlayAnimation("Attack1", -1, 1.0f);
-
+				for (int enemyIndex = 0; enemyIndex != enemyList.size(); ++enemyIndex)
+				{
+					if (cPhysics2D.CalculateDistance(vec2Index, enemyList[enemyIndex]->vec2Index) <= attackRange && vec2Index.y == enemyList[enemyIndex]->vec2Index.y) // Check if player and enemy are on the same level & check whether the enemy is within the player's range
+					{
+						cout << "Hit Enemy Once\n";
+						//TO DO: REDUCE THEIR HP
+						enemyList[enemyIndex]->health -= playerInitialDamage;
+						cout << enemyList[enemyIndex]->health << endl;
+						if (enemyList[enemyIndex]->health <= 0)
+						{
+							enemyList[enemyIndex]->~CEntity2D();					
+							enemyList.erase(enemyList.begin() + enemyIndex);
+							CScene2D::GetInstance()->setNewEnemyVector(enemyList);
+						}
+						break;
+					}
+				}
 			}
 		}
 	}
@@ -472,7 +491,7 @@ void CPlayer2D::Update(const double dElapsedTime)
 	{
 		if (!firstAttack)
 		{
-			cout << "Hello I've released my left click\n";
+			//cout << "Hello I've released my left click\n";
 			animatedSprites->PlayAnimation("Idle", -1, 1.0f);
 			firstAttack = true;
 		}
