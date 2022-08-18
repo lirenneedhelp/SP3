@@ -107,6 +107,9 @@ bool CPlayer2D::Init(void)
 	highjump = false;
 	jumps = 0;
 	speed = false;
+	attackRange = 1.0f;
+	hitEnemy = false;
+	firstAttack = true; // Check if it's the first click
 	
 	// By default, microsteps should be zero
 	vec2NumMicroSteps = glm::i32vec2(0, 0);
@@ -115,18 +118,25 @@ bool CPlayer2D::Init(void)
 	glBindVertexArray(VAO);
 	
 	// Load the player texture 
-	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/scene2d_player.png", true);
+	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/player.png", true);
 	if (iTextureID == 0)
 	{
-		cout << "Unable to load Image/scene2d_player.png" << endl;
+		cout << "Unable to load Image/player.png" << endl;
 		return false;
 	}
 	
 	//CS: Create the animated sprite and setup the animation 
-	animatedSprites = CMeshBuilder::GenerateSpriteAnimation(3, 3, cSettings->TILE_WIDTH, cSettings->TILE_HEIGHT);
-	animatedSprites->AddAnimation("idle", 0, 2);
-	animatedSprites->AddAnimation("right", 3, 5);
-	animatedSprites->AddAnimation("left", 6, 8);
+	animatedSprites = CMeshBuilder::GenerateSpriteAnimation(11, 7, cSettings->TILE_WIDTH, cSettings->TILE_HEIGHT);
+	animatedSprites->AddAnimation("idle", 0, 6);
+	animatedSprites->AddAnimation("right", 7, 13);
+	animatedSprites->AddAnimation("left", 7, 13);
+	animatedSprites->AddAnimation("jump", 14, 20);
+	animatedSprites->AddAnimation("Attack1", 42, 56);
+	//animatedSprites->AddAnimation("Attack2", 49, 56);
+	//animatedSprites->AddAnimation("Attack3", 42, 48);
+
+
+
 	//CS: Play the "idle" animation as default
 	animatedSprites->PlayAnimation("idle", -1, 1.0f);
 
@@ -321,68 +331,79 @@ void CPlayer2D::Update(const double dElapsedTime)
 
 		}
 			
-			if (cKeyboardController->IsKeyDown(GLFW_KEY_W))
+		if (cKeyboardController->IsKeyDown(GLFW_KEY_W))
+		{
+			// Calculate the new position up
+			if (vec2Index.y < (int)cSettings->NUM_TILES_YAXIS)
 			{
-				// Calculate the new position up
-				if (vec2Index.y < (int)cSettings->NUM_TILES_YAXIS)
-				{
-					vec2NumMicroSteps.y++;
-					if (vec2NumMicroSteps.y > cSettings->NUM_STEPS_PER_TILE_YAXIS)
-					{
-						vec2NumMicroSteps.y = 0;
-						vec2Index.y++;
-					}
-				}
-
-				// Constraint the player's position within the screen boundary
-				Constraint(UP);
-
-				// If the new position is not feasible, then revert to old position
-				if (CheckPosition(UP) == false)
+				vec2NumMicroSteps.y++;
+				if (vec2NumMicroSteps.y > cSettings->NUM_STEPS_PER_TILE_YAXIS)
 				{
 					vec2NumMicroSteps.y = 0;
+					vec2Index.y++;
 				}
-
-				//CS: Play the "idle" animation
-				animatedSprites->PlayAnimation("idle", -1, 1.0f);
-
-				//CS: Change Color
-				runtimeColour = glm::vec4(0.0, 1.0, 1.0, 0.5);
 			}
-			else if (cKeyboardController->IsKeyDown(GLFW_KEY_S))
+
+			// Constraint the player's position within the screen boundary
+			Constraint(UP);
+
+			// If the new position is not feasible, then revert to old position
+			if (CheckPosition(UP) == false)
 			{
-				// Calculate the new position down
-				if (vec2Index.y >= 0)
-				{
-					vec2NumMicroSteps.y--;
-					if (vec2NumMicroSteps.y < 0)
-					{
-						vec2NumMicroSteps.y = ((int)cSettings->NUM_STEPS_PER_TILE_YAXIS) - 1;
-						vec2Index.y--;
-					}
-				}
-
-				// Constraint the player's position within the screen boundary
-				Constraint(DOWN);
-
-				// If the new position is not feasible, then revert to old position
-				if (CheckPosition(DOWN) == false)
-				{
-					vec2Index = vec2OldIndex;
-					vec2NumMicroSteps.y = 0;
-				}
-
-				//CS: Play the "idle" animation
-				animatedSprites->PlayAnimation("idle", -1, 1.0f);
-
-				//CS: Change Color
-				runtimeColour = glm::vec4(1.0, 0.0, 1.0, 0.5);
+				vec2NumMicroSteps.y = 0;
 			}
-			if (cKeyboardController->IsKeyPressed(GLFW_KEY_SPACE))
+
+			//CS: Play the "idle" animation
+			animatedSprites->PlayAnimation("idle", -1, 1.0f);
+
+			//CS: Change Color
+			runtimeColour = glm::vec4(0.0, 1.0, 1.0, 0.5);
+		}
+		else if (cKeyboardController->IsKeyDown(GLFW_KEY_S))
+		{
+			// Calculate the new position down
+			if (vec2Index.y >= 0)
 			{
-				if (highjump == false)
+				vec2NumMicroSteps.y--;
+				if (vec2NumMicroSteps.y < 0)
 				{
-					if ((cPhysics2D.GetStatus() == CPhysics2D::STATUS::IDLE))
+					vec2NumMicroSteps.y = ((int)cSettings->NUM_STEPS_PER_TILE_YAXIS) - 1;
+					vec2Index.y--;
+				}
+			}
+
+			// Constraint the player's position within the screen boundary
+			Constraint(DOWN);
+
+			// If the new position is not feasible, then revert to old position
+			if (CheckPosition(DOWN) == false)
+			{
+				vec2Index = vec2OldIndex;
+				vec2NumMicroSteps.y = 0;
+			}
+
+			//CS: Play the "idle" animation
+			animatedSprites->PlayAnimation("idle", -1, 1.0f);
+
+			//CS: Change Color
+			runtimeColour = glm::vec4(1.0, 0.0, 1.0, 0.5);
+		}
+		if (cKeyboardController->IsKeyPressed(GLFW_KEY_SPACE))
+		{
+			if (highjump == false)
+			{
+				if ((cPhysics2D.GetStatus() == CPhysics2D::STATUS::IDLE))
+				{
+					cPhysics2D.SetStatus(CPhysics2D::STATUS::JUMP);
+					cPhysics2D.SetInitialVelocity(glm::vec2(0.0f, 2.f));
+					iJumpCount += 1;
+					// Play a jump sound
+					cSoundController->PlaySoundByID(3);
+					animatedSprites->PlayAnimation("jump", -1, 0.5f);
+				}
+				else
+				{
+					if (iJumpCount < 2)
 					{
 						cPhysics2D.SetStatus(CPhysics2D::STATUS::JUMP);
 						cPhysics2D.SetInitialVelocity(glm::vec2(0.0f, 2.f));
@@ -390,66 +411,71 @@ void CPlayer2D::Update(const double dElapsedTime)
 						// Play a jump sound
 						cSoundController->PlaySoundByID(3);
 					}
-					else
-					{
-						if (iJumpCount < 2)
-						{
-							cPhysics2D.SetStatus(CPhysics2D::STATUS::JUMP);
-							cPhysics2D.SetInitialVelocity(glm::vec2(0.0f, 2.f));
-							iJumpCount += 1;
-							// Play a jump sound
-							cSoundController->PlaySoundByID(3);
-						}
-					}
 				}
-				if (highjump == true)
+			}
+			if (highjump == true)
+			{
+				if ((cPhysics2D.GetStatus() == CPhysics2D::STATUS::IDLE))
 				{
-					if ((cPhysics2D.GetStatus() == CPhysics2D::STATUS::IDLE))
+					cPhysics2D.SetStatus(CPhysics2D::STATUS::JUMP);
+					cPhysics2D.SetInitialVelocity(glm::vec2(0.0f, 3.f));
+					iJumpCount += 1;
+					++jumps;
+					// Play a jump sound
+					cSoundController->PlaySoundByID(3);
+				}
+				else
+				{
+					if (iJumpCount < 2)
 					{
-						cPhysics2D.SetStatus(CPhysics2D::STATUS::JUMP);
 						cPhysics2D.SetInitialVelocity(glm::vec2(0.0f, 3.f));
 						iJumpCount += 1;
-						++jumps;
 						// Play a jump sound
 						cSoundController->PlaySoundByID(3);
 					}
-					else
-					{
-						if (iJumpCount < 2)
-						{
-							cPhysics2D.SetInitialVelocity(glm::vec2(0.0f, 3.f));
-							iJumpCount += 1;
-							// Play a jump sound
-							cSoundController->PlaySoundByID(3);
-						}
-					}
-					if (jumps == 3)
-					{
-						highjump = false;
-					}
-
 				}
+				if (jumps == 3)
+				{
+					highjump = false;
+				}
+
 			}
+		}
 		
 	}
 	//Put mouse inputs here
 	if (cMouseController->IsButtonDown(0))
 	{	
-		attackSpeed -= dElapsedTime;
-		if (attackSpeed <= 0.f)
+		if (firstAttack)
 		{
 			cout << "hello I've LEFT CLICKED\n";
-			//damage the enemy and reset the interval
-			attackSpeed = 1.0f;
-			//if (cPhysics2D.CalculateDistance(vec2Index,))
-			//enemyList = CScene2D::GetInstance()->returnEnemyVector();
-			//returnNearestEnemy();
-			
+			animatedSprites->PlayAnimation("Attack1", -1, 1.0f);
+			firstAttack = false;
+		}
+		else
+		{
+			attackSpeed -= dElapsedTime;
+			if (attackSpeed <= 0.f)
+			{
+				cout << "hello I'm holding left click\n";
+				//damage the enemy and reset the interval
+				attackSpeed = 1.0f;
+				//if (cPhysics2D.CalculateDistance(vec2Index,))
+				//enemyList = CScene2D::GetInstance()->returnEnemyVector();
+				//returnNearestEnemy();
+				animatedSprites->PlayAnimation("Attack1", -1, 1.0f);
+
+			}
 		}
 	}
     else if (cMouseController->IsButtonUp(0))
 	{
-		//cout << "Hello I've released my left click\n";	
+		if (!firstAttack)
+		{
+			cout << "Hello I've released my left click\n";
+			animatedSprites->PlayAnimation("Idle", -1, 1.0f);
+			firstAttack = true;
+		}
 	}
 
 	//cMouseController->PostUpdate();
