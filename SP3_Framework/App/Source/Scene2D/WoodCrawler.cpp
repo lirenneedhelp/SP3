@@ -125,7 +125,7 @@ bool CWoodCrawler::Init(void)
 	woodAnimatedSprites->AddAnimation("Pull", 6, 8);
 	woodAnimatedSprites->AddAnimation("Idle", 9, 11);
 
-	woodAnimatedSprites->PlayAnimation("Idle", -1, 1.0f);
+	woodAnimatedSprites->PlayAnimation("Left", -1, 1.0f);
 
 	//CS: Init the color to white
 	runtimeColour = glm::vec4(1.0, 1.0, 1.0, 1.0);
@@ -139,62 +139,6 @@ bool CWoodCrawler::Init(void)
 
 	hitInterval = 2.0f;
 	
-	hit = false;
-
-	health = 60;
-
-	movementSpeed = 0.4;
-
-	return true;
-}
-
-/**
- @brief Init without reading from the map
- */
-bool CWoodCrawler::Init2(void)
-{
-	// Get the handler to the CSettings instance
-	cSettings = CSettings::GetInstance();
-
-	// Get the handler to the CMap2D instance
-	cMap2D = CMap2D::GetInstance();
-
-	// By default, microsteps should be zero
-	vec2NumMicroSteps = glm::vec2(0, 0);
-
-	glGenVertexArrays(1, &VAO);
-	glBindVertexArray(VAO);
-
-	//CS: Create the Quad Mesh using the mesh builder
-	quadMesh = CMeshBuilder::GenerateQuad(glm::vec4(1, 1, 1, 1), cSettings->TILE_WIDTH, cSettings->TILE_HEIGHT);
-
-	// Load the enemy2D texture
-	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/woodcrawler.png", true);
-	if (iTextureID == 0)
-	{
-		cout << "Unable to load Image/woodcrawler.png" << endl;
-		return false;
-	}
-	woodAnimatedSprites = CMeshBuilder::GenerateSpriteAnimation(4, 3, cSettings->TILE_WIDTH, cSettings->TILE_HEIGHT);
-	woodAnimatedSprites->AddAnimation("Left", 0, 2);
-	woodAnimatedSprites->AddAnimation("Right", 3, 5);
-	woodAnimatedSprites->AddAnimation("Pull", 6, 8);
-	woodAnimatedSprites->AddAnimation("Idle", 9, 11);
-
-	woodAnimatedSprites->PlayAnimation("Idle", -1, 1.0f);
-
-	//CS: Init the color to white
-	runtimeColour = glm::vec4(1.0, 1.0, 1.0, 1.0);
-
-	// Set the Physics to fall status by default
-	cPhysics2D.Init();
-	cPhysics2D.SetStatus(CPhysics2D::STATUS::FALL);
-
-	// If this class is initialised properly, then set the bIsActive to true
-	bIsActive = true;
-
-	hitInterval = 2.0f;
-
 	hit = false;
 
 	health = 60;
@@ -429,7 +373,6 @@ void CWoodCrawler::PostRender(void)
 */
 void CWoodCrawler::Seti32vec2Index(const int iIndex_XAxis, const int iIndex_YAxis)
 {
-	vec2Index = glm::i32vec2(iIndex_XAxis, iIndex_YAxis);
 	this->vec2Index.x = iIndex_XAxis;
 	this->vec2Index.y = iIndex_YAxis;
 }
@@ -777,7 +720,6 @@ bool CWoodCrawler::InteractWithPlayer(void)
 
 	
 		// Since the player has been caught, then reset the FSM
-		sCurrentFSM = IDLE;
 		iFSMCounter = 0;
 		return true;
 	}

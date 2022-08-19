@@ -365,15 +365,11 @@ bool CScene2D::Update(const double dElapsedTime)
 			{
 				cout << "Spawn Enemy\n";
 				CWoodCrawler* cWoodCrawler = new CWoodCrawler();
-				cWoodCrawler->SetShader("Shader2D_Colour");
 				cWoodCrawler->Seti32vec2Index(randcol, randrow);
-				if (cWoodCrawler->Init2() == true)
-				{
-					//cWoodCrawler->SetShader("Shader2D_Colour");
-					cWoodCrawler->SetPlayer2D(cPlayer2D);
-					cWoodCrawler->setHP(60);
-					enemyVector.push_back(cWoodCrawler);
-				}
+				cWoodCrawler->SetShader("Shader2D_Colour");
+				cWoodCrawler->SetPlayer2D(cPlayer2D);
+			
+				enemyVector.push_back(cWoodCrawler);
 				
 				
 
