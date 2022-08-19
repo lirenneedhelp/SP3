@@ -153,7 +153,7 @@ void CGlutton::Update(const double dElapsedTime)
 			iFSMCounter = 0;
 			cout << "Switching to Idle State" << endl;
 		}
-		else if (cPhysics2D.CalculateDistance(vec2Index, cPlayer2D->vec2Index) < 5.0f)
+		else if (cPhysics2D.CalculateDistance(vec2Index, cPlayer2D->vec2Index) < 20.0f)
 		{
 			sCurrentFSM = ATTACK;
 			iFSMCounter = 0;
@@ -167,7 +167,7 @@ void CGlutton::Update(const double dElapsedTime)
 		iFSMCounter++;
 		break;
 	case ATTACK:
-		if (cPhysics2D.CalculateDistance(vec2Index, cPlayer2D->vec2Index) < 5.0f)
+		if (cPhysics2D.CalculateDistance(vec2Index, cPlayer2D->vec2Index) < 20.0f)
 		{
 			// Calculate a path to the player
 			//cMap2D->PrintSelf();
@@ -230,6 +230,7 @@ void CGlutton::Update(const double dElapsedTime)
 		}
 		break;
 	case SHOOT:
+		cout << "I'm shooting your ass down\n";
 
 	default:
 		break;
@@ -339,6 +340,16 @@ void CGlutton::SetPlayer2D(CPlayer2D* cPlayer2D)
 
 	// Update the enemy's direction
 	UpdateDirection();
+}
+
+float CGlutton::getHP(void)
+{
+	return health;
+}
+
+void CGlutton::setHP(float newHealth)
+{
+	health = newHealth;
 }
 
 
@@ -635,15 +646,15 @@ bool CGlutton::InteractWithPlayer(void)
 	glm::i32vec2 i32vec2PlayerPos = cPlayer2D->vec2Index;
 	
 	// Check if the enemy2D is within 1.5 indices of the player2D
-	if (((vec2Index.x >= i32vec2PlayerPos.x - 0.5) && 
-		(vec2Index.x <= i32vec2PlayerPos.x + 0.5))
+	if (((vec2Index.x >= i32vec2PlayerPos.x - 20) && 
+		(vec2Index.x <= i32vec2PlayerPos.x + 20))
 		&& 
 		((vec2Index.y >= i32vec2PlayerPos.y - 0.5) &&
 		(vec2Index.y <= i32vec2PlayerPos.y + 0.5)))
 	{
-		cout << "Gotcha!" << endl;
+		cout << "Within Range!" << endl;
 		// Since the player has been caught, then reset the FSM
-		sCurrentFSM = IDLE;
+		sCurrentFSM = SHOOT;
 		iFSMCounter = 0;
 		return true;
 	}

@@ -74,6 +74,14 @@ public:
 	// Set the handle to cPlayer to this class instance
 	void SetPlayer2D(CPlayer2D* cPlayer2D);
 
+	// Get Glutton HP
+
+	float getHP(void);
+
+	// Set Glutton HP
+
+	void setHP(float newHealth);
+
 	// boolean flag to indicate if this enemy is active
 	bool bIsActive;
 

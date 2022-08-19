@@ -61,6 +61,8 @@ public:
 	// The vec2 variable which stores the UV coordinates to render the Entity2D
 	glm::vec2 vec2UVCoordinate;
 
+	float health;
+
 protected:
 	// Name of Shader Program instance
 	std::string sShaderName;
