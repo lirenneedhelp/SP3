@@ -118,6 +118,7 @@ bool CPlayer2D::Init(void)
 	spearequip = false;
 	axeequip = false;
 	bowequip = false;
+	shovelequip = false;
 
 	playerInitialDamage = 10;
 	
@@ -128,7 +129,7 @@ bool CPlayer2D::Init(void)
 	glBindVertexArray(VAO);
 	
 	// Load the player texture 
-	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/player.png", true);
+	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/.png", true);
 	if (iTextureID == 0)
 	{
 		cout << "Unable to load Image/player.png" << endl;
@@ -136,7 +137,7 @@ bool CPlayer2D::Init(void)
 	}
 	
 	//CS: Create the animated sprite and setup the animation 
-	animatedSprites = CMeshBuilder::GenerateSpriteAnimation(11, 7, cSettings->TILE_WIDTH, cSettings->TILE_HEIGHT);
+	animatedSprites = CMeshBuilder::GenerateSpriteAnimation(24, 7, cSettings->TILE_WIDTH, cSettings->TILE_HEIGHT);
 	animatedSprites->AddAnimation("idle", 0, 6);
 	animatedSprites->AddAnimation("right", 7, 13);
 	animatedSprites->AddAnimation("left", 7, 13);
@@ -174,10 +175,16 @@ bool CPlayer2D::Init(void)
 	cInventoryItem = cInventoryManager->Add("sword", "Image/sword.tga", 100, 100);
 	cInventoryItem->vec2Size = glm::vec2(25, 25);
 
+	cInventoryItem = cInventoryManager->Add("spear", "Image/spear.tga", 100, 100);
+	cInventoryItem->vec2Size = glm::vec2(25, 25);
+
+	cInventoryItem = cInventoryManager->Add("bow", "Image/bow.tga", 100, 100);
+	cInventoryItem->vec2Size = glm::vec2(25, 25);
+
 	cInventoryItem = cInventoryManager->Add("axe", "Image/axe.tga", 100, 100);
 	cInventoryItem->vec2Size = glm::vec2(25, 25);
 
-	cInventoryItem = cInventoryManager->Add("spear", "Image/spear.tga", 100, 100);
+	cInventoryItem = cInventoryManager->Add("shovel", "Image/shovel.tga", 100, 100);
 	cInventoryItem->vec2Size = glm::vec2(25, 25);
 
 	// Add a Health icon as one of the inventory items
@@ -1036,6 +1043,15 @@ void CPlayer2D::InteractWithMap(void)
 		// Play a bell sound
 		cSoundController->PlaySoundByID(1);
 		break;
+	case 32:
+		// Erase the potion from this position
+		cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
+		// Increase the potion by 1
+		cInventoryItem = cInventoryManager->GetItem("bow");
+		cInventoryItem->Add(1);
+		// Play a bell sound
+		cSoundController->PlaySoundByID(1);
+		break;
 	case 33:
 		// Erase the potion from this position
 		cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
@@ -1043,6 +1059,16 @@ void CPlayer2D::InteractWithMap(void)
 		cInventoryItem = cInventoryManager->GetItem("axe");
 		cInventoryItem->Add(1);
 		axeequip = true;
+		// Play a bell sound
+		cSoundController->PlaySoundByID(1);
+		break;
+	case 34:
+		// Erase the potion from this position
+		cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
+		// Increase the potion by 1
+		cInventoryItem = cInventoryManager->GetItem("shovel");
+		cInventoryItem->Add(1);
+		shovelequip = true;
 		// Play a bell sound
 		cSoundController->PlaySoundByID(1);
 		break;

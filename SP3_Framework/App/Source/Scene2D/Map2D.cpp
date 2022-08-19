@@ -225,6 +225,18 @@ bool CMap2D::Init(	const unsigned int uiNumLevels,
 		// Store the texture ID into MapOfTextureIDs
 		MapOfTextureIDs.insert(pair<int, int>(31, iTextureID));
 	}
+	// Load the bow texture
+	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/bow.tga", true);
+	if (iTextureID == 0)
+	{
+		cout << "Unable to load Image/bow.tga" << endl;
+		return false;
+	}
+	else
+	{
+		// Store the texture ID into MapOfTextureIDs
+		MapOfTextureIDs.insert(pair<int, int>(32, iTextureID));
+	}
 	// Load the axe texture
 	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/axe.tga", true);
 	if (iTextureID == 0)
@@ -236,6 +248,18 @@ bool CMap2D::Init(	const unsigned int uiNumLevels,
 	{
 		// Store the texture ID into MapOfTextureIDs
 		MapOfTextureIDs.insert(pair<int, int>(33, iTextureID));
+	}
+	// Load the axe texture
+	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/shovel.tga", true);
+	if (iTextureID == 0)
+	{
+		cout << "Unable to load Image/shovel.tga" << endl;
+		return false;
+	}
+	else
+	{
+		// Store the texture ID into MapOfTextureIDs
+		MapOfTextureIDs.insert(pair<int, int>(34, iTextureID));
 	}
 	// Load the Exit texture
 	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Scene2D_Exit.tga", true);
