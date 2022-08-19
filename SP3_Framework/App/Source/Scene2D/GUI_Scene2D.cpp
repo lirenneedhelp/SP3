@@ -84,8 +84,11 @@ bool CGUI_Scene2D::Init(void)
 	cInventoryItem = cInventoryManager->Add("Tree", "Image/Scene2D_TreeTile.tga", 5, 0);
 	cInventoryItem->vec2Size = glm::vec2(25, 25);
 
-	emptyInventorySlot = cInventoryManager->Add("Empty", "Image\\GUI\\itemhotbar.png", 1, 1);
-	emptyInventorySlot->vec2Size = glm::vec2(25, 25);
+
+	CImageLoader* il = CImageLoader::GetInstance();
+	emptyInventorySlot.fileName = "Image\\GUI\\itemhotbar.png";
+	emptyInventorySlot.textureID = il->LoadTextureGetID(emptyInventorySlot.fileName.c_str(), false);
+	emptyInventorySlot.itemID = -1;
 
 	for (int i = 0; i < 9; ++i)
 	{
@@ -175,10 +178,11 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 	ImGui::End();
 	
 	ImGuiWindowFlags window_flags = 0;
+	//window_flags |= ImGuiWindowFlags_;
 	window_flags |= ImGuiWindowFlags_NoTitleBar;
 	window_flags |= ImGuiWindowFlags_NoScrollbar;
+	window_flags |= ImGuiWindowFlags_NoResize;
 	//window_flags |= ImGuiWindowFlags_MenuBar;
-	window_flags |= ImGuiWindowFlags_NoBackground;
 	window_flags |= ImGuiWindowFlags_NoMove;
 	window_flags |= ImGuiWindowFlags_NoCollapse;
 	window_flags |= ImGuiWindowFlags_NoNav;
@@ -186,18 +190,20 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 	for (int i = 0; i < playerInventory.size(); ++i)
 	{
 	
-		ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth / 3, cSettings->iWindowHeight * 0.94f));
-		ImGui::SetWindowSize(ImVec2(cSettings->iWindowWidth, 25.0f * relativeScale_y));
+		ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth / 9 * 3 , cSettings->iWindowHeight * 0.93f ));
+		ImGui::SetWindowSize(ImVec2(cSettings->iWindowWidth / 3 * relativeScale_x, 40.0f * relativeScale_y));
 		if (cKeyboardController->IsKeyPressed(GLFW_KEY_1))
 		{
 			ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(1.0f, 0.0f, 0.0f, 1.0f));
 			ImGui::PopStyleColor();
+
 			ImGui::SameLine();
 
 		}
-		ImGui::Image((void*)(intptr_t)emptyInventorySlot->GetTextureID(),
-			ImVec2(emptyInventorySlot->vec2Size.x * relativeScale_x, emptyInventorySlot->vec2Size.y * relativeScale_y),
-			ImVec2(0, 1), ImVec2(1, 0));
+		if (ImGui::ImageButton((ImTextureID)playerInventory[i].textureID, ImVec2(20 * relativeScale_x, 20 * relativeScale_y), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0), 2, ImVec4(1, 0, 0, 0)))
+		{
+			cout << playerInventory[i].itemID << endl;
+		}
 		ImGui::SameLine();
 	}
 	ImGui::End();

@@ -69,6 +69,11 @@ public:
 
 	bool isMoving;
 	bool speed;
+	bool strength;
+	bool swordequip;
+	bool spearequip;
+	bool axeequip;
+	bool bowequip;
 	bool highjump;
 	int jumps;
 
