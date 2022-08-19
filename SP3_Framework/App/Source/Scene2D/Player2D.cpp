@@ -187,6 +187,18 @@ bool CPlayer2D::Init(void)
 	cInventoryItem = cInventoryManager->Add("shovel", "Image/shovel.tga", 100, 100);
 	cInventoryItem->vec2Size = glm::vec2(25, 25);
 
+	cInventoryItem = cInventoryManager->Add("helmet", "Image/helmet.tga", 100, 100);
+	cInventoryItem->vec2Size = glm::vec2(25, 25);
+
+	cInventoryItem = cInventoryManager->Add("chestplate", "Image/chestplate.tga", 100, 100);
+	cInventoryItem->vec2Size = glm::vec2(25, 25);
+
+	cInventoryItem = cInventoryManager->Add("leggings", "Image/leggings.tga", 100, 100);
+	cInventoryItem->vec2Size = glm::vec2(25, 25);
+
+	cInventoryItem = cInventoryManager->Add("boots", "Image/boots.tga", 100, 100);
+	cInventoryItem->vec2Size = glm::vec2(25, 25);
+
 	// Add a Health icon as one of the inventory items
 	cInventoryItem = cInventoryManager->Add("Health", "Image/Scene2D_Health.tga", 100, 100);
 	cInventoryItem->vec2Size = glm::vec2(25, 25);
@@ -1116,6 +1128,46 @@ void CPlayer2D::InteractWithMap(void)
 		cInventoryItem = cInventoryManager->GetItem("Health");
 		cInventoryItem->Remove(1);
 		break;
+	case 41:
+		// Erase the potion from this position
+		cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
+		// Increase the potion by 1
+		cInventoryItem = cInventoryManager->GetItem("helmet");
+		cInventoryItem->Add(1);
+		shovelequip = true;
+		// Play a bell sound
+		cSoundController->PlaySoundByID(1);
+		break;
+	case 42:
+		// Erase the potion from this position
+		cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
+		// Increase the potion by 1
+		cInventoryItem = cInventoryManager->GetItem("chestplate");
+		cInventoryItem->Add(1);
+		shovelequip = true;
+		// Play a bell sound
+		cSoundController->PlaySoundByID(1);
+		break;
+	case 43:
+		// Erase the potion from this position
+		cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
+		// Increase the potion by 1
+		cInventoryItem = cInventoryManager->GetItem("leggings");
+		cInventoryItem->Add(1);
+		shovelequip = true;
+		// Play a bell sound
+		cSoundController->PlaySoundByID(1);
+		break;
+	case 44:
+		// Erase the potion from this position
+		cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
+		// Increase the potion by 1
+		cInventoryItem = cInventoryManager->GetItem("boots");
+		cInventoryItem->Add(1);
+		shovelequip = true;
+		// Play a bell sound
+		cSoundController->PlaySoundByID(1);
+		break;
 	case 99:
 		// Level has been completed
 		CGameManager::GetInstance()->bLevelCompleted = true;
@@ -1264,7 +1316,15 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime) {
 				break;
 			}
 		}
-		breakinterval = 0.2f;
+		if (shovelequip = true)
+		{
+			breakinterval = 0.1f;
+		}
+		else
+		{
+			breakinterval = 0.2f;
+		}
+		
 	}
 	if (cKeyboardController->IsKeyDown(GLFW_KEY_U) && breakinterval <= 0.f) {
 		if (direction == 1) {
@@ -1281,7 +1341,14 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime) {
 				break;
 			}
 		}
-		breakinterval = 0.2f;
+		if (shovelequip = true)
+		{
+			breakinterval = 0.1f;
+		}
+		else
+		{
+			breakinterval = 0.2f;
+		}
 	}
 	if (cKeyboardController->IsKeyDown(GLFW_KEY_P) && breakinterval <= 0.f) {
 
@@ -1297,8 +1364,14 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime) {
 			cMap2D->SetMapInfo(vec2Index.y + 1, vec2Index.x, 0);
 			break;
 		}
-
-		breakinterval = 0.2f;
+		if (shovelequip = true)
+		{
+			breakinterval = 0.1f;
+		}
+		else
+		{
+			breakinterval = 0.2f;
+		}
 	}
 }
 /*
