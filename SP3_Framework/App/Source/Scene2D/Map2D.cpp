@@ -249,7 +249,7 @@ bool CMap2D::Init(	const unsigned int uiNumLevels,
 		// Store the texture ID into MapOfTextureIDs
 		MapOfTextureIDs.insert(pair<int, int>(33, iTextureID));
 	}
-	// Load the axe texture
+	// Load the shovel texture
 	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/shovel.tga", true);
 	if (iTextureID == 0)
 	{
@@ -260,6 +260,54 @@ bool CMap2D::Init(	const unsigned int uiNumLevels,
 	{
 		// Store the texture ID into MapOfTextureIDs
 		MapOfTextureIDs.insert(pair<int, int>(34, iTextureID));
+	}
+	// Load the helmet texture
+	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/helmet.tga", true);
+	if (iTextureID == 0)
+	{
+		cout << "Unable to load Image/helmet.tga" << endl;
+		return false;
+	}
+	else
+	{
+		// Store the texture ID into MapOfTextureIDs
+		MapOfTextureIDs.insert(pair<int, int>(41, iTextureID));
+	}
+	// Load the chestplate texture
+	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/chestplate.tga", true);
+	if (iTextureID == 0)
+	{
+		cout << "Unable to load Image/chestplate.tga" << endl;
+		return false;
+	}
+	else
+	{
+		// Store the texture ID into MapOfTextureIDs
+		MapOfTextureIDs.insert(pair<int, int>(42, iTextureID));
+	}
+	// Load the leggings texture
+	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/leggings.tga", true);
+	if (iTextureID == 0)
+	{
+		cout << "Unable to load Image/leggings.tga" << endl;
+		return false;
+	}
+	else
+	{
+		// Store the texture ID into MapOfTextureIDs
+		MapOfTextureIDs.insert(pair<int, int>(43, iTextureID));
+	}
+	// Load the boots texture
+	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/boots.tga", true);
+	if (iTextureID == 0)
+	{
+		cout << "Unable to load Image/boots.tga" << endl;
+		return false;
+	}
+	else
+	{
+		// Store the texture ID into MapOfTextureIDs
+		MapOfTextureIDs.insert(pair<int, int>(44, iTextureID));
 	}
 	// Load the Exit texture
 	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Scene2D_Exit.tga", true);
