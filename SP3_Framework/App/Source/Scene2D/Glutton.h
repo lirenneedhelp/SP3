@@ -29,6 +29,12 @@ class CMap2D;
 // Include Player2D
 #include "Player2D.h"
 
+// Include CEnemyProjectile
+#include "EnemyProjectile.h"
+
+// Include Scene2D (Because I want to update the bullet vector in Scene2D)
+#include "Scene2D.h"
+
 class CGlutton : public CEntity2D
 {
 public:
@@ -40,6 +46,10 @@ public:
 
 	// Init
 	bool Init(void);
+
+	// Init without reading from the map
+
+	bool Init2(void);
 
 	// Update
 	void Update(const double dElapsedTime);
@@ -74,6 +84,8 @@ public:
 	// Set the handle to cPlayer to this class instance
 	void SetPlayer2D(CPlayer2D* cPlayer2D);
 
+	bool checkForWall(void); // Check for walls in front of the player
+
 	// Get Glutton HP
 
 	float getHP(void);
@@ -99,8 +111,9 @@ protected:
 	{
 		IDLE = 0,
 		PATROL = 1,
-		ATTACK = 2,
-		SHOOT = 3,
+		TRACE = 2,
+		JUMP_OVER_WALL = 3,
+		SHOOT = 4,
 		NUM_FSM
 	};
 
@@ -129,6 +142,10 @@ protected:
 	glm::vec2 i32vec2Destination;
 	// The vec2 which stores the direction for enemy2D movement in the Map2D
 	glm::vec2 i32vec2Direction;
+
+	float shotInterval;
+
+	float wallDist;
 
 	// Settings
 	CSettings* cSettings;

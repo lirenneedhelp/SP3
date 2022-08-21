@@ -57,6 +57,7 @@
 
 #include "EnemyProjectile.h"
 
+
 class CScene2D : public CSingletonTemplate<CScene2D>
 {
 	friend CSingletonTemplate<CScene2D>;
@@ -83,7 +84,16 @@ public:
 	float getDuration(void); // How long has it been day / night
 	void resetDuration(void); //Reset the counter ^
 	vector<CEntity2D*>returnEnemyVector(void);
-	void setNewEnemyVector(vector<CEntity2D*> newList);
+	void setNewEnemyVector(vector<CEntity2D*> &newList);
+
+	void setLiveBulletVector(vector<CEntity2D*> &vectorOfBullets);
+
+	// Push Bullet into the vector
+	void pushBullet(CEntity2D* bullet);
+
+	vector<CEntity2D*> getLiveBulletVector(void);
+	
+	
 
 protected:
 	// The handler containing the instance of the 2D Map
@@ -100,7 +110,7 @@ protected:
 	glm::mat4 transform;
 
 	// Projectile Handler
-    CEnemyProjectile* enemyProjectile;
+	vector<CEntity2D*> liveBullets;
 
 	// GUI_Scene2D
 	CGUI_Scene2D* cGUI_Scene2D;
@@ -111,8 +121,9 @@ protected:
 	// Handler to the CSoundController
 	CSoundController* cSoundController;
 
-	bool day;
+    
 
+	bool day;
 
 	float enemySpawnTimeCounter;
 

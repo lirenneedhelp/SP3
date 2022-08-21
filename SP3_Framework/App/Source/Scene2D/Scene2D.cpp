@@ -165,6 +165,9 @@ bool CScene2D::Init(void)
 		return false;
 	}
 
+	//Create and initialise the CEnemyProjectile
+	liveBullets.clear();
+
 	// Create and initialise the CEnemy2D
 	enemyVector.clear();
 	while (true)
@@ -197,6 +200,8 @@ bool CScene2D::Init(void)
 		}
 		else
 		{
+			delete cWoodCrawler;
+			cWoodCrawler = NULL;
 			// Break out of this loop if the enemy has all been loaded
 			break;
 		}
@@ -211,10 +216,13 @@ bool CScene2D::Init(void)
 		if (cGlutton->Init() == true)
 		{
 			cGlutton->SetPlayer2D(cPlayer2D);
+			cGlutton->setHP(60);
 			enemyVector.push_back(cGlutton);
 		}
 		else
 		{
+			delete cGlutton;
+			cGlutton = NULL;
 			// Break out of this loop if the enemy has all been loaded
 			break;
 		}
@@ -234,13 +242,12 @@ bool CScene2D::Init(void)
 		}
 		else
 		{
+			delete cBloodDeer;
+			cBloodDeer = NULL;
 			// Break out of this loop if the enemy has all been loaded
 			break;
 		}
 	}
-	enemyProjectile = new CEnemyProjectile();
-	enemyProjectile->SetShader("Shader2D_Colour");
-	enemyProjectile->Init();
 
 	// Store the keyboard controller singleton instance here
 	cKeyboardController = CKeyboardController::GetInstance();
@@ -286,6 +293,14 @@ bool CScene2D::Update(const double dElapsedTime)
 	{
 		enemyVector[i]->Update(dElapsedTime);
 	}
+
+	if (liveBullets.size() > 0)
+	{
+		for (int j = 0; j < liveBullets.size(); j++)
+		{
+			liveBullets[j]->Update(dElapsedTime);
+		}
+	}
 	 
 	// Call the Map2D's update method
 	cMap2D->Update(dElapsedTime);
@@ -309,9 +324,6 @@ bool CScene2D::Update(const double dElapsedTime)
 	}
 	if (cKeyboardController->IsKeyReleased(GLFW_KEY_M))
 	{
-		/*enemyProjectile->PreRender();
-		enemyProjectile->Render();
-		enemyProjectile->PostRender();*/
 
 	}
 
@@ -363,25 +375,34 @@ bool CScene2D::Update(const double dElapsedTime)
 			}
 			else
 			{
-				cout << "Spawn Enemy\n";
-				CWoodCrawler* cWoodCrawler = new CWoodCrawler();
-				cWoodCrawler->Seti32vec2Index(randcol, randrow);
-				cWoodCrawler->SetShader("Shader2D_Colour");
-				cWoodCrawler->SetPlayer2D(cPlayer2D);
-			
-				enemyVector.push_back(cWoodCrawler);
-				
-				
-
-				enemySpawnTimeCounter = 15.f;
-				/*float randEnemy = rand() * 3 + 1;
+				float randEnemy = rand() % 2 + 1;
 				cout << randEnemy << endl;
 				if (randEnemy == 1)
 				{
+					CWoodCrawler* cWoodCrawler = new CWoodCrawler();
+					cWoodCrawler->SetShader("Shader2D_Colour");
+					cWoodCrawler->Seti32vec2Index(randcol, randrow);
+					if (cWoodCrawler->Init2() == true)
+					{
+						cWoodCrawler->SetPlayer2D(cPlayer2D);
+						cWoodCrawler->setHP(60);
+						enemyVector.push_back(cWoodCrawler);
+					}
+				}
+				else if (randEnemy == 2)
+				{
 					CGlutton* cGlutton = new CGlutton();
 					cGlutton->SetShader("Shader2D_Colour");
-				}*/
-				cout << enemyVector.size() << endl;
+					cGlutton->Seti32vec2Index(randcol, randrow);
+					if (cGlutton->Init2() == true)
+					{
+						cGlutton->SetPlayer2D(cPlayer2D);
+						cGlutton->setHP(60);
+						enemyVector.push_back(cGlutton);
+					}
+				}
+				enemySpawnTimeCounter = 15.f;
+
 				break;
 			}
 		}
@@ -426,6 +447,19 @@ void CScene2D::Render(void)
 		enemyVector[i]->Render();
 		// Call the CEnemy2D's PostRender()
 		enemyVector[i]->PostRender();
+	}
+
+	if (liveBullets.size() > 0)
+	{
+		for (int i = 0; i < liveBullets.size(); i++)
+		{
+			// Call the CEnemy2D's PreRender()
+			liveBullets[i]->PreRender();
+			// Call the CEnemy2D's Render()
+			liveBullets[i]->Render();
+			// Call the CEnemy2D's PostRender()
+			liveBullets[i]->PostRender();
+		}
 	}
 
 	// Call the CPlayer2D's PreRender()
@@ -475,7 +509,22 @@ vector<CEntity2D*> CScene2D::returnEnemyVector(void)
 	return enemyVector;
 }
 
-void CScene2D::setNewEnemyVector(vector<CEntity2D*> newList)
+void CScene2D::setNewEnemyVector(vector<CEntity2D*> &newList)
 {
 	enemyVector = newList;
+}
+
+void CScene2D::setLiveBulletVector(vector<CEntity2D*>& vectorOfBullets)
+{
+	liveBullets = vectorOfBullets;
+}
+
+void CScene2D::pushBullet(CEntity2D* bullet)
+{
+	liveBullets.push_back(bullet);
+}
+
+vector<CEntity2D*> CScene2D::getLiveBulletVector(void)
+{
+	return liveBullets;
 }

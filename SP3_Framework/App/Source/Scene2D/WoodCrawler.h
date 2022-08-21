@@ -43,6 +43,9 @@ public:
 	// Init
 	bool Init(void);
 
+	//Init without reading from Map
+	bool Init2(void);
+
 	// Update
 	void Update(const double dElapsedTime);
 

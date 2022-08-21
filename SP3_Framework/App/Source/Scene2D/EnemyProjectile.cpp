@@ -33,8 +33,6 @@ CEnemyProjectile::CEnemyProjectile(void)
 	, cMap2D(NULL)
 	, cSettings(NULL)
 	, cPlayer2D(NULL)
-	, sCurrentFSM(FSM::IDLE)
-	, iFSMCounter(0)
 	, quadMesh(NULL)
 {
 	transform = glm::mat4(1.0f);	// make sure to initialize matrix to identity matrix first
@@ -64,7 +62,6 @@ CEnemyProjectile::~CEnemyProjectile(void)
 		quadMesh = NULL;
 	}
 
-	// We won't delete this since it was created elsewhere
 	cPlayer2D = NULL;
 
 	// We won't delete this since it was created elsewhere
@@ -77,7 +74,7 @@ CEnemyProjectile::~CEnemyProjectile(void)
 }
 
 /**
-  @brief Initialise this instance
+  @brief Initialise this instance without reading from the map (won't be necessary)
   */
 bool CEnemyProjectile::Init(void)
 {
@@ -92,13 +89,15 @@ bool CEnemyProjectile::Init(void)
 	// By default, microsteps should be zero
 	i32vec2NumMicroSteps = glm::i32vec2(0, 0);
 
+	//i32vec2Direction = glm::i32vec2(0, 0);
+
 	glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);
 
 	//CS: Create the Quad Mesh using the mesh builder
-	quadMesh = CMeshBuilder::GenerateQuad(glm::vec4(1, 1, 1, 1), cSettings->TILE_WIDTH, cSettings->TILE_HEIGHT);
+	quadMesh = CMeshBuilder::GenerateQuad(glm::vec4(1, 1, 1, 1), cSettings->TILE_WIDTH / 2, cSettings->TILE_HEIGHT / 2);
 
-	// Load the enemy2D texture
+	// Load the bullet texture
 	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Scene2D_EnemyTile.tga", true);
 	if (iTextureID == 0)
 	{
@@ -112,6 +111,11 @@ bool CEnemyProjectile::Init(void)
 	// Set the Physics to fall status by default
 	cPhysics2D.Init();
 	cPhysics2D.SetStatus(CPhysics2D::STATUS::FALL);
+
+	bulletStorage = CScene2D::GetInstance()->getLiveBulletVector();
+	hitPlayer = false;
+
+	bulletDamage = 20;
 
 	// If this class is initialised properly, then set the bIsActive to true
 	bIsActive = true;
@@ -127,22 +131,36 @@ void CEnemyProjectile::Update(const double dElapsedTime)
 	if (!bIsActive)
 		return;
 
-	if (cMap2D->FindValue(299, uiRow, uiCol))
+	
+	UpdatePosition();
+	if (bulletStorage.size() != 0)
 	{
-		// Erase the value of the player in the arrMapInfo
-		cMap2D->SetMapInfo(uiRow, uiCol, 0);
-
-		// Set the start position of the Player to iRow and iCol
-		vec2Index = glm::i32vec2(uiCol, uiRow);
+		CheckForInteraction();
 	}
-	if (CheckPosition(RIGHT))
-	{
-		vec2Index++;
-	}
+	
 
 	// Update the UV Coordinates
 	vec2UVCoordinate.x = cSettings->ConvertIndexToUVSpace(cSettings->x, vec2Index.x, false, i32vec2NumMicroSteps.x*cSettings->MICRO_STEP_XAXIS);
 	vec2UVCoordinate.y = cSettings->ConvertIndexToUVSpace(cSettings->y, vec2Index.y, false, i32vec2NumMicroSteps.y*cSettings->MICRO_STEP_YAXIS);
+}
+
+void CEnemyProjectile::SetPlayer2D(CPlayer2D* cPlayer2D)
+{
+	this->cPlayer2D = cPlayer2D;
+
+	// Update the enemy's direction
+	//UpdateDirection();
+}
+
+void CEnemyProjectile::setBulletVector(vector<CEntity2D*>& newBulletVector)
+{
+	bulletStorage = newBulletVector;
+}
+
+vector<CEntity2D*>& CEnemyProjectile::getBulletVector(void)
+{
+	// TODO: insert return statement here
+	return bulletStorage;
 }
 
 /**
@@ -220,6 +238,12 @@ void CEnemyProjectile::Seti32vec2Index(const int iIndex_XAxis, const int iIndex_
 	this->vec2Index.y = iIndex_YAxis;
 }
 
+void CEnemyProjectile::seti32vec2Direction(const int playerX, const int enemyX)
+{
+	this->i32vec2Direction.x = playerX - enemyX;
+	this->i32vec2Direction.y = 0;
+}
+
 /**
 @brief Set the number of microsteps of the enemy2D
 @param iNumMicroSteps_XAxis A const int variable storing the current microsteps in the X-axis
@@ -231,17 +255,6 @@ void CEnemyProjectile::Seti32vec2NumMicroSteps(const int iNumMicroSteps_XAxis, c
 	this->i32vec2NumMicroSteps.y = iNumMicroSteps_YAxis;
 }
 
-/**
- @brief Set the handle to cPlayer to this class instance
- @param cPlayer2D A CPlayer2D* variable which contains the pointer to the CPlayer2D instance
- */
-void CEnemyProjectile::SetPlayer2D(CPlayer2D* cPlayer2D)
-{
-	this->cPlayer2D = cPlayer2D;
-
-	// Update the enemy's direction
-	UpdateDirection();
-}
 
 
 /**
@@ -405,6 +418,41 @@ bool CEnemyProjectile::CheckPosition(DIRECTION eDirection)
 	return true;
 }
 
+bool CEnemyProjectile::CheckPos(DIRECTION eDirection)
+{
+	if (eDirection == LEFT)
+	{
+		if ((cMap2D->GetMapInfo(vec2Index.y, vec2Index.x) >= 100) ||
+			(cMap2D->GetMapInfo(vec2Index.y, vec2Index.x - 1) >= 100) ||
+			vec2Index.x < 0)
+		{
+			if (i32vec2NumMicroSteps.x == 0)
+				return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	else if (eDirection == RIGHT)
+	{
+		if ((cMap2D->GetMapInfo(vec2Index.y, vec2Index.x) >= 100) ||
+			(cMap2D->GetMapInfo(vec2Index.y, vec2Index.x + 1) >= 100) ||
+			vec2Index.x >= (int)cSettings->NUM_TILES_XAXIS - 1)
+		{
+			if (i32vec2NumMicroSteps.x == 0)
+				return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
+	
+	return false;
+}
+
 // Check if the enemy2D is in mid-air
 bool CEnemyProjectile::IsMidAir(void)
 {
@@ -437,41 +485,17 @@ bool CEnemyProjectile::InteractWithPlayer(void)
 		((vec2Index.y >= i32vec2PlayerPos.y - 0.5) &&
 		(vec2Index.y <= i32vec2PlayerPos.y + 0.5)))
 	{
-		cout << "Gotcha!" << endl;
+		//cout << "Gotcha!" << endl;
+		damageOnPlayer = cPlayer2D->returnPlayerHealth();
+		playerHP = damageOnPlayer->GetItem("Health");
+		playerHP->Remove(bulletDamage);
+		hitPlayer = true;
 		// Since the player has been caught, then reset the FSM
-		sCurrentFSM = IDLE;
-		iFSMCounter = 0;
 		return true;
 	}
 	return false;
 }
 
-/**
- @brief Update the enemy's direction.
- */
-void CEnemyProjectile::UpdateDirection(void)
-{
-	// Set the destination to the player
-	i32vec2Destination = cPlayer2D->vec2Index;
-
-	// Calculate the direction between enemy2D and player2D
-	i32vec2Direction = i32vec2Destination - vec2Index;
-
-	// Calculate the distance between enemy2D and player2D
-	float fDistance = cPhysics2D.CalculateDistance(vec2Index, i32vec2Destination);
-	if (fDistance >= 0.01f)
-	{
-		// Calculate direction vector.
-		// We need to round the numbers as it is easier to work with whole numbers for movements
-		i32vec2Direction.x = (int)round(i32vec2Direction.x / fDistance);
-		i32vec2Direction.y = (int)round(i32vec2Direction.y / fDistance);
-	}
-	else
-	{
-		// Since we are not going anywhere, set this to 0.
-		i32vec2Direction = glm::i32vec2(0);
-	}
-}
 
 /**
  @brief Flip horizontal direction. For patrol use only
@@ -496,7 +520,7 @@ void CEnemyProjectile::UpdatePosition(void)
 		const int iOldIndex = vec2Index.x;
 		if (vec2Index.x >= 0)
 		{
-			i32vec2NumMicroSteps.x--;
+			i32vec2NumMicroSteps.x -= 0.4;
 			if (i32vec2NumMicroSteps.x < 0)
 			{
 				i32vec2NumMicroSteps.x = ((int)cSettings->NUM_STEPS_PER_TILE_XAXIS) - 1;
@@ -510,7 +534,6 @@ void CEnemyProjectile::UpdatePosition(void)
 		// Find a feasible position for the enemy2D's current position
 		if (CheckPosition(LEFT) == false)
 		{
-			FlipHorizontalDirection();
 			vec2Index = i32vec2OldIndex;
 			i32vec2NumMicroSteps.x = 0;
 		}
@@ -530,7 +553,7 @@ void CEnemyProjectile::UpdatePosition(void)
 		const int iOldIndex = vec2Index.x;
 		if (vec2Index.x < (int)cSettings->NUM_TILES_XAXIS)
 		{
-			i32vec2NumMicroSteps.x++;
+			i32vec2NumMicroSteps.x += 0.4;
 
 			if (i32vec2NumMicroSteps.x >= cSettings->NUM_STEPS_PER_TILE_XAXIS)
 			{
@@ -545,7 +568,6 @@ void CEnemyProjectile::UpdatePosition(void)
 		// Find a feasible position for the enemy2D's current position
 		if (CheckPosition(RIGHT) == false)
 		{
-			FlipHorizontalDirection();
 			//vec2Index = i32vec2OldIndex;
 			i32vec2NumMicroSteps.x = 0;
 		}
@@ -567,6 +589,52 @@ void CEnemyProjectile::UpdatePosition(void)
 		{
 			cPhysics2D.SetStatus(CPhysics2D::STATUS::JUMP);
 			cPhysics2D.SetInitialVelocity(glm::vec2(0.0f, 3.5f));
+		}
+	}
+}
+
+void CEnemyProjectile::CheckForInteraction(void)
+{
+	for (int i = 0; i < bulletStorage.size(); i++)
+	{
+		if (i32vec2Direction.x > 0)
+		{
+			if (CheckPos(RIGHT))
+			{
+				bulletStorage[i]->~CEntity2D();
+				vector <CEntity2D*> temp = CScene2D::GetInstance()->getLiveBulletVector();
+				temp.erase(temp.begin() + i);
+				CScene2D::GetInstance()->setLiveBulletVector(temp);
+				bulletStorage = temp;
+				cout << bulletStorage.size() << endl;
+				break;
+			}
+				    
+		}
+		else if (i32vec2Direction.x < 0)
+		{
+			if (CheckPos(LEFT))
+			{			
+				bulletStorage[i]->~CEntity2D();
+				vector <CEntity2D*> temp = CScene2D::GetInstance()->getLiveBulletVector();
+				temp.erase(temp.begin() + i);
+				CScene2D::GetInstance()->setLiveBulletVector(temp);
+				bulletStorage = temp;
+				cout << bulletStorage.size() << endl;
+				break;	
+			}
+			
+		}
+		if (hitPlayer)
+		{
+			bulletStorage[i]->~CEntity2D();
+			vector <CEntity2D*> temp = CScene2D::GetInstance()->getLiveBulletVector();
+			temp.erase(temp.begin() + i);
+			CScene2D::GetInstance()->setLiveBulletVector(temp);
+			bulletStorage = temp;
+			cout << bulletStorage.size() << endl;
+			hitPlayer = false;
+			break;
 		}
 	}
 }
