@@ -121,6 +121,47 @@ bool CGlutton::Init(void)
 	cPhysics2D.Init();
 	cPhysics2D.SetStatus(CPhysics2D::STATUS::FALL);
 
+	shotInterval = 1.0f;
+
+	// If this class is initialised properly, then set the bIsActive to true
+	bIsActive = true;
+
+	return true;
+}
+
+bool CGlutton::Init2(void)
+{
+	// Get the handler to the CSettings instance
+	cSettings = CSettings::GetInstance();
+
+	// Get the handler to the CMap2D instance
+	cMap2D = CMap2D::GetInstance();
+
+	glGenVertexArrays(1, &VAO);
+	glBindVertexArray(VAO);
+
+	//CS: Create the Quad Mesh using the mesh builder
+	quadMesh = CMeshBuilder::GenerateQuad(glm::vec4(1, 1, 1, 1), cSettings->TILE_WIDTH, cSettings->TILE_HEIGHT);
+
+	// Load the enemy2D texture
+	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Scene2D_EnemyTile.tga", true);
+	if (iTextureID == 0)
+	{
+		cout << "Unable to load Image/Scene2D_EnemyTile.tga" << endl;
+		return false;
+	}
+
+	//CS: Init the color to white
+	runtimeColour = glm::vec4(1.0, 1.0, 1.0, 1.0);
+
+	// Set the Physics to fall status by default
+	cPhysics2D.Init();
+	cPhysics2D.SetStatus(CPhysics2D::STATUS::FALL);
+
+	shotInterval = 1.0f;
+
+	wallDist = 0.0f;
+
 	// If this class is initialised properly, then set the bIsActive to true
 	bIsActive = true;
 
@@ -153,11 +194,19 @@ void CGlutton::Update(const double dElapsedTime)
 			iFSMCounter = 0;
 			cout << "Switching to Idle State" << endl;
 		}
-		else if (cPhysics2D.CalculateDistance(vec2Index, cPlayer2D->vec2Index) < 20.0f)
+		else if (cPhysics2D.CalculateDistance(vec2Index, cPlayer2D->vec2Index) > 5.0f)
 		{
-			sCurrentFSM = ATTACK;
+			sCurrentFSM = TRACE;
 			iFSMCounter = 0;
+			cout << "Switching to TRACE State" << endl;
 		}
+		//else if (checkForWall())
+		//{
+		//	sCurrentFSM = JUMP_OVER_WALL;
+		//	iFSMCounter = 0;
+		//	cout << "Switching to JUMP_OVER_WALL State" << endl;
+
+		//}
 		else
 		{
 			// Patrol around
@@ -166,8 +215,8 @@ void CGlutton::Update(const double dElapsedTime)
 		}
 		iFSMCounter++;
 		break;
-	case ATTACK:
-		if (cPhysics2D.CalculateDistance(vec2Index, cPlayer2D->vec2Index) < 20.0f)
+	case TRACE:
+		if (cPhysics2D.CalculateDistance(vec2Index, cPlayer2D->vec2Index) > 5.0f)
 		{
 			// Calculate a path to the player
 			//cMap2D->PrintSelf();
@@ -220,17 +269,111 @@ void CGlutton::Update(const double dElapsedTime)
 		}
 		else
 		{
-			if (iFSMCounter > iMaxFSMCounter)
+			
+		/*	if (checkForWall())
+			{
+				sCurrentFSM = JUMP_OVER_WALL;
+				iFSMCounter = 0;
+			}*/
+			if (cPhysics2D.CalculateDistance(vec2Index, cPlayer2D->vec2Index) < 5.0f && vec2Index.y == cPlayer2D->vec2Index.y)
+			{
+				sCurrentFSM = SHOOT;
+				iFSMCounter = 0;
+			}
+			else 
 			{
 				sCurrentFSM = PATROL;
 				iFSMCounter = 0;
-				cout << "ATTACK : Reset counter: " << iFSMCounter << endl;
 			}
 			iFSMCounter++;
 		}
 		break;
 	case SHOOT:
-		cout << "I'm shooting your ass down\n";
+	{
+		shotInterval -= dElapsedTime;
+		if (shotInterval <= 0)
+		{
+			cout << "Shot Bullet\n";
+			CEnemyProjectile* cEnemyProjectile = new CEnemyProjectile();
+			cEnemyProjectile->SetShader("Shader2D_Colour");
+			cEnemyProjectile->Seti32vec2Index(vec2Index.x, vec2Index.y);
+			cEnemyProjectile->seti32vec2Direction(cPlayer2D->vec2Index.x, vec2Index.x);		
+			cEnemyProjectile->SetPlayer2D(cPlayer2D);
+			CScene2D::GetInstance()->pushBullet(cEnemyProjectile);
+
+			if (cEnemyProjectile->Init() == true)
+			{
+				cout << "SPAWNED\n";
+		
+			}
+			
+			shotInterval = 1.0f;
+		}
+
+		if (cPhysics2D.CalculateDistance(vec2Index, cPlayer2D->vec2Index) > .0f)
+		{
+			sCurrentFSM = TRACE;
+			iFSMCounter = 0;
+		
+		}
+		/*else
+		{
+			sCurrentFSM = PATROL;
+			iFSMCounter = 0;
+		}*/
+	}
+	break;
+
+	case JUMP_OVER_WALL:
+	{
+		
+			// Calculate a path to the player
+			auto path = cMap2D->PathFind(vec2Index,
+				glm::vec2(vec2Index.x + wallDist, vec2Index.y),
+				heuristic::euclidean,
+				20);
+			//cout << "=== Printing out the path ===" << endl;
+
+			// Calculate new destination
+			bool bFirstPosition = true;
+			for (const auto& coord : path)
+			{
+				//std::cout << coord.x << "," << coord.y << "\n";
+				if (bFirstPosition == true)
+				{
+					// Set a destination
+					i32vec2Destination = coord;
+					// Calculate the direction between enemy2D and this destination
+					i32vec2Direction = i32vec2Destination - vec2Index;
+					bFirstPosition = false;
+				}
+				else
+				{
+					if ((coord - i32vec2Destination) == i32vec2Direction)
+					{
+						// Set a destination
+						i32vec2Destination = coord;
+					}
+					else
+						break;
+				}
+			}
+			UpdatePosition();
+		
+		if (!checkForWall())
+		{
+			sCurrentFSM = SHOOT;
+			iFSMCounter = 0;
+		}
+		else if (iFSMCounter > iMaxFSMCounter)
+		{
+			sCurrentFSM = PATROL;
+			iFSMCounter = 0;
+		}
+		iFSMCounter++;
+		
+	}
+	break;
 
 	default:
 		break;
@@ -340,6 +483,48 @@ void CGlutton::SetPlayer2D(CPlayer2D* cPlayer2D)
 
 	// Update the enemy's direction
 	UpdateDirection();
+}
+
+bool CGlutton::checkForWall(void)
+{
+	for (float i = 0; i < 10.f; ++i)
+	{
+		if (i32vec2Direction.x < 0)
+		{
+			
+			if (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x - i) == 200)
+			{
+				return false;
+			}
+			else if (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x - i) >= 100)
+			{
+				wallDist = -(i + 1);
+				return true;
+			}
+			else
+			{
+				continue;
+			}
+		}
+		else if (i32vec2Direction.x > 0)
+		{
+			if (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x + i) == 200)
+			{
+				return false;
+			}
+			else if (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x + i) >= 100)
+			{
+				wallDist = i + 1;
+				return true;
+			}
+			else
+			{
+				continue;
+			}
+		}
+		
+	}
+	return false;
 }
 
 float CGlutton::getHP(void)
@@ -781,7 +966,7 @@ void CGlutton::UpdatePosition(void)
 		if (cPhysics2D.GetStatus() == CPhysics2D::STATUS::IDLE)
 		{
 			cPhysics2D.SetStatus(CPhysics2D::STATUS::JUMP);
-			cPhysics2D.SetInitialVelocity(glm::vec2(0.0f, 3.5f));
+			cPhysics2D.SetInitialVelocity(glm::vec2(0.0f, 2.5f));
 		}
 	}
 }

@@ -92,8 +92,9 @@ protected:
 	{
 		std::string fileName;
 		unsigned textureID;
+		unsigned itemID;
 	};
 
-	vector<CInventoryItem*> playerInventory;
-	CInventoryItem* emptyInventorySlot;
+	vector<ButtonData> playerInventory;
+	ButtonData emptyInventorySlot;
 };

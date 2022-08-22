@@ -29,6 +29,12 @@ class CMap2D;
 // Include Player2D
 #include "Player2D.h"
 
+// Include Glutton 
+
+#include "Glutton.h"
+
+#include "InventoryManager.h"
+
 class CEnemyProjectile : public CEntity2D
 {
 public:
@@ -56,6 +62,9 @@ public:
 	// Set the indices of the enemy2D
 	void Seti32vec2Index(const int iIndex_XAxis, const int iIndex_YAxis);
 
+	// Set the direction of the bullet
+	void seti32vec2Direction(const int playerX, const int enemyX);
+
 	// Set the number of microsteps of the enemy2D
 	void Seti32vec2NumMicroSteps(const int iNumMicroSteps_XAxis, const int iNumMicroSteps_YAxis);
 
@@ -74,6 +83,13 @@ public:
 	// Set the handle to cPlayer to this class instance
 	void SetPlayer2D(CPlayer2D* cPlayer2D);
 
+	// Set the size of the current bullet vector
+	void setBulletVector(vector<CEntity2D*>&newBulletVector);
+
+
+	vector<CEntity2D*>& getBulletVector(void);
+
+	
 	// boolean flag to indicate if this enemy is active
 	bool bIsActive;
 
@@ -87,13 +103,7 @@ protected:
 		NUM_DIRECTIONS
 	};
 
-	enum FSM
-	{
-		IDLE = 0,
-		PATROL = 1,
-		ATTACK = 2,
-		NUM_FSM
-	};
+	vector <CEntity2D*> bulletStorage;
 
 	glm::vec2 i32vec2OldIndex;
 
@@ -121,6 +131,7 @@ protected:
 	// The vec2 which stores the direction for enemy2D movement in the Map2D
 	glm::vec2 i32vec2Direction;
 
+
 	// Settings
 	CSettings* cSettings;
 
@@ -133,23 +144,24 @@ protected:
 	// Handle to the CPlayer2D
 	CPlayer2D* cPlayer2D;
 
-	// Current FSM
-	FSM sCurrentFSM;
+	bool hitPlayer;
 
-	// FSM counter - count how many frames it has been in this FSM
-	int iFSMCounter;
+	// Controls bullet damage on player
+	CInventoryManager* damageOnPlayer;
 
-	// Max count in a state
-	const int iMaxFSMCounter = 60;
+	// Player health
+	CInventoryItem* playerHP;
 
-	unsigned int uiRow;
-	unsigned int uiCol;
+	int bulletDamage;
 
 	// Constraint the enemy2D's position within a boundary
 	void Constraint(DIRECTION eDirection = LEFT);
 
 	// Check if a position is possible to move into
 	bool CheckPosition(DIRECTION eDirection);
+
+	// Check if position is alr at wall
+	bool CheckPos(DIRECTION eDirection);
 
 	// Check if the enemy2D is in mid-air
 	bool IsMidAir(void);
@@ -168,5 +180,7 @@ protected:
 
 	// Update position
 	void UpdatePosition(void);
+
+	void CheckForInteraction(void);
 };
 

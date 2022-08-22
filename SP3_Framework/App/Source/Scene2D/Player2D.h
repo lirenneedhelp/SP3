@@ -73,6 +73,7 @@ public:
 	bool swordequip;
 	bool spearequip;
 	bool axeequip;
+	bool shovelequip;
 	bool bowequip;
 	bool highjump;
 	int jumps;
