@@ -520,7 +520,7 @@ void CPlayer2D::Update(const double dElapsedTime)
 			}
 		}
 
-		if (swordequip = true)
+		if (swordequip == true)
 		{
 			attackSpeed -= dElapsedTime;
 			if (attackSpeed <= 0.f)
@@ -557,7 +557,7 @@ void CPlayer2D::Update(const double dElapsedTime)
 				}
 			}
 		}
-		else if (spearequip = true)
+		else if (spearequip == true)
 		{
 			attackSpeed -= dElapsedTime;
 			if (attackSpeed <= 0.f)
@@ -594,7 +594,7 @@ void CPlayer2D::Update(const double dElapsedTime)
 				}
 			}
 		}
-		else if (bowequip = true)
+		else if (bowequip == true)
 		{
 			attackSpeed -= dElapsedTime;
 			if (attackSpeed <= 0.f)
@@ -631,7 +631,7 @@ void CPlayer2D::Update(const double dElapsedTime)
 				}
 			}
 		}
-		if (strength = true)
+		if (strength == true)
 		{
 			playerInitialDamage *= 1.5;
 		}
@@ -1316,13 +1316,13 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime) {
 				break;
 			}
 		}
-		if (shovelequip = true)
+		if (shovelequip == true)
 		{
-			breakinterval = 0.1f;
+			breakinterval = 0.25f;
 		}
 		else
 		{
-			breakinterval = 0.2f;
+			breakinterval = 1.f;
 		}
 		
 	}
@@ -1338,16 +1338,18 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime) {
 				break;
 			case 103:
 				cMap2D->SetMapInfo(vec2Index.y - 1, vec2Index.x, 0);
+				cPhysics2D.SetStatus(CPhysics2D::STATUS::JUMP);
 				break;
+				
 			}
 		}
-		if (shovelequip = true)
+		if (shovelequip == true)
 		{
-			breakinterval = 0.1f;
+			breakinterval = 0.25f;
 		}
 		else
 		{
-			breakinterval = 0.2f;
+			breakinterval = 1.f;
 		}
 	}
 	if (cKeyboardController->IsKeyDown(GLFW_KEY_P) && breakinterval <= 0.f) {
@@ -1364,13 +1366,13 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime) {
 			cMap2D->SetMapInfo(vec2Index.y + 1, vec2Index.x, 0);
 			break;
 		}
-		if (shovelequip = true)
+		if (shovelequip == true)
 		{
-			breakinterval = 0.1f;
+			breakinterval = 0.25f;
 		}
 		else
 		{
-			breakinterval = 0.2f;
+			breakinterval = 1.5f;
 		}
 	}
 }
