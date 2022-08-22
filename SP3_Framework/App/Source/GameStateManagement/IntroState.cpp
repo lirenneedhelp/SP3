@@ -64,7 +64,7 @@ bool CIntroState::Init(void)
 	//CShaderManager::GetInstance()->activeShader->setInt("texture1", 0);
 
 	//Create Background Entity
-	background = new CBackgroundEntity("Image/IntroBackground.png");
+	background = new CBackgroundEntity("Image/splashscreen.png");
 	background->SetShader("Shader2D");
 	background->Init();
 
