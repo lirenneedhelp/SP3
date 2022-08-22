@@ -66,6 +66,9 @@ public:
 	// PostRender
 	void PostRender(void);
 
+	// Update the Inventory
+	void updateInventory(CInventoryItem* item);
+
 protected:
 	// Constructor
 	CGUI_Scene2D(void);
@@ -92,8 +95,9 @@ protected:
 	{
 		std::string fileName;
 		unsigned textureID;
-		unsigned itemID;
+		unsigned slotID;
 	};
+	vector<CInventoryItem*> storePlayerItem;
 
 	vector<ButtonData> playerInventory;
 	ButtonData emptyInventorySlot;

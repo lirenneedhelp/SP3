@@ -520,7 +520,7 @@ void CPlayer2D::Update(const double dElapsedTime)
 			}
 		}
 
-		if (swordequip = true)
+		if (swordequip == true)
 		{
 			attackSpeed -= dElapsedTime;
 			if (attackSpeed <= 0.f)
@@ -557,7 +557,7 @@ void CPlayer2D::Update(const double dElapsedTime)
 				}
 			}
 		}
-		else if (spearequip = true)
+		else if (spearequip == true)
 		{
 			attackSpeed -= dElapsedTime;
 			if (attackSpeed <= 0.f)
@@ -594,7 +594,7 @@ void CPlayer2D::Update(const double dElapsedTime)
 				}
 			}
 		}
-		else if (bowequip = true)
+		else if (bowequip == true)
 		{
 			attackSpeed -= dElapsedTime;
 			if (attackSpeed <= 0.f)
@@ -603,13 +603,16 @@ void CPlayer2D::Update(const double dElapsedTime)
 				//damage the enemy and reset the interval
 				attackSpeed = 1.0f;
 				playerInitialDamage = 20;
-				attackRange *= 2;
+		
 				//if (cPhysics2D.CalculateDistance(vec2Index,))
 				enemyList = CScene2D::GetInstance()->returnEnemyVector();
 				//returnNearestEnemy();
 				animatedSprites->PlayAnimation("Attack1", -1, 1.0f);
 				for (int enemyIndex = 0; enemyIndex != enemyList.size(); ++enemyIndex)
 				{
+
+					// TO DO : MAKE BOW SHOOT ARROW
+
 					/*if (strength = true)
 					{
 						playerInitialDamage *= 1.5;
@@ -631,7 +634,7 @@ void CPlayer2D::Update(const double dElapsedTime)
 				}
 			}
 		}
-		if (strength = true)
+		if (strength == true)
 		{
 			playerInitialDamage *= 1.5;
 		}
@@ -1072,6 +1075,7 @@ void CPlayer2D::InteractWithMap(void)
 		// Increase the potion by 1
 		cInventoryItem = cInventoryManager->GetItem("sword");
 		cInventoryItem->Add(1);
+		CGUI_Scene2D::GetInstance()->updateInventory(cInventoryItem);
 		swordequip = true;
 		std::cout << "sword equiped\n";
 		// Play a bell sound
@@ -1316,7 +1320,7 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime) {
 				break;
 			}
 		}
-		if (shovelequip = true)
+		if (shovelequip == true)
 		{
 			breakinterval = 0.1f;
 		}
@@ -1341,7 +1345,7 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime) {
 				break;
 			}
 		}
-		if (shovelequip = true)
+		if (shovelequip == true)
 		{
 			breakinterval = 0.1f;
 		}
@@ -1364,7 +1368,7 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime) {
 			cMap2D->SetMapInfo(vec2Index.y + 1, vec2Index.x, 0);
 			break;
 		}
-		if (shovelequip = true)
+		if (shovelequip == true)
 		{
 			breakinterval = 0.1f;
 		}

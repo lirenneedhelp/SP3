@@ -35,6 +35,8 @@ class CMap2D;
 
 #include "InventoryManager.h"
 
+#include "Primitives/SpriteAnimation.h"
+
 class CEnemyProjectile : public CEntity2D
 {
 public:
@@ -153,6 +155,10 @@ protected:
 	CInventoryItem* playerHP;
 
 	int bulletDamage;
+
+	CSpriteAnimation* bulletAnimation;
+
+
 
 	// Constraint the enemy2D's position within a boundary
 	void Constraint(DIRECTION eDirection = LEFT);
