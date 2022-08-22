@@ -1322,11 +1322,11 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime) {
 		}
 		if (shovelequip == true)
 		{
-			breakinterval = 0.1f;
+			breakinterval = 0.25f;
 		}
 		else
 		{
-			breakinterval = 0.2f;
+			breakinterval = 1.f;
 		}
 		
 	}
@@ -1342,16 +1342,18 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime) {
 				break;
 			case 103:
 				cMap2D->SetMapInfo(vec2Index.y - 1, vec2Index.x, 0);
+				cPhysics2D.SetStatus(CPhysics2D::STATUS::JUMP);
 				break;
+				
 			}
 		}
 		if (shovelequip == true)
 		{
-			breakinterval = 0.1f;
+			breakinterval = 0.25f;
 		}
 		else
 		{
-			breakinterval = 0.2f;
+			breakinterval = 1.f;
 		}
 	}
 	if (cKeyboardController->IsKeyDown(GLFW_KEY_P) && breakinterval <= 0.f) {
@@ -1370,11 +1372,11 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime) {
 		}
 		if (shovelequip == true)
 		{
-			breakinterval = 0.1f;
+			breakinterval = 0.25f;
 		}
 		else
 		{
-			breakinterval = 0.2f;
+			breakinterval = 1.5f;
 		}
 	}
 }
