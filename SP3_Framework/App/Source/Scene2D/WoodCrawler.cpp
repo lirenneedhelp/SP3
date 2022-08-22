@@ -238,7 +238,7 @@ void CWoodCrawler::Update(const double dElapsedTime)
 			iFSMCounter = 0;
 			cout << "Switching to Idle State" << endl;
 		}
-		else if (cPhysics2D.CalculateDistance(vec2Index, cPlayer2D->vec2Index) < 10.0f && vec2Index.x == cPlayer2D->vec2Index.x) //Ensure that the enemy is directly above the player
+		else if (cPhysics2D.CalculateDistance(vec2Index, cPlayer2D->vec2Index) < 10.0f && vec2Index.x == cPlayer2D->vec2Index.x && vec2Index.y > cPlayer2D->vec2Index.y) //Ensure that the enemy is directly above the player
 		{
 			sCurrentFSM = PULLING;
 			iFSMCounter = 0;
