@@ -189,16 +189,6 @@ protected:
 		!CODE CHANGES END!
 	*/
 
-	bool speed;
-	bool strength;
-	bool swordequip;
-	bool spearequip;
-	bool axeequip;
-	bool shovelequip;
-	bool bowequip;
-	bool highjump;
-	int jumps;
-
 	CEntity2D* returnNearestEnemy(void);
 };
 
