@@ -71,6 +71,8 @@ public:
 
 	bool isMoving;
 
+
+
 	CInventoryManager* returnPlayerHealth(void);
 
 	float returnCharge(void);
@@ -109,6 +111,8 @@ protected:
 
 	// InventoryItem
 	CInventoryItem* cInventoryItem;
+	
+	CInventoryManager* damageOnPlayer;
 
 	// List of enemies
 	vector <CEntity2D*> enemyList;
@@ -132,6 +136,8 @@ protected:
 	// Player Initial Damage
 
 	float playerInitialDamage;
+
+	float defense;
 
 	// Handler to the CSoundController
 	CSoundController* cSoundController;
@@ -160,6 +166,8 @@ protected:
 	// Update the health and lives
 	void UpdateHealthLives(void);
 
+	void UpdateDefense(void);
+
 	/*
 		!CODE CHANGES START!
 		functions for the breaking and building of blocks
@@ -171,7 +179,6 @@ protected:
 	/*
 		!CODE CHANGES END!
 	*/
-
 	bool speed;
 	bool strength;
 	bool swordequip;
@@ -179,6 +186,10 @@ protected:
 	bool axeequip;
 	bool shovelequip;
 	bool bowequip;
+	bool helmetequip;
+	bool chestplateequip;
+	bool leggingsequip;
+	bool bootsequip;
 	bool highjump;
 	int jumps;
 
