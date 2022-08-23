@@ -97,6 +97,8 @@ bool CGlutton::Init(void)
 
 	// Set the start position of the Player to iRow and iCol
 	vec2Index = glm::i32vec2(uiCol, uiRow);
+
+	reachedOtherside = false;
 	// By default, microsteps should be zero
 	i32vec2NumMicroSteps = glm::i32vec2(0, 0);
 
@@ -107,12 +109,23 @@ bool CGlutton::Init(void)
 	quadMesh = CMeshBuilder::GenerateQuad(glm::vec4(1, 1, 1, 1), cSettings->TILE_WIDTH, cSettings->TILE_HEIGHT);
 
 	// Load the enemy2D texture
-	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Scene2D_EnemyTile.tga", true);
+	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/glutton.png", true);
 	if (iTextureID == 0)
 	{
-		cout << "Unable to load Image/Scene2D_EnemyTile.tga" << endl;
+		cout << "Unable to load Image/glutton.png" << endl;
 		return false;
 	}
+
+	gluttonAnimatedSprites = CMeshBuilder::GenerateSpriteAnimation(7, 3, cSettings->TILE_WIDTH, cSettings->TILE_HEIGHT);
+	gluttonAnimatedSprites->AddAnimation("Left", 0, 2);
+	gluttonAnimatedSprites->AddAnimation("Right", 3, 5);
+	gluttonAnimatedSprites->AddAnimation("shootLeft", 6, 8);
+	gluttonAnimatedSprites->AddAnimation("shootRight", 9, 11);
+	gluttonAnimatedSprites->AddAnimation("attackLeft", 12, 14);
+	gluttonAnimatedSprites->AddAnimation("attackRight", 15, 17);
+	gluttonAnimatedSprites->AddAnimation("Idle", 18, 20);
+
+	gluttonAnimatedSprites->PlayAnimation("Idle", -1, 5);
 
 	//CS: Init the color to white
 	runtimeColour = glm::vec4(1.0, 1.0, 1.0, 1.0);
@@ -144,12 +157,25 @@ bool CGlutton::Init2(void)
 	quadMesh = CMeshBuilder::GenerateQuad(glm::vec4(1, 1, 1, 1), cSettings->TILE_WIDTH, cSettings->TILE_HEIGHT);
 
 	// Load the enemy2D texture
-	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Scene2D_EnemyTile.tga", true);
+	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/glutton.png", true);
 	if (iTextureID == 0)
 	{
-		cout << "Unable to load Image/Scene2D_EnemyTile.tga" << endl;
+		cout << "Unable to load Image/glutton.png" << endl;
 		return false;
 	}
+	destination = glm::vec2(0, 0);
+	gluttonAnimatedSprites = CMeshBuilder::GenerateSpriteAnimation(7, 3, cSettings->TILE_WIDTH, cSettings->TILE_HEIGHT);
+	gluttonAnimatedSprites->AddAnimation("Left", 0, 2);
+	gluttonAnimatedSprites->AddAnimation("Right", 3, 5);
+	gluttonAnimatedSprites->AddAnimation("shootLeft", 6, 8);
+	gluttonAnimatedSprites->AddAnimation("shootRight", 9, 11);
+	gluttonAnimatedSprites->AddAnimation("attackLeft", 12, 14);
+	gluttonAnimatedSprites->AddAnimation("attackRight", 15, 17);
+	gluttonAnimatedSprites->AddAnimation("Idle", 18, 20);
+
+	gluttonAnimatedSprites->PlayAnimation("Idle", -1, 5);
+
+
 
 	//CS: Init the color to white
 	runtimeColour = glm::vec4(1.0, 1.0, 1.0, 1.0);
@@ -179,6 +205,7 @@ void CGlutton::Update(const double dElapsedTime)
 	switch (sCurrentFSM)
 	{
 	case IDLE:
+		gluttonAnimatedSprites->AddAnimation("Idle", -1, 5);
 		if (iFSMCounter > iMaxFSMCounter)
 		{
 			sCurrentFSM = PATROL;
@@ -194,19 +221,19 @@ void CGlutton::Update(const double dElapsedTime)
 			iFSMCounter = 0;
 			cout << "Switching to Idle State" << endl;
 		}
-		else if (cPhysics2D.CalculateDistance(vec2Index, cPlayer2D->vec2Index) > 5.0f)
+		else if (cPhysics2D.CalculateDistance(vec2Index, cPlayer2D->vec2Index) < 20.0f)
 		{
 			sCurrentFSM = TRACE;
 			iFSMCounter = 0;
 			cout << "Switching to TRACE State" << endl;
 		}
-		//else if (checkForWall())
-		//{
-		//	sCurrentFSM = JUMP_OVER_WALL;
-		//	iFSMCounter = 0;
-		//	cout << "Switching to JUMP_OVER_WALL State" << endl;
+		/*else if (checkForWall())
+		{
+			sCurrentFSM = JUMP_OVER_WALL;
+			iFSMCounter = 0;
+			cout << "Switching to JUMP_OVER_WALL State" << endl;
 
-		//}
+		}*/
 		else
 		{
 			// Patrol around
@@ -216,7 +243,7 @@ void CGlutton::Update(const double dElapsedTime)
 		iFSMCounter++;
 		break;
 	case TRACE:
-		if (cPhysics2D.CalculateDistance(vec2Index, cPlayer2D->vec2Index) > 5.0f)
+		if (cPhysics2D.CalculateDistance(vec2Index, cPlayer2D->vec2Index) >= 10.0f || vec2Index.y != cPlayer2D->vec2Index.y)
 		{
 			// Calculate a path to the player
 			//cMap2D->PrintSelf();
@@ -270,68 +297,81 @@ void CGlutton::Update(const double dElapsedTime)
 		else
 		{
 			
-		/*	if (checkForWall())
+			if (checkForWall())
 			{
 				sCurrentFSM = JUMP_OVER_WALL;
 				iFSMCounter = 0;
-			}*/
-			if (cPhysics2D.CalculateDistance(vec2Index, cPlayer2D->vec2Index) < 5.0f && vec2Index.y == cPlayer2D->vec2Index.y)
+
+			}
+			else
 			{
 				sCurrentFSM = SHOOT;
 				iFSMCounter = 0;
 			}
-			else 
-			{
-				sCurrentFSM = PATROL;
-				iFSMCounter = 0;
-			}
+						
+			
+			
 			iFSMCounter++;
 		}
 		break;
 	case SHOOT:
 	{
-		shotInterval -= dElapsedTime;
-		if (shotInterval <= 0)
+		if (vec2Index.y == cPlayer2D->vec2Index.y)
 		{
-			cout << "Shot Bullet\n";
-			CEnemyProjectile* cEnemyProjectile = new CEnemyProjectile();
-			cEnemyProjectile->SetShader("Shader2D_Colour");
-			cEnemyProjectile->Seti32vec2Index(vec2Index.x, vec2Index.y);
-			cEnemyProjectile->seti32vec2Direction(cPlayer2D->vec2Index.x, vec2Index.x);		
-			cEnemyProjectile->SetPlayer2D(cPlayer2D);
-			CScene2D::GetInstance()->pushBullet(cEnemyProjectile);
-
-			if (cEnemyProjectile->Init() == true)
+			shotInterval -= dElapsedTime;
+			if (shotInterval <= 0)
 			{
-				cout << "SPAWNED\n";
-		
+				if (vec2Index.x - cPlayer2D->vec2Index.x > 0)
+				{
+					gluttonAnimatedSprites->PlayAnimation("shootLeft", -1, 0.5);
+				}
+				else
+				{
+					gluttonAnimatedSprites->PlayAnimation("shootRight", -1, 0.5);
+
+				}
+				cout << "Shot Bullet\n";
+				CEnemyProjectile* cEnemyProjectile = new CEnemyProjectile();
+				cEnemyProjectile->SetShader("Shader2D_Colour");
+				cEnemyProjectile->Seti32vec2Index(vec2Index.x, vec2Index.y);
+				cEnemyProjectile->seti32vec2Direction(cPlayer2D->vec2Index.x, vec2Index.x);
+				cEnemyProjectile->SetPlayer2D(cPlayer2D);
+				CScene2D::GetInstance()->pushBullet(cEnemyProjectile);
+
+				if (cEnemyProjectile->Init() == true)
+				{
+					cout << "SPAWNED\n";
+
+				}
+
+				shotInterval = 1.0f;
+				
 			}
 			
-			shotInterval = 1.0f;
+			/*if (checkForWall() == true)
+			{
+				sCurrentFSM = JUMP_OVER_WALL;
+				iFSMCounter = 0;
+			}*/
 		}
-
-		if (cPhysics2D.CalculateDistance(vec2Index, cPlayer2D->vec2Index) > .0f)
+		else
 		{
-			sCurrentFSM = TRACE;
+			sCurrentFSM = IDLE;
 			iFSMCounter = 0;
+			cout << "SHOOT TO PATROL\n";
+		}
 		
-		}
-		/*else
-		{
-			sCurrentFSM = PATROL;
-			iFSMCounter = 0;
-		}*/
+		
 	}
 	break;
-
 	case JUMP_OVER_WALL:
 	{
-		
+
 			// Calculate a path to the player
 			auto path = cMap2D->PathFind(vec2Index,
-				glm::vec2(vec2Index.x + wallDist, vec2Index.y),
+				destination,
 				heuristic::euclidean,
-				20);
+				10);
 			//cout << "=== Printing out the path ===" << endl;
 
 			// Calculate new destination
@@ -359,21 +399,29 @@ void CGlutton::Update(const double dElapsedTime)
 				}
 			}
 			UpdatePosition();
+
+			/*	if (!checkForWall())
+				{
+					sCurrentFSM = SHOOT;
+					iFSMCounter = 0;
+				}
+				else if (iFSMCounter > iMaxFSMCounter)
+				{
+					sCurrentFSM = PATROL;
+					iFSMCounter = 0;
+				}
+				iFSMCounter++;*/
 		
-		if (!checkForWall())
+		if (vec2Index == destination)
 		{
 			sCurrentFSM = SHOOT;
 			iFSMCounter = 0;
+			destination = glm::vec2(0, 0);
 		}
-		else if (iFSMCounter > iMaxFSMCounter)
-		{
-			sCurrentFSM = PATROL;
-			iFSMCounter = 0;
-		}
-		iFSMCounter++;
-		
+
 	}
 	break;
+	
 
 	default:
 		break;
@@ -381,6 +429,7 @@ void CGlutton::Update(const double dElapsedTime)
 
 	// Update Jump or Fall
 	UpdateJumpFall(dElapsedTime);
+	gluttonAnimatedSprites->Update(dElapsedTime);
 
 	// Update the UV Coordinates
 	vec2UVCoordinate.x = cSettings->ConvertIndexToUVSpace(cSettings->x, vec2Index.x, false, i32vec2NumMicroSteps.x*cSettings->MICRO_STEP_XAXIS);
@@ -433,9 +482,11 @@ void CGlutton::Render(void)
 
 	// Render the tile
 	//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-	quadMesh->Render();
-
+	glBindVertexArray(VAO);
+	gluttonAnimatedSprites->Render();
 	glBindVertexArray(0);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
 
 }
 
@@ -487,18 +538,19 @@ void CGlutton::SetPlayer2D(CPlayer2D* cPlayer2D)
 
 bool CGlutton::checkForWall(void)
 {
-	for (float i = 0; i < 10.f; ++i)
+	for (float i = 0; i <= 10.f; ++i)
 	{
 		if (i32vec2Direction.x < 0)
 		{
 			
-			if (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x - i) == 200)
+			if (vec2Index.x - i == cPlayer2D->vec2Index.x)
 			{
 				return false;
 			}
 			else if (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x - i) >= 100)
 			{
-				wallDist = -(i + 1);
+				wallDist = -(i + 2);
+				destination = glm::vec2(vec2Index.x + wallDist, vec2Index.y);
 				return true;
 			}
 			else
@@ -508,13 +560,14 @@ bool CGlutton::checkForWall(void)
 		}
 		else if (i32vec2Direction.x > 0)
 		{
-			if (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x + i) == 200)
+			if (vec2Index.x + i == cPlayer2D->vec2Index.x)
 			{
 				return false;
 			}
 			else if (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x + i) >= 100)
 			{
-				wallDist = i + 1;
+				wallDist = i + 2;
+				destination = glm::vec2(vec2Index.x + wallDist, vec2Index.y);
 				return true;
 			}
 			else
@@ -831,15 +884,14 @@ bool CGlutton::InteractWithPlayer(void)
 	glm::i32vec2 i32vec2PlayerPos = cPlayer2D->vec2Index;
 	
 	// Check if the enemy2D is within 1.5 indices of the player2D
-	if (((vec2Index.x >= i32vec2PlayerPos.x - 20) && 
-		(vec2Index.x <= i32vec2PlayerPos.x + 20))
+	if (((vec2Index.x >= i32vec2PlayerPos.x - 0.5) && 
+		(vec2Index.x <= i32vec2PlayerPos.x + 0.5))
 		&& 
 		((vec2Index.y >= i32vec2PlayerPos.y - 0.5) &&
 		(vec2Index.y <= i32vec2PlayerPos.y + 0.5)))
 	{
-		cout << "Within Range!" << endl;
 		// Since the player has been caught, then reset the FSM
-		sCurrentFSM = SHOOT;
+	
 		iFSMCounter = 0;
 		return true;
 	}
@@ -920,9 +972,10 @@ void CGlutton::UpdatePosition(void)
 		{
 			cPhysics2D.SetStatus(CPhysics2D::STATUS::FALL);
 		}
+		gluttonAnimatedSprites->PlayAnimation("Left", -1, 5);
 
 		// Interact with the Player
-		InteractWithPlayer();
+		//InteractWithPlayer();
 	}
 	else if (i32vec2Direction.x > 0)
 	{
@@ -957,7 +1010,9 @@ void CGlutton::UpdatePosition(void)
 		}
 
 		// Interact with the Player
-		InteractWithPlayer();
+		//InteractWithPlayer();
+		gluttonAnimatedSprites->PlayAnimation("Right", -1, 5);
+
 	}
 
 	// if the player is above the enemy2D, then jump to attack

@@ -351,14 +351,14 @@ bool CScene2D::Update(const double dElapsedTime)
 	}
 	dayCounter += dElapsedTime;
 
-	//if (!day)
-	//{
+	if (!day)
+	{
 		enemySpawnTimeCounter -= dElapsedTime;
-	//}
-	//else
-	//{
-	//	enemySpawnTimeCounter = 15.f;
-	//}
+	}
+	else
+	{
+		enemySpawnTimeCounter = 15.f;
+	}
 
 	if (enemySpawnTimeCounter <= 0)
 	{ 

@@ -35,6 +35,8 @@ class CMap2D;
 // Include Scene2D (Because I want to update the bullet vector in Scene2D)
 #include "Scene2D.h"
 
+#include "Primitives/SpriteAnimation.h"
+
 class CGlutton : public CEntity2D
 {
 public:
@@ -84,7 +86,6 @@ public:
 	// Set the handle to cPlayer to this class instance
 	void SetPlayer2D(CPlayer2D* cPlayer2D);
 
-	bool checkForWall(void); // Check for walls in front of the player
 
 	// Get Glutton HP
 
@@ -147,6 +148,9 @@ protected:
 
 	float wallDist;
 
+	bool reachedOtherside;
+
+	glm::vec2 destination;
 	// Settings
 	CSettings* cSettings;
 
@@ -161,6 +165,9 @@ protected:
 
 	// Current FSM
 	FSM sCurrentFSM;
+
+	// Glutton Sprite Animation
+	CSpriteAnimation* gluttonAnimatedSprites;
 
 	// FSM counter - count how many frames it has been in this FSM
 	int iFSMCounter;
@@ -191,5 +198,8 @@ protected:
 
 	// Update position
 	void UpdatePosition(void);
+
+	bool checkForWall(void); // Check for walls in front of the player
+
 };
 

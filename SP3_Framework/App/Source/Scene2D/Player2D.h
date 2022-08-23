@@ -67,7 +67,10 @@ public:
 	// PostRender
 	void PostRender(void);
 
+	// Don't add your variables here without any reason
+
 	bool isMoving;
+<<<<<<< HEAD
 	bool speed;
 	bool strength;
 	bool swordequip;
@@ -81,9 +84,10 @@ public:
 	bool bootsequip;
 	bool highjump;
 	int jumps;
+=======
+>>>>>>> 373f604f9c4b82ececd8cbd09fa6d733773c83d2
 
 	CInventoryManager* returnPlayerHealth(void);
-
 protected:
 	enum DIRECTION
 	{
@@ -184,6 +188,16 @@ protected:
 	/*
 		!CODE CHANGES END!
 	*/
+
+	bool speed;
+	bool strength;
+	bool swordequip;
+	bool spearequip;
+	bool axeequip;
+	bool shovelequip;
+	bool bowequip;
+	bool highjump;
+	int jumps;
 
 	CEntity2D* returnNearestEnemy(void);
 };

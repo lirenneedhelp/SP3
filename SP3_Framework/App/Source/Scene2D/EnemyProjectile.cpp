@@ -95,15 +95,20 @@ bool CEnemyProjectile::Init(void)
 	glBindVertexArray(VAO);
 
 	//CS: Create the Quad Mesh using the mesh builder
-	quadMesh = CMeshBuilder::GenerateQuad(glm::vec4(1, 1, 1, 1), cSettings->TILE_WIDTH / 2, cSettings->TILE_HEIGHT / 2);
+	quadMesh = CMeshBuilder::GenerateQuad(glm::vec4(1, 1, 1, 1), cSettings->TILE_WIDTH, cSettings->TILE_HEIGHT);
 
 	// Load the bullet texture
-	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/Scene2D_EnemyTile.tga", true);
+	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/acidspit.png", true);
 	if (iTextureID == 0)
 	{
-		cout << "Unable to load Image/Scene2D_EnemyTile.tga" << endl;
+		cout << "Unable to load Image/acidspit.png" << endl;
 		return false;
 	}
+
+	bulletAnimation = CMeshBuilder::GenerateSpriteAnimation(2, 3, cSettings->TILE_WIDTH, cSettings->TILE_HEIGHT);
+	bulletAnimation->AddAnimation("Left", 0, 2);
+	bulletAnimation->AddAnimation("Right", 3, 5);
+
 
 	//CS: Init the color to white
 	runtimeColour = glm::vec4(1.0, 1.0, 1.0, 1.0);
@@ -137,6 +142,7 @@ void CEnemyProjectile::Update(const double dElapsedTime)
 	{
 		CheckForInteraction();
 	}
+	bulletAnimation->Update(dElapsedTime);
 	
 
 	// Update the UV Coordinates
@@ -209,9 +215,11 @@ void CEnemyProjectile::Render(void)
 
 	// Render the tile
 	//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-	quadMesh->Render();
-
+	glBindVertexArray(VAO);
+	bulletAnimation->Render();
 	glBindVertexArray(0);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
 
 }
 
@@ -543,7 +551,7 @@ void CEnemyProjectile::UpdatePosition(void)
 		{
 			cPhysics2D.SetStatus(CPhysics2D::STATUS::FALL);
 		}
-
+		bulletAnimation->PlayAnimation("Left", -1, 5);
 		// Interact with the Player
 		InteractWithPlayer();
 	}
@@ -580,6 +588,8 @@ void CEnemyProjectile::UpdatePosition(void)
 
 		// Interact with the Player
 		InteractWithPlayer();
+		bulletAnimation->PlayAnimation("Right", -1, 5);
+
 	}
 
 	// if the player is above the enemy2D, then jump to attack
@@ -606,7 +616,7 @@ void CEnemyProjectile::CheckForInteraction(void)
 				temp.erase(temp.begin() + i);
 				CScene2D::GetInstance()->setLiveBulletVector(temp);
 				bulletStorage = temp;
-				cout << bulletStorage.size() << endl;
+				//cout << bulletStorage.size() << endl;
 				break;
 			}
 				    
@@ -620,10 +630,20 @@ void CEnemyProjectile::CheckForInteraction(void)
 				temp.erase(temp.begin() + i);
 				CScene2D::GetInstance()->setLiveBulletVector(temp);
 				bulletStorage = temp;
-				cout << bulletStorage.size() << endl;
+				//cout << bulletStorage.size() << endl;
 				break;	
 			}
 			
+		}
+		else if (i32vec2Direction.x == 0)
+		{
+			bulletStorage[i]->~CEntity2D();
+			vector <CEntity2D*> temp = CScene2D::GetInstance()->getLiveBulletVector();
+			temp.erase(temp.begin() + i);
+			CScene2D::GetInstance()->setLiveBulletVector(temp);
+			bulletStorage = temp;
+			//cout << bulletStorage.size() << endl;
+			break;
 		}
 		if (hitPlayer)
 		{
@@ -632,7 +652,7 @@ void CEnemyProjectile::CheckForInteraction(void)
 			temp.erase(temp.begin() + i);
 			CScene2D::GetInstance()->setLiveBulletVector(temp);
 			bulletStorage = temp;
-			cout << bulletStorage.size() << endl;
+			//cout << bulletStorage.size() << endl;
 			hitPlayer = false;
 			break;
 		}
