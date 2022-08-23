@@ -144,6 +144,7 @@ bool CBloodDeer::Init(void)
 	// If this class is initialised properly, then set the bIsActive to true
 	bIsActive = true;
 
+	damage = 30;
 	buffDamage = 1.0f;
 	buffSpeed = 1.0f;
 	buffAtkSpeed = 1.0f;
@@ -794,7 +795,7 @@ bool CBloodDeer::InteractWithPlayer(void)
 	{
 		damageOnPlayer = cPlayer2D->returnPlayerHealth();
 		playerHP = damageOnPlayer->GetItem("Health");
-		playerHP->Remove(30 * buffDamage);		
+		playerHP->Remove(30 * buffDamage);
 		hit = true;
 		if (rage)
 		{

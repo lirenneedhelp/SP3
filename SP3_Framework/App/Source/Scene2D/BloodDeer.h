@@ -148,15 +148,15 @@ protected:
 
 	// Handle to the CPlayer2D
 	CPlayer2D* cPlayer2D;
-
 	// RageCounter
 	float rageCounter; // Checks how many seconds it has been in ATTACK state
-
+	float damage;
 	bool rage;
 
 	// Controls the attack speed
 	bool hit; 
 	float hitIntervals;
+	
 
 	// Handle Enemies damage on player
 	CInventoryManager* damageOnPlayer;
