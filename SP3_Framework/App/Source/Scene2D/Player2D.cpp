@@ -1271,7 +1271,7 @@ void CPlayer2D::UpdateHealthLives(void)
 void CPlayer2D::UpdateDefense(void)
 {
 
-	if (helmetequip = true)
+	if (helmetequip == true)
 	{	
 		defense = 20;
 		cout << "u're protected!" << endl;
@@ -1280,7 +1280,7 @@ void CPlayer2D::UpdateDefense(void)
 		cInventoryItem->Remove(30 - defense);
 		cout << "damage reduced" << endl;
 	}
-	if (chestplateequip = true)
+	if (chestplateequip == true)
 	{
 		defense = 40;
 		std::cout << "u're protected!" << endl;
@@ -1289,7 +1289,7 @@ void CPlayer2D::UpdateDefense(void)
 		cInventoryItem->Remove(30-defense);
 		*/
 	}
-	if (leggingsequip = true)
+	if (leggingsequip == true)
 	{
 		defense = 30;
 		std::cout << "u're protected!" << endl;
@@ -1298,7 +1298,7 @@ void CPlayer2D::UpdateDefense(void)
 		cInventoryItem->Remove(30-defense);
 		*/
 	}
-	if (bootsequip = true)
+	if (bootsequip == true)
 	{
 		defense = 10;
 		std::cout << "u're protected!" << endl;
