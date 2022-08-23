@@ -124,6 +124,7 @@ bool CPlayer2D::Init(void)
 	chestplateequip = false;
 	leggingsequip = false;
 	bootsequip = false;
+	
 
 	playerInitialDamage = 10;
 	
@@ -503,7 +504,7 @@ void CPlayer2D::Update(const double dElapsedTime)
 				attackSpeed = 1.0f;
 				//if (cPhysics2D.CalculateDistance(vec2Index,))
 				enemyList = CScene2D::GetInstance()->returnEnemyVector();
-				//returnNearestEnemy();
+				//returnNearestPlayer();
 				animatedSprites->PlayAnimation("Attack1", -1, 1.0f);
 				for (int enemyIndex = 0; enemyIndex != enemyList.size(); ++enemyIndex)
 				{
@@ -618,10 +619,7 @@ void CPlayer2D::Update(const double dElapsedTime)
 
 					// TO DO : MAKE BOW SHOOT ARROW
 
-					/*if (strength = true)
-					{
-						playerInitialDamage *= 1.5;
-					}*/
+					
 					if (cPhysics2D.CalculateDistance(vec2Index, enemyList[enemyIndex]->vec2Index) <= attackRange && vec2Index.y == enemyList[enemyIndex]->vec2Index.y) // Check if player and enemy are on the same level & check whether the enemy is within the player's range
 					{
 						std::cout << "Hit Enemy Once\n";
@@ -1147,13 +1145,6 @@ void CPlayer2D::InteractWithMap(void)
 		std::cout << "got armour" << endl;
 		helmetequip = true;
 		// Play a bell sound
-		cSoundController->PlaySoundByID(1);
-		if (helmetequip = true)
-		{
-			defense = 20;
-			std::cout << "u're protected!" << endl;
-			
-		}
 		break;
 	case 42:
 		// Erase the potion from this position
@@ -1182,6 +1173,7 @@ void CPlayer2D::InteractWithMap(void)
 		cInventoryItem = cInventoryManager->GetItem("boots");
 		cInventoryItem->Add(1);
 		bootsequip = true;
+
 		// Play a bell sound
 		cSoundController->PlaySoundByID(1);
 		break;
@@ -1220,44 +1212,43 @@ void CPlayer2D::UpdateHealthLives(void)
 	}
 }
 
-void CPlayer2D::UpdateDefense(void)
+void CPlayer2D::UpdateDefense(float damage)
 {
-
-	if (helmetequip = true)
+	if (helmetequip == true)
 	{	
 		defense = 20;
 		cout << "u're protected!" << endl;
 		damageOnPlayer = returnPlayerHealth();
 		cInventoryItem = damageOnPlayer->GetItem("Health");
-		cInventoryItem->Remove(30 - defense);
+		cInventoryItem->Remove(damage - defense);
 		cout << "damage reduced" << endl;
 	}
-	if (chestplateequip = true)
+	else if (chestplateequip == true)
 	{
 		defense = 40;
 		std::cout << "u're protected!" << endl;
-	/*	damageOnPlayer = returnPlayerHealth();
+		damageOnPlayer = returnPlayerHealth();
 		cInventoryItem = damageOnPlayer->GetItem("Health");
-		cInventoryItem->Remove(30-defense);
-		*/
+		cInventoryItem->Remove(damage - defense);
+		cout << "damage reduced" << endl;
 	}
-	if (leggingsequip = true)
+	else if (leggingsequip == true)
 	{
 		defense = 30;
 		std::cout << "u're protected!" << endl;
-		/*damageOnPlayer = returnPlayerHealth();
+		damageOnPlayer = returnPlayerHealth();
 		cInventoryItem = damageOnPlayer->GetItem("Health");
-		cInventoryItem->Remove(30-defense);
-		*/
+		cInventoryItem->Remove(damage - defense);
+		cout << "damage reduced" << endl;
 	}
-	if (bootsequip = true)
+	else if (bootsequip == true)
 	{
 		defense = 10;
 		std::cout << "u're protected!" << endl;
-		/*damageOnPlayer = returnPlayerHealth();
+		damageOnPlayer = returnPlayerHealth();
 		cInventoryItem = damageOnPlayer->GetItem("Health");
-		cInventoryItem->Remove(30-defense);*/
-	
+		cInventoryItem->Remove(damage - defense);
+		cout << "damage reduced" << endl;
 	}
 }
 /*
@@ -1437,3 +1428,4 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime) {
 /*
 	!CODE CHANGES END!
 */     
+

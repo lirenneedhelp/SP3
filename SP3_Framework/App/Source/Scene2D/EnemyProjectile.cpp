@@ -494,9 +494,10 @@ bool CEnemyProjectile::InteractWithPlayer(void)
 		(vec2Index.y <= i32vec2PlayerPos.y + 0.5)))
 	{
 		//cout << "Gotcha!" << endl;
-		damageOnPlayer = cPlayer2D->returnPlayerHealth();
-		playerHP = damageOnPlayer->GetItem("Health");
-		playerHP->Remove(bulletDamage);
+		//damageOnPlayer = cPlayer2D->returnPlayerHealth();
+		//playerHP = damageOnPlayer->GetItem("Health");
+		//playerHP->Remove(bulletDamage);
+		cPlayer2D->UpdateDefense(bulletDamage);
 		hitPlayer = true;
 		// Since the player has been caught, then reset the FSM
 		return true;
