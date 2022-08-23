@@ -1220,46 +1220,46 @@ void CPlayer2D::UpdateHealthLives(void)
 	}
 }
 
-//void CPlayer2D::UpdateDefense(void)
-//{
-//
-//	if (helmetequip = true)
-//	{	
-//		defense = 20;
-//		cout << "u're protected!" << endl;
-//		damageOnPlayer = returnPlayerHealth();
-//		cInventoryItem = damageOnPlayer->GetItem("Health");
-//		cInventoryItem->Remove(30 - defense);
-//		cout << "damage reduced" << endl;
-//	}
-//	if (chestplateequip = true)
-//	{
-//		defense = 40;
-//		std::cout << "u're protected!" << endl;
-//	/*	damageOnPlayer = returnPlayerHealth();
-//		cInventoryItem = damageOnPlayer->GetItem("Health");
-//		cInventoryItem->Remove(30-defense);
-//		*/
-//	}
-//	if (leggingsequip = true)
-//	{
-//		defense = 30;
-//		std::cout << "u're protected!" << endl;
-//		/*damageOnPlayer = returnPlayerHealth();
-//		cInventoryItem = damageOnPlayer->GetItem("Health");
-//		cInventoryItem->Remove(30-defense);
-//		*/
-//	}
-//	if (bootsequip = true)
-//	{
-//		defense = 10;
-//		std::cout << "u're protected!" << endl;
-//		/*damageOnPlayer = returnPlayerHealth();
-//		cInventoryItem = damageOnPlayer->GetItem("Health");
-//		cInventoryItem->Remove(30-defense);*/
-//	
-//	}
-//}
+void CPlayer2D::UpdateDefense(void)
+{
+
+	if (helmetequip = true)
+	{	
+		defense = 20;
+		cout << "u're protected!" << endl;
+		damageOnPlayer = returnPlayerHealth();
+		cInventoryItem = damageOnPlayer->GetItem("Health");
+		cInventoryItem->Remove(30 - defense);
+		cout << "damage reduced" << endl;
+	}
+	if (chestplateequip = true)
+	{
+		defense = 40;
+		std::cout << "u're protected!" << endl;
+	/*	damageOnPlayer = returnPlayerHealth();
+		cInventoryItem = damageOnPlayer->GetItem("Health");
+		cInventoryItem->Remove(30-defense);
+		*/
+	}
+	if (leggingsequip = true)
+	{
+		defense = 30;
+		std::cout << "u're protected!" << endl;
+		/*damageOnPlayer = returnPlayerHealth();
+		cInventoryItem = damageOnPlayer->GetItem("Health");
+		cInventoryItem->Remove(30-defense);
+		*/
+	}
+	if (bootsequip = true)
+	{
+		defense = 10;
+		std::cout << "u're protected!" << endl;
+		/*damageOnPlayer = returnPlayerHealth();
+		cInventoryItem = damageOnPlayer->GetItem("Health");
+		cInventoryItem->Remove(30-defense);*/
+	
+	}
+}
 /*
 	!CODE CHANGES START!
 	code here should handle the breaking and placing of blocks
