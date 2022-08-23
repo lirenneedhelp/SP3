@@ -83,15 +83,25 @@ public:
 	void setTime(bool time);
 	float getDuration(void); // How long has it been day / night
 	void resetDuration(void); //Reset the counter ^
-	vector<CEntity2D*>returnEnemyVector(void);
-	void setNewEnemyVector(vector<CEntity2D*> &newList);
-
-	void setLiveBulletVector(vector<CEntity2D*> &vectorOfBullets);
-
+	vector<CEntity2D*>returnEnemyVector(void); // Returns the enemy vector 
+	void setNewEnemyVector(vector<CEntity2D*>& newList);// Set new enemy vector
 	// Push Bullet into the vector
 	void pushBullet(CEntity2D* bullet);
 
+	// Push Arrow into the vector
+	void pushArrow(CEntity2D* arrow);
+	// Setter for bullet vector
+	void setLiveBulletVector(vector<CEntity2D*>& vectorOfBullets);;
+
+	// Getter for Bullet Vector
 	vector<CEntity2D*> getLiveBulletVector(void);
+
+	// Setter for arrow vector
+	void setLiveArrowVector(vector<CEntity2D*>& vectorOfArrows);
+
+	// Getter for arrow vector
+	vector<CEntity2D*> getLiveArrowVector(void);
+
 	
 	
 
@@ -111,6 +121,9 @@ protected:
 
 	// Projectile Handler
 	vector<CEntity2D*> liveBullets;
+
+	// Arrow Projectile Handler
+	vector<CEntity2D*> liveArrows;
 
 	// GUI_Scene2D
 	CGUI_Scene2D* cGUI_Scene2D;

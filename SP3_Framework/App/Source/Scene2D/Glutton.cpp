@@ -134,7 +134,7 @@ bool CGlutton::Init(void)
 	cPhysics2D.Init();
 	cPhysics2D.SetStatus(CPhysics2D::STATUS::FALL);
 
-	shotInterval = 1.0f;
+	shotInterval = 1.5f;
 
 	// If this class is initialised properly, then set the bIsActive to true
 	bIsActive = true;
@@ -321,30 +321,31 @@ void CGlutton::Update(const double dElapsedTime)
 			shotInterval -= dElapsedTime;
 			if (shotInterval <= 0)
 			{
-				if (vec2Index.x - cPlayer2D->vec2Index.x > 0)
+				// Checks whether enemy is facing left or right
+				if (vec2Index.x - cPlayer2D->vec2Index.x > 0)  
 				{
-					gluttonAnimatedSprites->PlayAnimation("shootLeft", -1, 0.5);
+					gluttonAnimatedSprites->PlayAnimation("shootLeft", -1, 1);
 				}
 				else
 				{
-					gluttonAnimatedSprites->PlayAnimation("shootRight", -1, 0.5);
+					gluttonAnimatedSprites->PlayAnimation("shootRight", -1, 1);
 
 				}
-				cout << "Shot Bullet\n";
-				CEnemyProjectile* cEnemyProjectile = new CEnemyProjectile();
+				//cout << "Shot Bullet\n";
+				CEnemyProjectile* cEnemyProjectile = new CEnemyProjectile(); // Create new Projectile
 				cEnemyProjectile->SetShader("Shader2D_Colour");
 				cEnemyProjectile->Seti32vec2Index(vec2Index.x, vec2Index.y);
 				cEnemyProjectile->seti32vec2Direction(cPlayer2D->vec2Index.x, vec2Index.x);
 				cEnemyProjectile->SetPlayer2D(cPlayer2D);
 				CScene2D::GetInstance()->pushBullet(cEnemyProjectile);
 
-				if (cEnemyProjectile->Init() == true)
+				if (cEnemyProjectile->Init() == true)   // Initialise the Projectile
 				{
 					cout << "SPAWNED\n";
 
 				}
 
-				shotInterval = 1.0f;
+				shotInterval = 1.5f;
 				
 			}
 			

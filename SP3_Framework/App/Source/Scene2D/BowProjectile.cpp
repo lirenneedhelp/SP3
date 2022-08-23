@@ -1,10 +1,10 @@
 /**
- CEnemyProjectile
+ CBowProjectile
  @brief A class which represents the enemy object
  By: Toh Da Jun
  Date: Mar 2020
  */
-#include "EnemyProjectile.h"
+#include "BowProjectile.h"
 
 #include <iostream>
 using namespace std;
@@ -28,13 +28,13 @@ using namespace std;
 /**
  @brief Constructor This constructor has protected access modifier as this class will be a Singleton
  */
-CEnemyProjectile::CEnemyProjectile(void)
+CBowProjectile::CBowProjectile(void)
 	: bIsActive(false)
 	, cMap2D(NULL)
 	, cSettings(NULL)
 	, cPlayer2D(NULL)
 	, quadMesh(NULL)
-	, bulletAnimation(NULL)
+	, arrowAnimation(NULL)
 {
 	transform = glm::mat4(1.0f);	// make sure to initialize matrix to identity matrix first
 
@@ -54,7 +54,7 @@ CEnemyProjectile::CEnemyProjectile(void)
 /**
  @brief Destructor This destructor has protected access modifier as this class will be a Singleton
  */
-CEnemyProjectile::~CEnemyProjectile(void)
+CBowProjectile::~CBowProjectile(void)
 {
 	// Delete the quadMesh
 	if (quadMesh)
@@ -77,7 +77,7 @@ CEnemyProjectile::~CEnemyProjectile(void)
 /**
   @brief Initialise this instance without reading from the map (won't be necessary)
   */
-bool CEnemyProjectile::Init(void)
+bool CBowProjectile::Init(void)
 {
 	// Get the handler to the CSettings instance
 	cSettings = CSettings::GetInstance();
@@ -99,16 +99,16 @@ bool CEnemyProjectile::Init(void)
 	quadMesh = CMeshBuilder::GenerateQuad(glm::vec4(1, 1, 1, 1), cSettings->TILE_WIDTH, cSettings->TILE_HEIGHT);
 
 	// Load the bullet texture
-	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/acidspit.png", true);
+	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/arrow.png", true);
 	if (iTextureID == 0)
 	{
-		cout << "Unable to load Image/acidspit.png" << endl;
+		cout << "Unable to load Image/arrow.png" << endl;
 		return false;
 	}
 
-	bulletAnimation = CMeshBuilder::GenerateSpriteAnimation(2, 3, cSettings->TILE_WIDTH, cSettings->TILE_HEIGHT);
-	bulletAnimation->AddAnimation("Left", 0, 2);
-	bulletAnimation->AddAnimation("Right", 3, 5);
+	arrowAnimation = CMeshBuilder::GenerateSpriteAnimation(2, 4, cSettings->TILE_WIDTH, cSettings->TILE_HEIGHT);
+	arrowAnimation->AddAnimation("Left", 0, 3);
+	arrowAnimation->AddAnimation("Right", 4, 7);
 
 
 	//CS: Init the color to white
@@ -118,10 +118,24 @@ bool CEnemyProjectile::Init(void)
 	cPhysics2D.Init();
 	cPhysics2D.SetStatus(CPhysics2D::STATUS::FALL);
 
-	bulletStorage = CScene2D::GetInstance()->getLiveBulletVector();
-	hitPlayer = false;
+	arrowStorage = CScene2D::GetInstance()->getLiveArrowVector();
 
-	bulletDamage = 20;
+	arrowDamage = 20;
+
+	amountOfCharge = cPlayer2D->returnCharge();
+
+	maxDistance = amountOfCharge * 5.0f;
+
+	if (i32vec2Direction.x < 0)
+	{
+		arrowDestination = vec2Index.x - maxDistance;
+	}
+	else
+	{
+		arrowDestination = vec2Index.x + maxDistance;
+	}
+
+	hitEnemy = false;
 
 	// If this class is initialised properly, then set the bIsActive to true
 	bIsActive = true;
@@ -132,18 +146,17 @@ bool CEnemyProjectile::Init(void)
 /**
  @brief Update this instance
  */
-void CEnemyProjectile::Update(const double dElapsedTime)
+void CBowProjectile::Update(const double dElapsedTime)
 {
 	if (!bIsActive)
 		return;
-
 	
 	UpdatePosition();
-	if (bulletStorage.size() != 0)
+	if (arrowStorage.size() != 0)
 	{
 		CheckForInteraction();
 	}
-	bulletAnimation->Update(dElapsedTime);
+	arrowAnimation->Update(dElapsedTime);
 	
 
 	// Update the UV Coordinates
@@ -151,7 +164,7 @@ void CEnemyProjectile::Update(const double dElapsedTime)
 	vec2UVCoordinate.y = cSettings->ConvertIndexToUVSpace(cSettings->y, vec2Index.y, false, i32vec2NumMicroSteps.y*cSettings->MICRO_STEP_YAXIS);
 }
 
-void CEnemyProjectile::SetPlayer2D(CPlayer2D* cPlayer2D)
+void CBowProjectile::SetPlayer2D(CPlayer2D* cPlayer2D)
 {
 	this->cPlayer2D = cPlayer2D;
 
@@ -159,21 +172,26 @@ void CEnemyProjectile::SetPlayer2D(CPlayer2D* cPlayer2D)
 	//UpdateDirection();
 }
 
-void CEnemyProjectile::setBulletVector(vector<CEntity2D*>& newBulletVector)
+void CBowProjectile::setBulletVector(vector<CEntity2D*>& newBulletVector)
 {
-	bulletStorage = newBulletVector;
+	arrowStorage = newBulletVector;
 }
 
-vector<CEntity2D*>& CEnemyProjectile::getBulletVector(void)
+vector<CEntity2D*>& CBowProjectile::getBulletVector(void)
 {
 	// TODO: insert return statement here
-	return bulletStorage;
+	return arrowStorage;
+}
+
+void CBowProjectile::setMaxDistance(float charge)
+{
+	maxDistance *= charge;
 }
 
 /**
  @brief Set up the OpenGL display environment before rendering
  */
-void CEnemyProjectile::PreRender(void)
+void CBowProjectile::PreRender(void)
 {
 	if (!bIsActive)
 		return;
@@ -192,7 +210,7 @@ void CEnemyProjectile::PreRender(void)
 /**
  @brief Render this instance
  */
-void CEnemyProjectile::Render(void)
+void CBowProjectile::Render(void)
 {
 	if (!bIsActive)
 		return;
@@ -217,7 +235,7 @@ void CEnemyProjectile::Render(void)
 	// Render the tile
 	//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(VAO);
-	bulletAnimation->Render();
+	arrowAnimation->Render();
 	glBindVertexArray(0);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
@@ -227,7 +245,7 @@ void CEnemyProjectile::Render(void)
 /**
  @brief PostRender Set up the OpenGL display environment after rendering.
  */
-void CEnemyProjectile::PostRender(void)
+void CBowProjectile::PostRender(void)
 {
 	if (!bIsActive)
 		return;
@@ -241,15 +259,15 @@ void CEnemyProjectile::PostRender(void)
 @param iIndex_XAxis A const int variable which stores the index in the x-axis
 @param iIndex_YAxis A const int variable which stores the index in the y-axis
 */
-void CEnemyProjectile::Seti32vec2Index(const int iIndex_XAxis, const int iIndex_YAxis)
+void CBowProjectile::Seti32vec2Index(const int iIndex_XAxis, const int iIndex_YAxis)
 {
 	this->vec2Index.x = iIndex_XAxis;
 	this->vec2Index.y = iIndex_YAxis;
 }
 
-void CEnemyProjectile::seti32vec2Direction(const int playerX, const int enemyX)
+void CBowProjectile::seti32vec2Direction(const int direction)
 {
-	this->i32vec2Direction.x = playerX - enemyX;
+	this->i32vec2Direction.x = direction;
 	this->i32vec2Direction.y = 0;
 }
 
@@ -258,7 +276,7 @@ void CEnemyProjectile::seti32vec2Direction(const int playerX, const int enemyX)
 @param iNumMicroSteps_XAxis A const int variable storing the current microsteps in the X-axis
 @param iNumMicroSteps_YAxis A const int variable storing the current microsteps in the Y-axis
 */
-void CEnemyProjectile::Seti32vec2NumMicroSteps(const int iNumMicroSteps_XAxis, const int iNumMicroSteps_YAxis)
+void CBowProjectile::Seti32vec2NumMicroSteps(const int iNumMicroSteps_XAxis, const int iNumMicroSteps_YAxis)
 {
 	this->i32vec2NumMicroSteps.x = iNumMicroSteps_XAxis;
 	this->i32vec2NumMicroSteps.y = iNumMicroSteps_YAxis;
@@ -270,7 +288,7 @@ void CEnemyProjectile::Seti32vec2NumMicroSteps(const int iNumMicroSteps_XAxis, c
  @brief Constraint the enemy2D's position within a boundary
  @param eDirection A DIRECTION enumerated data type which indicates the direction to check
  */
-void CEnemyProjectile::Constraint(DIRECTION eDirection)
+void CBowProjectile::Constraint(DIRECTION eDirection)
 {
 	if (eDirection == LEFT)
 	{
@@ -306,7 +324,7 @@ void CEnemyProjectile::Constraint(DIRECTION eDirection)
 	}
 	else
 	{
-		cout << "CEnemyProjectile::Constraint: Unknown direction." << endl;
+		cout << "CBowProjectile::Constraint: Unknown direction." << endl;
 	}
 }
 
@@ -314,7 +332,7 @@ void CEnemyProjectile::Constraint(DIRECTION eDirection)
  @brief Check if a position is possible to move into
  @param eDirection A DIRECTION enumerated data type which indicates the direction to check
  */
-bool CEnemyProjectile::CheckPosition(DIRECTION eDirection)
+bool CBowProjectile::CheckPosition(DIRECTION eDirection)
 {
 	if (eDirection == LEFT)
 	{
@@ -421,13 +439,13 @@ bool CEnemyProjectile::CheckPosition(DIRECTION eDirection)
 	}
 	else
 	{
-		cout << "CEnemyProjectile::CheckPosition: Unknown direction." << endl;
+		cout << "CBowProjectile::CheckPosition: Unknown direction." << endl;
 	}
 
 	return true;
 }
 
-bool CEnemyProjectile::CheckPos(DIRECTION eDirection)
+bool CBowProjectile::CheckPos(DIRECTION eDirection)
 {
 	if (eDirection == LEFT)
 	{
@@ -463,7 +481,7 @@ bool CEnemyProjectile::CheckPos(DIRECTION eDirection)
 }
 
 // Check if the enemy2D is in mid-air
-bool CEnemyProjectile::IsMidAir(void)
+bool CBowProjectile::IsMidAir(void)
 {
 	// if the player is at the bottom row, then he is not in mid-air for sure
 	if (vec2Index.y == 0)
@@ -483,25 +501,33 @@ bool CEnemyProjectile::IsMidAir(void)
 /**
  @brief Let enemy2D interact with the player.
  */
-bool CEnemyProjectile::InteractWithPlayer(void)
+bool CBowProjectile::InteractWithEnemies(void)
 {
-	glm::i32vec2 i32vec2PlayerPos = cPlayer2D->vec2Index;
-	
-	// Check if the enemy2D is within 1.5 indices of the player2D
-	if (((vec2Index.x >= i32vec2PlayerPos.x - 0.5) && 
-		(vec2Index.x <= i32vec2PlayerPos.x + 0.5))
-		&& 
-		((vec2Index.y >= i32vec2PlayerPos.y - 0.5) &&
-		(vec2Index.y <= i32vec2PlayerPos.y + 0.5)))
+	vector<CEntity2D*>enemyList = CScene2D::GetInstance()->returnEnemyVector();
+	for (int enemyIndex = 0; enemyIndex != enemyList.size(); ++enemyIndex)
 	{
-		//cout << "Gotcha!" << endl;
-		damageOnPlayer = cPlayer2D->returnPlayerHealth();
-		playerHP = damageOnPlayer->GetItem("Health");
-		playerHP->Remove(bulletDamage);
-		hitPlayer = true;
-		// Since the player has been caught, then reset the FSM
-		return true;
+		// Check if the enemy2D is within 1.5 indices of the player2D
+		if (((vec2Index.x >= enemyList[enemyIndex]->vec2Index.x - 0.5) &&
+			(vec2Index.x >= enemyList[enemyIndex]->vec2Index.x + 0.5))
+			&&
+			((vec2Index.y >= enemyList[enemyIndex]->vec2Index.y - 0.5) &&
+				(vec2Index.y <= enemyList[enemyIndex]->vec2Index.y + 0.5)))
+		{
+			cout << "HEADSHOT!\n";
+			hitEnemy = true;
+			enemyList[enemyIndex]->health -= arrowDamage;
+			std::cout << enemyList[enemyIndex]->health << endl;
+			if (enemyList[enemyIndex]->health <= 0)
+			{
+				enemyList[enemyIndex]->~CEntity2D();
+				enemyList.erase(enemyList.begin() + enemyIndex);
+				CScene2D::GetInstance()->setNewEnemyVector(enemyList);
+			}
+			// Since the player has been caught, then reset the FSM
+			return true;
+		}
 	}
+	
 	return false;
 }
 
@@ -509,7 +535,7 @@ bool CEnemyProjectile::InteractWithPlayer(void)
 /**
  @brief Flip horizontal direction. For patrol use only
  */
-void CEnemyProjectile::FlipHorizontalDirection(void)
+void CBowProjectile::FlipHorizontalDirection(void)
 {
 	i32vec2Direction.x *= -1;
 }
@@ -517,7 +543,7 @@ void CEnemyProjectile::FlipHorizontalDirection(void)
 /**
 @brief Update position.
 */
-void CEnemyProjectile::UpdatePosition(void)
+void CBowProjectile::UpdatePosition(void)
 {
 	// Store the old position
 	i32vec2OldIndex = vec2Index;
@@ -529,7 +555,7 @@ void CEnemyProjectile::UpdatePosition(void)
 		const int iOldIndex = vec2Index.x;
 		if (vec2Index.x >= 0)
 		{
-			i32vec2NumMicroSteps.x -= 0.4;
+			i32vec2NumMicroSteps.x -= (1 * amountOfCharge);
 			if (i32vec2NumMicroSteps.x < 0)
 			{
 				i32vec2NumMicroSteps.x = ((int)cSettings->NUM_STEPS_PER_TILE_XAXIS) - 1;
@@ -552,9 +578,9 @@ void CEnemyProjectile::UpdatePosition(void)
 		{
 			cPhysics2D.SetStatus(CPhysics2D::STATUS::FALL);
 		}
-		bulletAnimation->PlayAnimation("Left", -1, 5);
+		arrowAnimation->PlayAnimation("Left", -1, 5);
 		// Interact with the Player
-		InteractWithPlayer();
+		InteractWithEnemies();
 	}
 	else if (i32vec2Direction.x > 0)
 	{
@@ -562,7 +588,7 @@ void CEnemyProjectile::UpdatePosition(void)
 		const int iOldIndex = vec2Index.x;
 		if (vec2Index.x < (int)cSettings->NUM_TILES_XAXIS)
 		{
-			i32vec2NumMicroSteps.x += 0.4;
+			i32vec2NumMicroSteps.x += (1 * amountOfCharge);
 
 			if (i32vec2NumMicroSteps.x >= cSettings->NUM_STEPS_PER_TILE_XAXIS)
 			{
@@ -588,8 +614,8 @@ void CEnemyProjectile::UpdatePosition(void)
 		}
 
 		// Interact with the Player
-		InteractWithPlayer();
-		bulletAnimation->PlayAnimation("Right", -1, 5);
+		InteractWithEnemies();
+		arrowAnimation->PlayAnimation("Right", -1, 5);
 
 	}
 
@@ -602,22 +628,33 @@ void CEnemyProjectile::UpdatePosition(void)
 			cPhysics2D.SetInitialVelocity(glm::vec2(0.0f, 3.5f));
 		}
 	}
+
 }
 
-void CEnemyProjectile::CheckForInteraction(void)
+void CBowProjectile::CheckForInteraction(void)
 {
-	for (int i = 0; i < bulletStorage.size(); i++)
+	for (int i = 0; i < arrowStorage.size(); i++)
 	{
 		if (i32vec2Direction.x > 0)
 		{
 			if (CheckPos(RIGHT))
 			{
-				bulletStorage[i]->~CEntity2D();
-				vector <CEntity2D*> temp = CScene2D::GetInstance()->getLiveBulletVector();
+				arrowStorage[i]->~CEntity2D();
+				vector <CEntity2D*> temp = CScene2D::GetInstance()->getLiveArrowVector();
 				temp.erase(temp.begin() + i);
-				CScene2D::GetInstance()->setLiveBulletVector(temp);
-				bulletStorage = temp;
-				//cout << bulletStorage.size() << endl;
+				CScene2D::GetInstance()->setLiveArrowVector(temp);
+				arrowStorage = temp;
+				//cout << arrowStorage.size() << endl;
+				break;
+			}
+			else if (vec2Index.x >= arrowDestination)
+			{
+				arrowStorage[i]->~CEntity2D();
+				vector <CEntity2D*> temp = CScene2D::GetInstance()->getLiveArrowVector();
+				temp.erase(temp.begin() + i);
+				CScene2D::GetInstance()->setLiveArrowVector(temp);
+				arrowStorage = temp;
+				//cout << arrowStorage.size() << endl;
 				break;
 			}
 				    
@@ -626,36 +663,37 @@ void CEnemyProjectile::CheckForInteraction(void)
 		{
 			if (CheckPos(LEFT))
 			{			
-				bulletStorage[i]->~CEntity2D();
-				vector <CEntity2D*> temp = CScene2D::GetInstance()->getLiveBulletVector();
+				arrowStorage[i]->~CEntity2D();
+				vector <CEntity2D*> temp = CScene2D::GetInstance()->getLiveArrowVector();
 				temp.erase(temp.begin() + i);
-				CScene2D::GetInstance()->setLiveBulletVector(temp);
-				bulletStorage = temp;
-				//cout << bulletStorage.size() << endl;
+				CScene2D::GetInstance()->setLiveArrowVector(temp);
+				arrowStorage = temp;
+				//cout << arrowStorage.size() << endl;
 				break;	
+			}
+			else if (vec2Index.x <= arrowDestination)
+			{
+				arrowStorage[i]->~CEntity2D();
+				vector <CEntity2D*> temp = CScene2D::GetInstance()->getLiveArrowVector();
+				temp.erase(temp.begin() + i);
+				CScene2D::GetInstance()->setLiveArrowVector(temp);
+				arrowStorage = temp;
+				//cout << arrowStorage.size() << endl;
+				break;
 			}
 			
 		}
-		else if (i32vec2Direction.x == 0)
+		
+		if (hitEnemy)
 		{
-			bulletStorage[i]->~CEntity2D();
-			vector <CEntity2D*> temp = CScene2D::GetInstance()->getLiveBulletVector();
+			arrowStorage[i]->~CEntity2D();
+			vector <CEntity2D*> temp = CScene2D::GetInstance()->getLiveArrowVector();
 			temp.erase(temp.begin() + i);
-			CScene2D::GetInstance()->setLiveBulletVector(temp);
-			bulletStorage = temp;
-			//cout << bulletStorage.size() << endl;
+			CScene2D::GetInstance()->setLiveArrowVector(temp);
+			arrowStorage = temp;
+			//cout << arrowStorage.size() << endl;
 			break;
 		}
-		if (hitPlayer)
-		{
-			bulletStorage[i]->~CEntity2D();
-			vector <CEntity2D*> temp = CScene2D::GetInstance()->getLiveBulletVector();
-			temp.erase(temp.begin() + i);
-			CScene2D::GetInstance()->setLiveBulletVector(temp);
-			bulletStorage = temp;
-			//cout << bulletStorage.size() << endl;
-			hitPlayer = false;
-			break;
-		}
+
 	}
 }
