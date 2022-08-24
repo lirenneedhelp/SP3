@@ -275,14 +275,15 @@ bool CScene2D::Init(void)
 	cSoundController = CSoundController::GetInstance();
 	cSoundController->LoadSound(FileSystem::getPath("Sounds\\creepy-night.ogg"), 1, true); //background sound for night 
 	cSoundController->LoadSound(FileSystem::getPath("Sounds\\Theme4.ogg"), 2, true); // background sound for day
-	cSoundController->LoadSound(FileSystem::getPath("Sounds\\item-equip.ogg"), 3, true); //sound effect for equipping an item
-	cSoundController->LoadSound(FileSystem::getPath("Sounds\\potionpickup.ogg"), 4, true); //sound effect for potions
-	cSoundController->LoadSound(FileSystem::getPath("Sounds\\hurt_dying.ogg"), 5, true); //sound effect for death
-	cSoundController->LoadSound(FileSystem::getPath("Sounds\\ough.ogg"), 6, true); //sound effect for getting hit
-	cSoundController->LoadSound(FileSystem::getPath("Sounds\\punch.ogg"), 7, true); //eound effect for punching
-	cSoundController->LoadSound(FileSystem::getPath("Sounds\\weaponattack.ogg"), 8, true); //sound effect for sword attack
-	cSoundController->LoadSound(FileSystem::getPath("Sounds\\wood-creak.ogg"), 9, true); //sound effect for chest
-	//cSoundController->LoadSound(FileSystem::getPath("Sounds\\item-equip.ogg"), 3, true);
+	cSoundController->LoadSound(FileSystem::getPath("Sounds\\jump.ogg"), 3, true);
+	cSoundController->LoadSound(FileSystem::getPath("Sounds\\item-equip.ogg"), 4, true); //sound effect for equipping an item
+	cSoundController->LoadSound(FileSystem::getPath("Sounds\\potionpickup.ogg"), 5, true); //sound effect for potions
+	cSoundController->LoadSound(FileSystem::getPath("Sounds\\hurt_dying.ogg"), 6, true); //sound effect for death
+	cSoundController->LoadSound(FileSystem::getPath("Sounds\\ough.ogg"), 7, true); //sound effect for getting hit
+	cSoundController->LoadSound(FileSystem::getPath("Sounds\\punch.ogg"), 8, true); //eound effect for punching
+	cSoundController->LoadSound(FileSystem::getPath("Sounds\\weaponattack.ogg"), 9, true); //sound effect for sword attack
+	cSoundController->LoadSound(FileSystem::getPath("Sounds\\wood-creak.ogg"), 10, true); //sound effect for chest
+	
 
 	return true;
 }
