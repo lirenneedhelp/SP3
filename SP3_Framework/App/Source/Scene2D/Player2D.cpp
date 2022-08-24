@@ -1418,6 +1418,9 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime) {
 			case 103:
 				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 0);
 				break;
+			case 105:
+				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x -1, rand() % 5 + 2);
+				break;
 			}
 		}
 		else if (direction == 2) {
@@ -1431,6 +1434,9 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime) {
 				break;
 			case 103:
 				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 0);
+				break;
+			case 105:
+				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, rand() % 3 + 3);
 				break;
 			}
 		}
