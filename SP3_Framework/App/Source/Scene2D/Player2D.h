@@ -71,6 +71,8 @@ public:
 
 	bool isMoving;
 
+	void UpdateDefense(float damage);
+
 
 
 	CInventoryManager* returnPlayerHealth(void);
@@ -163,7 +165,6 @@ protected:
 
 	// Check if the player is in mid-air
 	bool IsMidAir(void);
-
 	// Update Jump or Fall
 	void UpdateJumpFall(const double dElapsedTime = 0.0166666666666667);
 
@@ -173,7 +174,7 @@ protected:
 	// Update the health and lives
 	void UpdateHealthLives(void);
 
-	void UpdateDefense(void);
+
 
 	/*
 		!CODE CHANGES START!
@@ -199,6 +200,11 @@ protected:
 	bool bootsequip;
 	bool highjump;
 	int jumps;
+
+	// Checks how many seconds potion has been active
+	float strength_runtime;
+	float speed_runtime;
+
 
 	// When Player Charges Up Bow
 	float charge;

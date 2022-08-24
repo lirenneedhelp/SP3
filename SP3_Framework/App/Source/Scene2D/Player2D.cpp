@@ -126,7 +126,11 @@ bool CPlayer2D::Init(void)
 
 	playerInitialDamage = 10;
 
+<<<<<<< HEAD
 	strengthValue = 1.0f;
+=======
+	speed_runtime = 0.f;
+>>>>>>> bdefaf70b5d3bda23d9e081487a4f99258c075a1
 	
 	// By default, microsteps should be zero
 	vec2NumMicroSteps = glm::i32vec2(0, 0);
@@ -540,8 +544,20 @@ void CPlayer2D::Update(const double dElapsedTime)
 			attackSpeed -= dElapsedTime;
 			if (attackSpeed <= 0.f)
 			{
+<<<<<<< HEAD
 				// When Sword Equipped
 				if (CGUI_Scene2D::GetInstance()->updateSelection() == SWORD_ID)
+=======
+				
+				//cout << "hello I'm holding left click\n";
+				//damage the enemy and reset the interval
+				attackSpeed = 1.0f;
+				//if (cPhysics2D.CalculateDistance(vec2Index,))
+				enemyList = CScene2D::GetInstance()->returnEnemyVector();
+				//returnNearestPlayer();
+				animatedSprites->PlayAnimation("Attack1", -1, 1.0f);
+				for (int enemyIndex = 0; enemyIndex != enemyList.size(); ++enemyIndex)
+>>>>>>> bdefaf70b5d3bda23d9e081487a4f99258c075a1
 				{
 					//cout << "Sword\n";
 					attackSpeed = 0.75f;
@@ -686,6 +702,7 @@ void CPlayer2D::Update(const double dElapsedTime)
 				charge = 0.f;
 				shoot = false;
 			}
+<<<<<<< HEAD
 
 		}
 		
@@ -695,7 +712,32 @@ void CPlayer2D::Update(const double dElapsedTime)
 		strengthValue = 2.0f; // basically base damage multiply by 2
 	}
 		
+=======
+		}	
+	}
+	
+	if (strength == true)
+	{
+		strength_runtime += dElapsedTime;
+		if (strength_runtime >= 20.f)
+		{
+			strength = false;
+			strength_runtime = 0.f;
+			cout << "strength's effect worn off!\n";
+		}
+	}
+>>>>>>> bdefaf70b5d3bda23d9e081487a4f99258c075a1
 
+	if (speed == true)
+	{
+		speed_runtime += dElapsedTime;
+		if (speed_runtime >= 3.f)
+		{
+			speed = false;
+			speed_runtime = 0.f;
+			cout << "speed's effect worn off!\n";
+		}
+	}
 	
 
 	//cMouseController->PostUpdate();
@@ -1196,6 +1238,7 @@ void CPlayer2D::InteractWithMap(void)
 		std::cout << "got armour" << endl;
 		helmetequip = true;
 		// Play a bell sound
+<<<<<<< HEAD
 		cSoundController->PlaySoundByID(1);
 		if (helmetequip == true)
 		{
@@ -1203,6 +1246,8 @@ void CPlayer2D::InteractWithMap(void)
 			std::cout << "u're protected!" << endl;
 			
 		}
+=======
+>>>>>>> bdefaf70b5d3bda23d9e081487a4f99258c075a1
 		break;
 	case 42:
 		// Erase the potion from this position
@@ -1231,6 +1276,7 @@ void CPlayer2D::InteractWithMap(void)
 		cInventoryItem = cInventoryManager->GetItem("boots");
 		cInventoryItem->Add(1);
 		bootsequip = true;
+
 		// Play a bell sound
 		cSoundController->PlaySoundByID(1);
 		break;
@@ -1269,44 +1315,58 @@ void CPlayer2D::UpdateHealthLives(void)
 	}
 }
 
-void CPlayer2D::UpdateDefense(void)
+void CPlayer2D::UpdateDefense(float damage)
 {
-
 	if (helmetequip == true)
 	{	
 		defense = 20;
 		cout << "u're protected by helmet!" << endl;
 		damageOnPlayer = returnPlayerHealth();
 		cInventoryItem = damageOnPlayer->GetItem("Health");
-		cInventoryItem->Remove(30 - defense);
+		cInventoryItem->Remove(damage - defense);
 		cout << "damage reduced" << endl;
 	}
-	if (chestplateequip == true)
+	else if (chestplateequip == true)
 	{
 		defense = 40;
+<<<<<<< HEAD
 		std::cout << "u're protected by chestplate!" << endl;
 	/*	damageOnPlayer = returnPlayerHealth();
+=======
+		std::cout << "u're protected!" << endl;
+		damageOnPlayer = returnPlayerHealth();
+>>>>>>> bdefaf70b5d3bda23d9e081487a4f99258c075a1
 		cInventoryItem = damageOnPlayer->GetItem("Health");
-		cInventoryItem->Remove(30-defense);
-		*/
+		cInventoryItem->Remove(damage - defense);
+		cout << "damage reduced" << endl;
 	}
-	if (leggingsequip == true)
+	else if (leggingsequip == true)
 	{
 		defense = 30;
+<<<<<<< HEAD
 		std::cout << "u're protected by leggings!" << endl;
 		/*damageOnPlayer = returnPlayerHealth();
+=======
+		std::cout << "u're protected!" << endl;
+		damageOnPlayer = returnPlayerHealth();
+>>>>>>> bdefaf70b5d3bda23d9e081487a4f99258c075a1
 		cInventoryItem = damageOnPlayer->GetItem("Health");
-		cInventoryItem->Remove(30-defense);
-		*/
+		cInventoryItem->Remove(damage - defense);
+		cout << "damage reduced" << endl;
 	}
-	if (bootsequip == true)
+	else if (bootsequip == true)
 	{
 		defense = 10;
+<<<<<<< HEAD
 		std::cout << "u're protected by boots!" << endl;
 		/*damageOnPlayer = returnPlayerHealth();
+=======
+		std::cout << "u're protected!" << endl;
+		damageOnPlayer = returnPlayerHealth();
+>>>>>>> bdefaf70b5d3bda23d9e081487a4f99258c075a1
 		cInventoryItem = damageOnPlayer->GetItem("Health");
-		cInventoryItem->Remove(30-defense);*/
-	
+		cInventoryItem->Remove(damage - defense);
+		cout << "damage reduced" << endl;
 	}
 }
 /*
@@ -1407,6 +1467,9 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime) {
 			case 103:
 				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 0);
 				break;
+			case 105:
+				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x -1, rand() % 5 + 2);
+				break;
 			}
 		}
 		else if (direction == 2) {
@@ -1421,11 +1484,14 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime) {
 			case 103:
 				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 0);
 				break;
+			case 105:
+				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, rand() % 3 + 3);
+				break;
 			}
 		}
 		if (shovelequip == true)
 		{
-			breakinterval = 0.25f;
+			breakinterval = 0.33f;
 		}
 		else
 		{
@@ -1452,7 +1518,7 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime) {
 		}
 		if (shovelequip == true)
 		{
-			breakinterval = 0.25f;
+			breakinterval = 0.33f;
 		}
 		else
 		{
@@ -1475,7 +1541,7 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime) {
 		}
 		if (shovelequip == true)
 		{
-			breakinterval = 0.25f;
+			breakinterval = 0.33f;
 		}
 		else
 		{
@@ -1486,3 +1552,4 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime) {
 /*
 	!CODE CHANGES END!
 */     
+

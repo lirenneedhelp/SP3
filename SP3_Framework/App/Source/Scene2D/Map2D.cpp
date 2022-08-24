@@ -379,6 +379,18 @@ bool CMap2D::Init(	const unsigned int uiNumLevels,
 		MapOfTextureIDs.insert(pair<int, int>(51, iTextureID));
 
 	}
+	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/chest.png", true);
+	if (iTextureID == 0)
+	{
+		cout << "Unable to load Image/chest.png" << endl;
+		return false;
+	}
+	else
+	{
+		// Store the texture ID into MapOfTextureIDs
+		MapOfTextureIDs.insert(pair<int, int>(105, iTextureID));
+
+	}
 
 	// Initialise the variables for AStar
 	m_weight = 1;
