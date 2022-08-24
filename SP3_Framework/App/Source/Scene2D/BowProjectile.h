@@ -1,5 +1,5 @@
 /**
- CGlutton
+ CBowProjectile
  @brief A class which represents the enemy object
  By: Toh Da Jun
  Date: Mar 2020
@@ -29,29 +29,25 @@ class CMap2D;
 // Include Player2D
 #include "Player2D.h"
 
-// Include CEnemyProjectile
-#include "EnemyProjectile.h"
+// Include Glutton 
 
-// Include Scene2D (Because I want to update the bullet vector in Scene2D)
-#include "Scene2D.h"
+#include "Glutton.h"
+
+#include "InventoryManager.h"
 
 #include "Primitives/SpriteAnimation.h"
 
-class CGlutton : public CEntity2D
+class CBowProjectile : public CEntity2D
 {
 public:
 	// Constructor
-	CGlutton(void);
+	CBowProjectile(void);
 
 	// Destructor
-	virtual ~CGlutton(void);
+	virtual ~CBowProjectile(void);
 
 	// Init
 	bool Init(void);
-
-	// Init without reading from the map
-
-	bool Init2(void);
 
 	// Update
 	void Update(const double dElapsedTime);
@@ -67,6 +63,9 @@ public:
 
 	// Set the indices of the enemy2D
 	void Seti32vec2Index(const int iIndex_XAxis, const int iIndex_YAxis);
+
+	// Set the direction of the bullet
+	void seti32vec2Direction(const int direction);
 
 	// Set the number of microsteps of the enemy2D
 	void Seti32vec2NumMicroSteps(const int iNumMicroSteps_XAxis, const int iNumMicroSteps_YAxis);
@@ -86,15 +85,16 @@ public:
 	// Set the handle to cPlayer to this class instance
 	void SetPlayer2D(CPlayer2D* cPlayer2D);
 
+	// Set the size of the current bullet vector
+	void setBulletVector(vector<CEntity2D*>&newBulletVector);
 
-	// Get Glutton HP
 
-	float getHP(void);
+	vector<CEntity2D*>& getBulletVector(void);
 
-	// Set Glutton HP
+	// Sets the max distance of the arrow depending on the charge
+	void setMaxDistance(float charge);
 
-	void setHP(float newHealth);
-
+	
 	// boolean flag to indicate if this enemy is active
 	bool bIsActive;
 
@@ -108,15 +108,7 @@ protected:
 		NUM_DIRECTIONS
 	};
 
-	enum FSM
-	{
-		IDLE = 0,
-		PATROL = 1,
-		TRACE = 2,
-		JUMP_OVER_WALL = 3,
-		SHOOT = 4,
-		NUM_FSM
-	};
+	vector <CEntity2D*> arrowStorage;
 
 	glm::vec2 i32vec2OldIndex;
 
@@ -144,13 +136,7 @@ protected:
 	// The vec2 which stores the direction for enemy2D movement in the Map2D
 	glm::vec2 i32vec2Direction;
 
-	float shotInterval;
 
-	float wallDist;
-
-	bool reachedOtherside;
-
-	glm::vec2 destination;
 	// Settings
 	CSettings* cSettings;
 
@@ -163,17 +149,24 @@ protected:
 	// Handle to the CPlayer2D
 	CPlayer2D* cPlayer2D;
 
-	// Current FSM
-	FSM sCurrentFSM;
+	float maxDistance;
+	// Controls bullet damage on player
+	CInventoryManager* damageOnPlayer;
 
-	// Glutton Sprite Animation
-	CSpriteAnimation* gluttonAnimatedSprites;
+	// Player health
+	CInventoryItem* playerHP;
 
-	// FSM counter - count how many frames it has been in this FSM
-	int iFSMCounter;
+	int arrowDamage;
 
-	// Max count in a state
-	const int iMaxFSMCounter = 60;
+	CSpriteAnimation* arrowAnimation;
+
+	float amountOfCharge; // Stores the charge value from CPlayer2D
+
+	float arrowDestination; // projected range of arrow
+
+	bool hitEnemy;
+
+
 
 	// Constraint the enemy2D's position within a boundary
 	void Constraint(DIRECTION eDirection = LEFT);
@@ -181,14 +174,17 @@ protected:
 	// Check if a position is possible to move into
 	bool CheckPosition(DIRECTION eDirection);
 
+	// Check if position is alr at wall
+	bool CheckPos(DIRECTION eDirection);
+
 	// Check if the enemy2D is in mid-air
 	bool IsMidAir(void);
 
 	// Update Jump or Fall
 	void UpdateJumpFall(const double dElapsedTime = 0.0166666666666667);
 
-	// Let enemy2D interact with the player
-	bool InteractWithPlayer(void);
+	// Let Arrows interact with the Enemies
+	bool InteractWithEnemies(void);
 
 	// Update direction
 	void UpdateDirection(void);
@@ -199,7 +195,6 @@ protected:
 	// Update position
 	void UpdatePosition(void);
 
-	bool checkForWall(void); // Check for walls in front of the player
-
+	void CheckForInteraction(void);
 };
 

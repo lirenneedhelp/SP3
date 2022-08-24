@@ -67,18 +67,17 @@ public:
 	// PostRender
 	void PostRender(void);
 
+	// Don't add your variables here without any reason
+
 	bool isMoving;
-	bool speed;
-	bool strength;
-	bool swordequip;
-	bool spearequip;
-	bool axeequip;
-	bool shovelequip;
-	bool bowequip;
-	bool highjump;
-	int jumps;
+
+	void UpdateDefense(float damage);
+
+
 
 	CInventoryManager* returnPlayerHealth(void);
+
+	float returnCharge(void);
 
 protected:
 	enum DIRECTION
@@ -114,6 +113,8 @@ protected:
 
 	// InventoryItem
 	CInventoryItem* cInventoryItem;
+	
+	CInventoryManager* damageOnPlayer;
 
 	// List of enemies
 	vector <CEntity2D*> enemyList;
@@ -132,9 +133,13 @@ protected:
 
 	bool firstAttack;
 
+	bool shoot;
+
 	// Player Initial Damage
 
 	float playerInitialDamage;
+
+	float defense;
 
 	// Handler to the CSoundController
 	CSoundController* cSoundController;
@@ -153,7 +158,6 @@ protected:
 
 	// Check if the player is in mid-air
 	bool IsMidAir(void);
-
 	// Update Jump or Fall
 	void UpdateJumpFall(const double dElapsedTime = 0.0166666666666667);
 
@@ -162,6 +166,8 @@ protected:
 
 	// Update the health and lives
 	void UpdateHealthLives(void);
+
+
 
 	/*
 		!CODE CHANGES START!
@@ -174,6 +180,22 @@ protected:
 	/*
 		!CODE CHANGES END!
 	*/
+	bool speed;
+	bool strength;
+	bool swordequip;
+	bool spearequip;
+	bool axeequip;
+	bool shovelequip;
+	bool bowequip;
+	bool helmetequip;
+	bool chestplateequip;
+	bool leggingsequip;
+	bool bootsequip;
+	bool highjump;
+	int jumps;
+
+	// When Player Charges Up Bow
+	float charge;
 
 	CEntity2D* returnNearestEnemy(void);
 };

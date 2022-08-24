@@ -765,9 +765,10 @@ bool CWoodCrawler::InteractWithPlayer(void)
 		&& !hit)
 	{
 		cout << "Attack!" << endl;
-		damageOnPlayer = cPlayer2D->returnPlayerHealth();
-		playerHP = damageOnPlayer->GetItem("Health");
-		playerHP->Remove(20);
+		//damageOnPlayer = cPlayer2D->returnPlayerHealth();
+		//playerHP = damageOnPlayer->GetItem("Health");
+		//playerHP->Remove(20);
+		cPlayer2D->UpdateDefense(20);
 		woodAnimatedSprites->PlayAnimation("Pull", -1, 5);
 		hit = true; // hit cooldown
 

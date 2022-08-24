@@ -83,14 +83,16 @@ bool CGUI_Scene2D::Init(void)
 	// Add a Tree as one of the inventory items
 	cInventoryItem = cInventoryManager->Add("Tree", "Image/Scene2D_TreeTile.tga", 5, 0);
 	cInventoryItem->vec2Size = glm::vec2(25, 25);
+	// Initialise the vector
+	storePlayerItem.clear();
 
 	CImageLoader* il = CImageLoader::GetInstance();
-	emptyInventorySlot.fileName = "Image\\GUI\\itemhotbar.png";
-	emptyInventorySlot.textureID = il->LoadTextureGetID(emptyInventorySlot.fileName.c_str(), false);
-	emptyInventorySlot.itemID = -1;
-
+	
 	for (int i = 0; i < 9; ++i)
 	{
+		emptyInventorySlot.fileName = "Image\\GUI\\itemhotbar.png";
+		emptyInventorySlot.textureID = il->LoadTextureGetID(emptyInventorySlot.fileName.c_str(), false);
+		emptyInventorySlot.slotID = i;
 		playerInventory.push_back(emptyInventorySlot);
 	}
 	// Store the keyboard controller singleton instance here
@@ -189,7 +191,7 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 	{
 	
 		ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth / 9 * 3, cSettings->iWindowHeight * 0.93f));
-		ImGui::SetWindowSize(ImVec2(cSettings->iWindowWidth / 3 * relativeScale_x, 40.0f * relativeScale_y));
+		ImGui::SetWindowSize(ImVec2(cSettings->iWindowWidth  / 2.7, 40.f * relativeScale_y));
 		if (cKeyboardController->IsKeyPressed(GLFW_KEY_1))
 		{
 			ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(1.0f, 0.0f, 0.0f, 1.0f));
@@ -199,7 +201,13 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 		}
 		if (ImGui::ImageButton((ImTextureID)playerInventory[i].textureID, ImVec2(20 * relativeScale_x, 20 * relativeScale_y), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0), 2, ImVec4(1, 0, 0, 0)))
 		{
-			cout << playerInventory[i].itemID << endl;
+			cout << playerInventory[i].slotID << endl;
+			if (storePlayerItem.size() > 0 && i < storePlayerItem.size())
+			{
+				ImGui::Image((void*)(intptr_t)storePlayerItem[i]->GetTextureID(),
+					ImVec2(20 * relativeScale_x, 20 * relativeScale_y),
+					ImVec2(0, 1), ImVec2(1, 0));
+			}
 		}
 		ImGui::SameLine();
 	}
@@ -236,4 +244,9 @@ void CGUI_Scene2D::Render(void)
  */
 void CGUI_Scene2D::PostRender(void)
 {
+}
+
+void CGUI_Scene2D::updateInventory(CInventoryItem* item)
+{
+	storePlayerItem.push_back(item);
 }

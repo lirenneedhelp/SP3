@@ -168,6 +168,9 @@ bool CScene2D::Init(void)
 	//Create and initialise the CEnemyProjectile
 	liveBullets.clear();
 
+	//Create and initialise the CBowProjectile
+	liveArrows.clear();
+
 	// Create and initialise the CEnemy2D
 	enemyVector.clear();
 	while (true)
@@ -301,6 +304,13 @@ bool CScene2D::Update(const double dElapsedTime)
 			liveBullets[j]->Update(dElapsedTime);
 		}
 	}
+	if (liveArrows.size() > 0)
+	{
+		for (int k = 0; k < liveArrows.size(); k++)
+		{
+			liveArrows[k]->Update(dElapsedTime);
+		}
+	}
 	 
 	// Call the Map2D's update method
 	cMap2D->Update(dElapsedTime);
@@ -351,14 +361,14 @@ bool CScene2D::Update(const double dElapsedTime)
 	}
 	dayCounter += dElapsedTime;
 
-	//if (!day)
-	//{
+	if (!day)
+	{
 		enemySpawnTimeCounter -= dElapsedTime;
-	//}
-	//else
-	//{
-	//	enemySpawnTimeCounter = 15.f;
-	//}
+	}
+	else
+	{
+		enemySpawnTimeCounter = 15.f;
+	}
 
 	if (enemySpawnTimeCounter <= 0)
 	{ 
@@ -438,7 +448,6 @@ void CScene2D::Render(void)
 	cMap2D->Render();
 	// Call the Map2D's PostRender()
 	cMap2D->PostRender();
-
 	for (int i = 0; i < enemyVector.size(); i++)
 	{
 		// Call the CEnemy2D's PreRender()
@@ -459,6 +468,18 @@ void CScene2D::Render(void)
 			liveBullets[i]->Render();
 			// Call the CEnemy2D's PostRender()
 			liveBullets[i]->PostRender();
+		}
+	}
+	if (liveArrows.size() > 0)
+	{
+		for (int i = 0; i < liveArrows.size(); i++)
+		{
+			// Call the CEnemy2D's PreRender()
+			liveArrows[i]->PreRender();
+			// Call the CEnemy2D's Render()
+			liveArrows[i]->Render();
+			// Call the CEnemy2D's PostRender()
+			liveArrows[i]->PostRender();
 		}
 	}
 
@@ -514,6 +535,11 @@ void CScene2D::setNewEnemyVector(vector<CEntity2D*> &newList)
 	enemyVector = newList;
 }
 
+void CScene2D::pushArrow(CEntity2D* arrow)
+{
+	liveArrows.push_back(arrow);
+}
+
 void CScene2D::setLiveBulletVector(vector<CEntity2D*>& vectorOfBullets)
 {
 	liveBullets = vectorOfBullets;
@@ -527,4 +553,14 @@ void CScene2D::pushBullet(CEntity2D* bullet)
 vector<CEntity2D*> CScene2D::getLiveBulletVector(void)
 {
 	return liveBullets;
+}
+
+void CScene2D::setLiveArrowVector(vector<CEntity2D*>& vectorOfArrows)
+{
+	liveArrows = vectorOfArrows;
+}
+
+vector<CEntity2D*> CScene2D::getLiveArrowVector(void)
+{
+	return liveArrows;
 }

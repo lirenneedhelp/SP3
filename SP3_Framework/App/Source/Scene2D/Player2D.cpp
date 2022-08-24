@@ -23,6 +23,7 @@ using namespace std;
 #include "GameManager.h"
 #include "BloodDeer.h"
 #include "Scene2D.h" 
+#include "BowProjectile.h"
 
 /**
  @brief Constructor This constructor has protected access modifier as this class will be a Singleton
@@ -111,7 +112,9 @@ bool CPlayer2D::Init(void)
 	strength = false;
 	attackRange = 1.0f;
 	hitEnemy = false;
+	defense = 0;
 	firstAttack = true; // Check if it's the first click
+	shoot = false;
 
 	//check if weapons are equiped
 	swordequip = false;
@@ -119,6 +122,11 @@ bool CPlayer2D::Init(void)
 	axeequip = false;
 	bowequip = false;
 	shovelequip = false;
+	helmetequip = false;
+	chestplateequip = false;
+	leggingsequip = false;
+	bootsequip = false;
+	
 
 	playerInitialDamage = 10;
 	
@@ -129,7 +137,7 @@ bool CPlayer2D::Init(void)
 	glBindVertexArray(VAO);
 	
 	// Load the player texture 
-	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/player.png", true);
+	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/adventurerPlayer.png", true);
 	if (iTextureID == 0)
 	{
 		std::cout << "Unable to load Image/player.png" << endl;
@@ -137,12 +145,19 @@ bool CPlayer2D::Init(void)
 	}
 
 	//CS: Create the animated sprite and setup the animation 
-	animatedSprites = CMeshBuilder::GenerateSpriteAnimation(11, 7, cSettings->TILE_WIDTH, cSettings->TILE_HEIGHT);
-	animatedSprites->AddAnimation("idle", 0, 6);
-	animatedSprites->AddAnimation("right", 7, 13);
-	animatedSprites->AddAnimation("left", 7, 13);
-	animatedSprites->AddAnimation("jump", 14, 20);
-	animatedSprites->AddAnimation("Attack1", 42, 56);
+	animatedSprites = CMeshBuilder::GenerateSpriteAnimation(40, 14, cSettings->TILE_WIDTH, cSettings->TILE_HEIGHT);
+	animatedSprites->AddAnimation("idle", 0, 3);
+	animatedSprites->AddAnimation("right", 224, 229);
+	animatedSprites->AddAnimation("left", 504, 509);
+	animatedSprites->AddAnimation("jump", 42, 51);
+	//animatedSprites->AddAnimation("jump", 21, 30);
+	animatedSprites->AddAnimation("Attack1", 84, 90);
+	animatedSprites->AddAnimation("chargeBow", 252, 258);
+	animatedSprites->AddAnimation("chargeBowLeft", 532, 538);
+
+	animatedSprites->AddAnimation("shootBow", 259, 260);
+	animatedSprites->AddAnimation("shootBowLeft", 539, 540);
+
 
 
 	//CS: Play the "idle" animation as default
@@ -205,6 +220,7 @@ bool CPlayer2D::Init(void)
 
 	iJumpCount = 0;
 	attackSpeed = 1.0f;
+	charge = 0.f;
 
 	direction = 0;
 	breakinterval = 0.2f;
@@ -480,7 +496,7 @@ void CPlayer2D::Update(const double dElapsedTime)
 	}
 	//Put mouse inputs here
 	if (cMouseController->IsButtonDown(0))
-	{	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+	{
 		if (firstAttack)
 		{
 			//cout << "hello I've LEFT CLICKED\n";
@@ -498,7 +514,7 @@ void CPlayer2D::Update(const double dElapsedTime)
 				attackSpeed = 1.0f;
 				//if (cPhysics2D.CalculateDistance(vec2Index,))
 				enemyList = CScene2D::GetInstance()->returnEnemyVector();
-				//returnNearestEnemy();
+				//returnNearestPlayer();
 				animatedSprites->PlayAnimation("Attack1", -1, 1.0f);
 				for (int enemyIndex = 0; enemyIndex != enemyList.size(); ++enemyIndex)
 				{
@@ -594,43 +610,6 @@ void CPlayer2D::Update(const double dElapsedTime)
 				}
 			}
 		}
-		else if (bowequip == true)
-		{
-			attackSpeed -= dElapsedTime;
-			if (attackSpeed <= 0.f)
-			{
-				//cout << "hello I'm holding left click\n";
-				//damage the enemy and reset the interval
-				attackSpeed = 1.0f;
-				playerInitialDamage = 20;
-				attackRange *= 2;
-				//if (cPhysics2D.CalculateDistance(vec2Index,))
-				enemyList = CScene2D::GetInstance()->returnEnemyVector();
-				//returnNearestEnemy();
-				animatedSprites->PlayAnimation("Attack1", -1, 1.0f);
-				for (int enemyIndex = 0; enemyIndex != enemyList.size(); ++enemyIndex)
-				{
-					/*if (strength = true)
-					{
-						playerInitialDamage *= 1.5;
-					}*/
-					if (cPhysics2D.CalculateDistance(vec2Index, enemyList[enemyIndex]->vec2Index) <= attackRange && vec2Index.y == enemyList[enemyIndex]->vec2Index.y) // Check if player and enemy are on the same level & check whether the enemy is within the player's range
-					{
-						std::cout << "Hit Enemy Once\n";
-						//TO DO: REDUCE THEIR HP
-						enemyList[enemyIndex]->health -= playerInitialDamage;
-						std::cout << enemyList[enemyIndex]->health << endl;
-						if (enemyList[enemyIndex]->health <= 0)
-						{
-							enemyList[enemyIndex]->~CEntity2D();
-							enemyList.erase(enemyList.begin() + enemyIndex);
-							CScene2D::GetInstance()->setNewEnemyVector(enemyList);
-						}
-						break;
-					}
-				}
-			}
-		}
 		if (strength == true)
 		{
 			playerInitialDamage *= 1.5;
@@ -645,6 +624,79 @@ void CPlayer2D::Update(const double dElapsedTime)
 			firstAttack = true;
 		}
 	}
+	//Put mouse inputs here
+	if (bowequip)
+	{
+		if (cMouseController->IsButtonDown(0))
+		{
+			if (!shoot)
+			{
+				shoot = true;
+			}
+			else
+			{
+				if (direction == 2)
+				{
+					animatedSprites->PlayAnimation("chargeBow", 0, 2);
+				}
+				else if (direction == 1)
+				{
+					animatedSprites->PlayAnimation("chargeBowLeft", 0, 2);
+				}
+					 
+				if (charge < 5.0f)
+				{
+					charge += dElapsedTime * 10;
+					cout << "charging up:" << charge << endl;
+
+				}
+			}
+		}
+		else if (cMouseController->IsButtonUp(0))
+		{
+			if (shoot)
+			{
+				if (direction == 2)
+				{
+					animatedSprites->PlayAnimation("shootBow", 0, 2);
+				}
+				else if (direction == 1)
+				{
+					animatedSprites->PlayAnimation("shootBowLeft", 0, 2);
+				}
+				//cout << "Shot Bullet\n";
+				
+					CBowProjectile* cBowProjectile = new CBowProjectile(); // Create new Projectile
+					if (direction == 1)
+					{
+						cBowProjectile->seti32vec2Direction(-1.0f);
+					}
+					else if (direction == 2)
+					{
+						cBowProjectile->seti32vec2Direction(1.0f);
+					}
+
+					cBowProjectile->SetShader("Shader2D_Colour");
+					cBowProjectile->Seti32vec2Index(vec2Index.x, vec2Index.y);
+					//cBowProjectile->setMaxDistance(charge);
+					cBowProjectile->SetPlayer2D(CPlayer2D::GetInstance());
+					CScene2D::GetInstance()->pushArrow(cBowProjectile);
+					if (cBowProjectile->Init() == true)
+					{
+						cout << "Shot an arrow\n";
+					}
+				
+				charge = 0.f;
+				shoot = false;
+			}
+
+		}
+
+		
+	}
+		
+
+	
 
 	//cMouseController->PostUpdate();
 
@@ -729,6 +781,11 @@ void CPlayer2D::PostRender(void)
 CInventoryManager* CPlayer2D::returnPlayerHealth(void)
 {
 	return cInventoryManager;
+}
+
+float CPlayer2D::returnCharge(void)
+{
+	return charge;
 }
 
 /**
@@ -1072,6 +1129,7 @@ void CPlayer2D::InteractWithMap(void)
 		// Increase the potion by 1
 		cInventoryItem = cInventoryManager->GetItem("sword");
 		cInventoryItem->Add(1);
+		CGUI_Scene2D::GetInstance()->updateInventory(cInventoryItem);
 		swordequip = true;
 		std::cout << "sword equiped\n";
 		// Play a bell sound
@@ -1093,6 +1151,7 @@ void CPlayer2D::InteractWithMap(void)
 		// Increase the potion by 1
 		cInventoryItem = cInventoryManager->GetItem("bow");
 		cInventoryItem->Add(1);
+		bowequip = true;
 		// Play a bell sound
 		cSoundController->PlaySoundByID(1);
 		break;
@@ -1134,9 +1193,9 @@ void CPlayer2D::InteractWithMap(void)
 		// Increase the potion by 1
 		cInventoryItem = cInventoryManager->GetItem("helmet");
 		cInventoryItem->Add(1);
-		shovelequip = true;
+		std::cout << "got armour" << endl;
+		helmetequip = true;
 		// Play a bell sound
-		cSoundController->PlaySoundByID(1);
 		break;
 	case 42:
 		// Erase the potion from this position
@@ -1144,7 +1203,7 @@ void CPlayer2D::InteractWithMap(void)
 		// Increase the potion by 1
 		cInventoryItem = cInventoryManager->GetItem("chestplate");
 		cInventoryItem->Add(1);
-		shovelequip = true;
+		chestplateequip = true;
 		// Play a bell sound
 		cSoundController->PlaySoundByID(1);
 		break;
@@ -1154,7 +1213,7 @@ void CPlayer2D::InteractWithMap(void)
 		// Increase the potion by 1
 		cInventoryItem = cInventoryManager->GetItem("leggings");
 		cInventoryItem->Add(1);
-		shovelequip = true;
+		leggingsequip = true;
 		// Play a bell sound
 		cSoundController->PlaySoundByID(1);
 		break;
@@ -1164,7 +1223,8 @@ void CPlayer2D::InteractWithMap(void)
 		// Increase the potion by 1
 		cInventoryItem = cInventoryManager->GetItem("boots");
 		cInventoryItem->Add(1);
-		shovelequip = true;
+		bootsequip = true;
+
 		// Play a bell sound
 		cSoundController->PlaySoundByID(1);
 		break;
@@ -1200,6 +1260,46 @@ void CPlayer2D::UpdateHealthLives(void)
 			// Player loses the game
 			CGameManager::GetInstance()->bPlayerLost = true;
 		}
+	}
+}
+
+void CPlayer2D::UpdateDefense(float damage)
+{
+	if (helmetequip == true)
+	{	
+		defense = 20;
+		cout << "u're protected!" << endl;
+		damageOnPlayer = returnPlayerHealth();
+		cInventoryItem = damageOnPlayer->GetItem("Health");
+		cInventoryItem->Remove(damage - defense);
+		cout << "damage reduced" << endl;
+	}
+	else if (chestplateequip == true)
+	{
+		defense = 40;
+		std::cout << "u're protected!" << endl;
+		damageOnPlayer = returnPlayerHealth();
+		cInventoryItem = damageOnPlayer->GetItem("Health");
+		cInventoryItem->Remove(damage - defense);
+		cout << "damage reduced" << endl;
+	}
+	else if (leggingsequip == true)
+	{
+		defense = 30;
+		std::cout << "u're protected!" << endl;
+		damageOnPlayer = returnPlayerHealth();
+		cInventoryItem = damageOnPlayer->GetItem("Health");
+		cInventoryItem->Remove(damage - defense);
+		cout << "damage reduced" << endl;
+	}
+	else if (bootsequip == true)
+	{
+		defense = 10;
+		std::cout << "u're protected!" << endl;
+		damageOnPlayer = returnPlayerHealth();
+		cInventoryItem = damageOnPlayer->GetItem("Health");
+		cInventoryItem->Remove(damage - defense);
+		cout << "damage reduced" << endl;
 	}
 }
 /*
@@ -1385,3 +1485,4 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime) {
 /*
 	!CODE CHANGES END!
 */     
+
