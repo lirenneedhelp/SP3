@@ -502,6 +502,7 @@ void CPlayer2D::Update(const double dElapsedTime)
 		{
 			//cout << "hello I've LEFT CLICKED\n";
 			animatedSprites->PlayAnimation("Attack1", -1, 1.0f);
+			cSoundController->PlaySoundByID(8);
 			firstAttack = false;
 		}
 		else 
@@ -517,6 +518,7 @@ void CPlayer2D::Update(const double dElapsedTime)
 				enemyList = CScene2D::GetInstance()->returnEnemyVector();
 				//returnNearestPlayer();
 				animatedSprites->PlayAnimation("Attack1", -1, 1.0f);
+				cSoundController->PlaySoundByID(8);
 				for (int enemyIndex = 0; enemyIndex != enemyList.size(); ++enemyIndex)
 				{
 					if (cPhysics2D.CalculateDistance(vec2Index, enemyList[enemyIndex]->vec2Index) <= attackRange && vec2Index.y == enemyList[enemyIndex]->vec2Index.y) // Check if player and enemy are on the same level & check whether the enemy is within the player's range
@@ -551,6 +553,7 @@ void CPlayer2D::Update(const double dElapsedTime)
 				enemyList = CScene2D::GetInstance()->returnEnemyVector();
 				//returnNearestEnemy();
 				animatedSprites->PlayAnimation("Attack1", -1, 1.0f);
+				cSoundController->PlaySoundByID(9);
 				for (int enemyIndex = 0; enemyIndex != enemyList.size(); ++enemyIndex)
 				{
 					/*if (strength = true)
