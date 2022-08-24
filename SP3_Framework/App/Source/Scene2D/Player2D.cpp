@@ -702,17 +702,6 @@ void CPlayer2D::Update(const double dElapsedTime)
 				charge = 0.f;
 				shoot = false;
 			}
-<<<<<<< HEAD
-
-		}
-		
-	}
-	if (strength)
-	{
-		strengthValue = 2.0f; // basically base damage multiply by 2
-	}
-		
-=======
 		}	
 	}
 	
@@ -725,8 +714,13 @@ void CPlayer2D::Update(const double dElapsedTime)
 			strength_runtime = 0.f;
 			cout << "strength's effect worn off!\n";
 		}
+		
 	}
->>>>>>> bdefaf70b5d3bda23d9e081487a4f99258c075a1
+	if (strength)
+	{
+		strengthValue = 2.0f; // basically base damage multiply by 2
+	}
+	}
 
 	if (speed == true)
 	{
@@ -1238,16 +1232,6 @@ void CPlayer2D::InteractWithMap(void)
 		std::cout << "got armour" << endl;
 		helmetequip = true;
 		// Play a bell sound
-<<<<<<< HEAD
-		cSoundController->PlaySoundByID(1);
-		if (helmetequip == true)
-		{
-			defense = 20;
-			std::cout << "u're protected!" << endl;
-			
-		}
-=======
->>>>>>> bdefaf70b5d3bda23d9e081487a4f99258c075a1
 		break;
 	case 42:
 		// Erase the potion from this position
@@ -1335,7 +1319,6 @@ void CPlayer2D::UpdateDefense(float damage)
 =======
 		std::cout << "u're protected!" << endl;
 		damageOnPlayer = returnPlayerHealth();
->>>>>>> bdefaf70b5d3bda23d9e081487a4f99258c075a1
 		cInventoryItem = damageOnPlayer->GetItem("Health");
 		cInventoryItem->Remove(damage - defense);
 		cout << "damage reduced" << endl;
@@ -1343,13 +1326,8 @@ void CPlayer2D::UpdateDefense(float damage)
 	else if (leggingsequip == true)
 	{
 		defense = 30;
-<<<<<<< HEAD
-		std::cout << "u're protected by leggings!" << endl;
-		/*damageOnPlayer = returnPlayerHealth();
-=======
 		std::cout << "u're protected!" << endl;
 		damageOnPlayer = returnPlayerHealth();
->>>>>>> bdefaf70b5d3bda23d9e081487a4f99258c075a1
 		cInventoryItem = damageOnPlayer->GetItem("Health");
 		cInventoryItem->Remove(damage - defense);
 		cout << "damage reduced" << endl;
@@ -1363,7 +1341,6 @@ void CPlayer2D::UpdateDefense(float damage)
 =======
 		std::cout << "u're protected!" << endl;
 		damageOnPlayer = returnPlayerHealth();
->>>>>>> bdefaf70b5d3bda23d9e081487a4f99258c075a1
 		cInventoryItem = damageOnPlayer->GetItem("Health");
 		cInventoryItem->Remove(damage - defense);
 		cout << "damage reduced" << endl;
