@@ -93,6 +93,8 @@ bool CGUI_Scene2D::Init(void)
 		emptyInventorySlot.fileName = "Image\\GUI\\itemhotbar.png";
 		emptyInventorySlot.textureID = il->LoadTextureGetID(emptyInventorySlot.fileName.c_str(), false);
 		emptyInventorySlot.slotID = i;
+		emptyInventorySlot.itemID = -1;
+		emptyInventorySlot.active = false;
 		playerInventory.push_back(emptyInventorySlot);
 	}
 	// Store the keyboard controller singleton instance here
@@ -186,31 +188,67 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 	window_flags |= ImGuiWindowFlags_NoMove;
 	window_flags |= ImGuiWindowFlags_NoCollapse;
 	window_flags |= ImGuiWindowFlags_NoNav;
+	window_flags |= ImGuiWindowFlags_NoBackground;
+
+	//ImGui::ShowStyleEditor();
+	//ImGui::ShowDemoWindow();
 	ImGui::Begin("Inventory", NULL, window_flags);
+	ImGui::SetWindowPos(ImVec2(0.0f, 0.0f/*cSettings->iWindowWidth / 9 * 3, cSettings->iWindowHeight * 0.92f)*/));
+	ImGui::SetWindowSize(ImVec2(cSettings->iWindowWidth, cSettings->iWindowHeight/*cSettings->iWindowWidth / 2.4, 50.f * relativeScale_y*/));
+	int move_from = -1, move_to = -1;
+	ImGui::SetCursorPos(ImVec2(cSettings->iWindowWidth / 9 * 3, cSettings->iWindowHeight * 0.92f));
+
 	for (int i = 0; i < playerInventory.size(); ++i)
 	{
-	
-		ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth / 9 * 3, cSettings->iWindowHeight * 0.93f));
-		ImGui::SetWindowSize(ImVec2(cSettings->iWindowWidth  / 2.7, 40.f * relativeScale_y));
-		if (cKeyboardController->IsKeyPressed(GLFW_KEY_1))
-		{
-			ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(1.0f, 0.0f, 0.0f, 1.0f));
-			ImGui::PopStyleColor();
-			ImGui::SameLine();
+		//ImGuiDragDropFlags src_flags = 0;
+		//src_flags |= ImGuiDragDropFlags_SourceNoDisableHover;     // Keep the source displayed as hovered
+		//src_flags |= ImGuiDragDropFlags_SourceNoHoldToOpenOthers; // Because our dragging is local, we disable the feature of opening foreign treenodes/tabs while dragging
 
-		}
-		if (ImGui::ImageButton((ImTextureID)playerInventory[i].textureID, ImVec2(20 * relativeScale_x, 20 * relativeScale_y), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0), 2, ImVec4(1, 0, 0, 0)))
+		if(ImGui::ImageButton((ImTextureID)playerInventory[i].textureID, ImVec2(20 * relativeScale_x, 20 * relativeScale_y), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0)))
 		{
+		
 			cout << playerInventory[i].slotID << endl;
-			if (storePlayerItem.size() > 0 && i < storePlayerItem.size())
-			{
-				ImGui::Image((void*)(intptr_t)storePlayerItem[i]->GetTextureID(),
-					ImVec2(20 * relativeScale_x, 20 * relativeScale_y),
-					ImVec2(0, 1), ImVec2(1, 0));
-			}
+			playerInventory[i].active = true;
+			updateButtonActivity(i);
+
+
+			//src_flags |= ImGuiDragDropFlags_SourceNoPreviewTooltip; // Hide the tooltip
+			//if (ImGui::BeginDragDropSource(src_flags))
+			//{
+			//	if (!(src_flags & ImGuiDragDropFlags_SourceNoPreviewTooltip))
+			//		ImGui::Text("Moving \"%d\"", playerInventory[i].textureID);
+			//	ImGui::SetDragDropPayload("DND_DEMO_NAME", &i, sizeof(int));
+			//	ImGui::EndDragDropSource();
+			//	
+			//}
+			//if (ImGui::BeginDragDropTarget())
+			//{
+			//	ImGuiDragDropFlags target_flags = 0;
+			//	target_flags |= ImGuiDragDropFlags_AcceptBeforeDelivery;    // Don't wait until the delivery (release mouse button on a target) to do something
+			//	target_flags |= ImGuiDragDropFlags_AcceptNoDrawDefaultRect; // Don't display the yellow rectangle
+			//	if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_DEMO_NAME", target_flags))
+			//	{
+			//		move_from = *(const int*)payload->Data;
+			//		move_to = i;
+			//	}
+			//	ImGui::EndDragDropTarget();
+			//}
+
 		}
 		ImGui::SameLine();
 	}
+	//if (move_from != -1 && move_to != -1)
+	//{
+	//	// Reorder items
+	//	int copy_dst = (move_from < move_to) ? move_from : move_to + 1;
+	//	int copy_src = (move_from < move_to) ? move_from + 1 : move_to;
+	//	int copy_count = (move_from < move_to) ? move_to - move_from : move_from - move_to;
+	//    unsigned tmp = playerInventory[move_from].textureID;
+	//	//printf("[%05d] move %d->%d (copy %d..%d to %d..%d)\n", ImGui::GetFrameCount(), move_from, move_to, copy_src, copy_src + copy_count - 1, copy_dst, copy_dst + copy_count - 1);
+	//	memmove(&playerInventory[copy_dst].textureID, &playerInventory[copy_src].textureID, (size_t)copy_count * sizeof(unsigned));
+	//	playerInventory[move_to].textureID = tmp;
+	//	ImGui::SetDragDropPayload("DND_DEMO_NAME", &move_to, sizeof(int)); // Update payload immediately so on the next frame if we move the mouse to an earlier item our index payload will be correct. This is odd and showcase how the DnD api isn't best presented in this example.
+	//}
 	ImGui::End();
 	
 
@@ -246,7 +284,55 @@ void CGUI_Scene2D::PostRender(void)
 {
 }
 
-void CGUI_Scene2D::updateInventory(CInventoryItem* item)
+void CGUI_Scene2D::updateInventory(CInventoryItem* item, unsigned item_ID)
 {
 	storePlayerItem.push_back(item);
+	for (int i = 0; i < storePlayerItem.size(); ++i)
+	{
+		if (storePlayerItem[i]->GetTextureID() != playerInventory[i].textureID) // Check whether the inventory is empty
+		{
+			playerInventory[i].textureID = storePlayerItem[i]->GetTextureID();
+			playerInventory[i].itemID = item_ID;
+		}
+	}
+}
+
+int CGUI_Scene2D::updateSelection(void)
+{
+	for (int i = 0; i < playerInventory.size(); ++i)
+	{
+		if (playerInventory[i].active == true)
+		{
+			for (unsigned j = 0; j < TOTAL_NUM; ++j)
+			{
+				if (playerInventory[i].itemID == j)
+				{
+					return playerInventory[i].itemID;
+				}
+				else
+				{
+					continue;
+				}
+
+			}
+		}
+	}
+	return -1;
+}
+
+void CGUI_Scene2D::updateButtonActivity(unsigned index)
+{
+	for (int i = 0; i < playerInventory.size(); ++i)
+	{
+		if (i != index)
+		{
+			playerInventory[i].active = false;
+			//cout << "Button " << i << " is inactive\n";
+		}
+		else
+		{
+			//cout << "Button " << i << " is active\n";
+			continue;
+		}
+	}
 }

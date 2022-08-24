@@ -198,7 +198,7 @@ bool CScene2D::Init(void)
 		if (cWoodCrawler->Init() == true)
 		{
 			cWoodCrawler->SetPlayer2D(cPlayer2D);
-			cWoodCrawler->setHP(60);
+			cWoodCrawler->setHP(10000);
 			enemyVector.push_back(cWoodCrawler);
 		}
 		else

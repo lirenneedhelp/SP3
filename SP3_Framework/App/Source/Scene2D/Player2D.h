@@ -86,6 +86,13 @@ protected:
 		DOWN = 3,
 		NUM_DIRECTIONS
 	};
+	enum ITEM_ID
+	{
+		SWORD_ID,
+		BOW_ID,
+		SPEAR_ID,
+		TOTAL_NUM,
+	};
 
 	glm::vec2 vec2OldIndex;
 	// Handler to the CMap2D instance
@@ -195,6 +202,8 @@ protected:
 
 	// When Player Charges Up Bow
 	float charge;
+
+	float strengthValue;
 
 	CEntity2D* returnNearestEnemy(void);
 };

@@ -221,19 +221,20 @@ void CGlutton::Update(const double dElapsedTime)
 			iFSMCounter = 0;
 			cout << "Switching to Idle State" << endl;
 		}
-		else if (cPhysics2D.CalculateDistance(vec2Index, cPlayer2D->vec2Index) < 20.0f)
+		else if (cPhysics2D.CalculateDistance(vec2Index, cPlayer2D->vec2Index) < 25.0f)
 		{
 			sCurrentFSM = TRACE;
 			iFSMCounter = 0;
 			cout << "Switching to TRACE State" << endl;
 		}
-		/*else if (checkForWall())
+		else if (checkForWall())
 		{
 			sCurrentFSM = JUMP_OVER_WALL;
 			iFSMCounter = 0;
 			cout << "Switching to JUMP_OVER_WALL State" << endl;
 
-		}*/
+		}
+		
 		else
 		{
 			// Patrol around
@@ -301,12 +302,14 @@ void CGlutton::Update(const double dElapsedTime)
 			{
 				sCurrentFSM = JUMP_OVER_WALL;
 				iFSMCounter = 0;
+				cout << "TRACE TO JUMP_OVER_WALL\n";
 
 			}
 			else
 			{
 				sCurrentFSM = SHOOT;
 				iFSMCounter = 0;
+				cout << "TRACE to SHOOT\n";
 			}
 						
 			
@@ -341,7 +344,7 @@ void CGlutton::Update(const double dElapsedTime)
 
 				if (cEnemyProjectile->Init() == true)   // Initialise the Projectile
 				{
-					cout << "SPAWNED\n";
+					//cout << "SPAWNED\n";
 
 				}
 
@@ -349,25 +352,23 @@ void CGlutton::Update(const double dElapsedTime)
 				
 			}
 			
-			/*if (checkForWall() == true)
-			{
-				sCurrentFSM = JUMP_OVER_WALL;
-				iFSMCounter = 0;
-			}*/
 		}
 		else
-		{
+		{		
 			sCurrentFSM = IDLE;
 			iFSMCounter = 0;
-			cout << "SHOOT TO PATROL\n";
+			cout << "SHOOT TO IDLE\n";
+			
 		}
+		
 		
 		
 	}
 	break;
 	case JUMP_OVER_WALL:
 	{
-
+		if (vec2Index.y == cPlayer2D->vec2Index.y)
+		{
 			// Calculate a path to the player
 			auto path = cMap2D->PathFind(vec2Index,
 				destination,
@@ -412,13 +413,20 @@ void CGlutton::Update(const double dElapsedTime)
 					iFSMCounter = 0;
 				}
 				iFSMCounter++;*/
-		
-		if (vec2Index == destination)
+		}
+		else if (vec2Index == destination)
 		{
 			sCurrentFSM = SHOOT;
 			iFSMCounter = 0;
 			destination = glm::vec2(0, 0);
 		}
+		else
+		{
+			sCurrentFSM = PATROL;
+			iFSMCounter = 0;
+		}
+		
+		
 
 	}
 	break;
