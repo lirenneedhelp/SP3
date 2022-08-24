@@ -76,6 +76,9 @@ public:
 
 
 	CInventoryManager* returnPlayerHealth(void);
+
+	float returnCharge(void);
+
 protected:
 	enum DIRECTION
 	{
@@ -129,6 +132,8 @@ protected:
 	int iJumpCount;
 
 	bool firstAttack;
+
+	bool shoot;
 
 	// Player Initial Damage
 
@@ -188,6 +193,9 @@ protected:
 	bool bootsequip;
 	bool highjump;
 	int jumps;
+
+	// When Player Charges Up Bow
+	float charge;
 
 	CEntity2D* returnNearestEnemy(void);
 };
