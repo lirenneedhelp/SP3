@@ -126,9 +126,10 @@ bool CPlayer2D::Init(void)
 	chestplateequip = false;
 	leggingsequip = false;
 	bootsequip = false;
-	
 
 	playerInitialDamage = 10;
+
+	speed_runtime = 0.f;
 	
 	// By default, microsteps should be zero
 	vec2NumMicroSteps = glm::i32vec2(0, 0);
@@ -689,13 +690,30 @@ void CPlayer2D::Update(const double dElapsedTime)
 				charge = 0.f;
 				shoot = false;
 			}
-
-		}
-
-		
+		}	
 	}
-		
+	
+	if (strength == true)
+	{
+		strength_runtime += dElapsedTime;
+		if (strength_runtime >= 20.f)
+		{
+			strength = false;
+			strength_runtime = 0.f;
+			cout << "strength's effect worn off!\n";
+		}
+	}
 
+	if (speed == true)
+	{
+		speed_runtime += dElapsedTime;
+		if (speed_runtime >= 3.f)
+		{
+			speed = false;
+			speed_runtime = 0.f;
+			cout << "speed's effect worn off!\n";
+		}
+	}
 	
 
 	//cMouseController->PostUpdate();
@@ -1418,7 +1436,7 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime) {
 		}
 		if (shovelequip == true)
 		{
-			breakinterval = 0.25f;
+			breakinterval = 0.33f;
 		}
 		else
 		{
@@ -1445,7 +1463,7 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime) {
 		}
 		if (shovelequip == true)
 		{
-			breakinterval = 0.25f;
+			breakinterval = 0.33f;
 		}
 		else
 		{
@@ -1468,7 +1486,7 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime) {
 		}
 		if (shovelequip == true)
 		{
-			breakinterval = 0.25f;
+			breakinterval = 0.33f;
 		}
 		else
 		{

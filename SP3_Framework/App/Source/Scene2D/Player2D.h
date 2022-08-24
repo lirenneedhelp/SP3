@@ -194,6 +194,11 @@ protected:
 	bool highjump;
 	int jumps;
 
+	// Checks how many seconds potion has been active
+	float strength_runtime;
+	float speed_runtime;
+
+
 	// When Player Charges Up Bow
 	float charge;
 

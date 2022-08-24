@@ -144,7 +144,6 @@ bool CBloodDeer::Init(void)
 	// If this class is initialised properly, then set the bIsActive to true
 	bIsActive = true;
 
-	damage = 30;
 	buffDamage = 1.0f;
 	buffSpeed = 1.0f;
 	buffAtkSpeed = 1.0f;
