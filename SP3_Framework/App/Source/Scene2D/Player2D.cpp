@@ -126,11 +126,9 @@ bool CPlayer2D::Init(void)
 
 	playerInitialDamage = 10;
 
-<<<<<<< HEAD
 	strengthValue = 1.0f;
-=======
+
 	speed_runtime = 0.f;
->>>>>>> bdefaf70b5d3bda23d9e081487a4f99258c075a1
 	
 	// By default, microsteps should be zero
 	vec2NumMicroSteps = glm::i32vec2(0, 0);
@@ -544,27 +542,25 @@ void CPlayer2D::Update(const double dElapsedTime)
 			attackSpeed -= dElapsedTime;
 			if (attackSpeed <= 0.f)
 			{
-<<<<<<< HEAD
 				// When Sword Equipped
 				if (CGUI_Scene2D::GetInstance()->updateSelection() == SWORD_ID)
-=======
-				
-				//cout << "hello I'm holding left click\n";
-				//damage the enemy and reset the interval
-				attackSpeed = 1.0f;
-				//if (cPhysics2D.CalculateDistance(vec2Index,))
-				enemyList = CScene2D::GetInstance()->returnEnemyVector();
-				//returnNearestPlayer();
-				animatedSprites->PlayAnimation("Attack1", -1, 1.0f);
-				cSoundController->PlaySoundByID(9);
-				for (int enemyIndex = 0; enemyIndex != enemyList.size(); ++enemyIndex)
->>>>>>> bdefaf70b5d3bda23d9e081487a4f99258c075a1
 				{
-					//cout << "Sword\n";
-					attackSpeed = 0.75f;
-					playerInitialDamage = 30 * strengthValue;
-					attackRange = 1.5;
+					//cout << "hello I'm holding left click\n";
+				//damage the enemy and reset the interval
+					attackSpeed = 1.0f;
+					//if (cPhysics2D.CalculateDistance(vec2Index,))
+					enemyList = CScene2D::GetInstance()->returnEnemyVector();
+					//returnNearestPlayer();
+					animatedSprites->PlayAnimation("Attack1", -1, 1.0f);
+					cSoundController->PlaySoundByID(9);
+					for (int enemyIndex = 0; enemyIndex != enemyList.size(); ++enemyIndex)
+					{
+						//cout << "Sword\n";
+						attackSpeed = 0.75f;
+						playerInitialDamage = 30 * strengthValue;
+						attackRange = 1.5;
 
+					}
 				}
 				// When Spear equipped
 				else if (CGUI_Scene2D::GetInstance()->updateSelection() == SPEAR_ID)
@@ -720,7 +716,6 @@ void CPlayer2D::Update(const double dElapsedTime)
 	if (strength)
 	{
 		strengthValue = 2.0f; // basically base damage multiply by 2
-	}
 	}
 
 	if (speed == true)
@@ -1314,10 +1309,8 @@ void CPlayer2D::UpdateDefense(float damage)
 	else if (chestplateequip == true)
 	{
 		defense = 40;
-<<<<<<< HEAD
-		std::cout << "u're protected by chestplate!" << endl;
-	/*	damageOnPlayer = returnPlayerHealth();
-=======
+		/*std::cout << "u're protected by chestplate!" << endl;
+		damageOnPlayer = returnPlayerHealth();*/
 		std::cout << "u're protected!" << endl;
 		damageOnPlayer = returnPlayerHealth();
 		cInventoryItem = damageOnPlayer->GetItem("Health");
@@ -1336,22 +1329,22 @@ void CPlayer2D::UpdateDefense(float damage)
 	else if (bootsequip == true)
 	{
 		defense = 10;
-<<<<<<< HEAD
-		std::cout << "u're protected by boots!" << endl;
-		/*damageOnPlayer = returnPlayerHealth();
-=======
+		//std::cout << "u're protected by boots!" << endl;
+		//damageOnPlayer = returnPlayerHealth();
 		std::cout << "u're protected!" << endl;
 		damageOnPlayer = returnPlayerHealth();
 		cInventoryItem = damageOnPlayer->GetItem("Health");
 		cInventoryItem->Remove(damage - defense);
 		cout << "damage reduced" << endl;
 	}
+
+	/*
+		!CODE CHANGES START!
+		code here should handle the breaking and placing of blocks
+	*/
 }
-/*
-	!CODE CHANGES START!
-	code here should handle the breaking and placing of blocks
-*/
-void CPlayer2D::BuildBlocks() {
+void CPlayer2D::BuildBlocks()
+{
 	if (cKeyboardController->IsKeyDown(GLFW_KEY_L)) {
 		if (direction == 1) {
 			switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x - 1))
@@ -1370,8 +1363,10 @@ void CPlayer2D::BuildBlocks() {
 			}
 		}
 	}
-	if (cKeyboardController->IsKeyDown(GLFW_KEY_J)) {
-		if (direction == 1) {
+	if (cKeyboardController->IsKeyDown(GLFW_KEY_J)) 
+	{
+		if (direction == 1) 
+		{
 			switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x + 1))
 			{
 			case 0:
@@ -1388,7 +1383,8 @@ void CPlayer2D::BuildBlocks() {
 			}
 		}
 	}
-	if (cKeyboardController->IsKeyDown(GLFW_KEY_I)) {
+	if (cKeyboardController->IsKeyDown(GLFW_KEY_I)) 
+	{
 		switch (cMap2D->GetMapInfo(vec2Index.y + 1, vec2Index.x))
 		{
 		case 0:
