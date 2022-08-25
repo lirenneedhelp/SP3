@@ -119,4 +119,12 @@ protected:
 
 	bool button1Clicked, button1Hovered;
 
+	int inventoryHotbar; // Size of the hotbar
+
+	int inventorySize; // Size of overall Inventory
+
+	vector <CEntity2D*> enemyHealth; // Stores the enemy health
+
+
+
 };

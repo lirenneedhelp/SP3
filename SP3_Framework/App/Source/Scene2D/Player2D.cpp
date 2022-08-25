@@ -335,7 +335,7 @@ void CPlayer2D::Update(const double dElapsedTime)
 			animatedSprites->PlayAnimation("left", -1, 1.0f);
 
 			//CS: Change Color
-			runtimeColour = glm::vec4(1.0, 0.0, 0.0, 1.0);
+			//runtimeColour = glm::vec4(1.0, 0.0, 0.0, 1.0);
 		}
 		else if (cKeyboardController->IsKeyDown(GLFW_KEY_D))
 		{
@@ -389,7 +389,7 @@ void CPlayer2D::Update(const double dElapsedTime)
 			animatedSprites->PlayAnimation("right", -1, 1.0f);
 
 			//CS: Change Color
-			runtimeColour = glm::vec4(1.0, 1.0, 0.0, 1.0);
+			//runtimeColour = glm::vec4(1.0, 1.0, 0.0, 1.0);
 
 		}
 			
@@ -419,7 +419,7 @@ void CPlayer2D::Update(const double dElapsedTime)
 			animatedSprites->PlayAnimation("idle", -1, 1.0f);
 
 			//CS: Change Color
-			runtimeColour = glm::vec4(0.0, 1.0, 1.0, 0.5);
+			//runtimeColour = glm::vec4(0.0, 1.0, 1.0, 0.5);
 		}
 		else if (cKeyboardController->IsKeyDown(GLFW_KEY_S))
 		{
@@ -448,7 +448,7 @@ void CPlayer2D::Update(const double dElapsedTime)
 			animatedSprites->PlayAnimation("idle", -1, 1.0f);
 
 			//CS: Change Color
-			runtimeColour = glm::vec4(1.0, 0.0, 1.0, 0.5);
+			//runtimeColour = glm::vec4(1.0, 0.0, 1.0, 0.5);
 		}
 		if (cKeyboardController->IsKeyPressed(GLFW_KEY_SPACE))
 		{
@@ -1332,6 +1332,10 @@ void CPlayer2D::UpdateDefense(float damage)
 		code here should handle the breaking and placing of blocks
 	*/
 }
+void CPlayer2D::setPlayerRuntimeColor(glm::vec4 color)
+{
+	runtimeColour = color;
+}
 void CPlayer2D::BuildBlocks()
 {
 	if (cKeyboardController->IsKeyDown(GLFW_KEY_L)) {
@@ -1393,24 +1397,24 @@ void CPlayer2D::BuildBlocks()
 }
 
 
-CEntity2D* CPlayer2D::returnNearestEnemy(void)
+vector<CEntity2D*> CPlayer2D::returnNearestEnemy(vector<CEntity2D*> enemyVector)
 {
-	for (int i = 0; i != enemyList.size(); ++i)
+	for (int i = 0; i != enemyVector.size(); ++i)
 	{
-		if (cPhysics2D.CalculateDistance(vec2Index, enemyList.front()->vec2Index) < (cPhysics2D.CalculateDistance(vec2Index, enemyList[i + 1]->vec2Index)))
+		if (cPhysics2D.CalculateDistance(vec2Index, enemyVector.front()->vec2Index) <= (cPhysics2D.CalculateDistance(vec2Index, enemyVector[i]->vec2Index)) && 
+			enemyVector.size() > 0)
 		{
 			continue;
 		}
 		else
 		{
-			CEntity2D* temp = enemyList.front();
-			enemyList.front() = enemyList[i + 1];
-			enemyList[i + 1] = temp;
+			CEntity2D* temp = enemyVector.front();
+			enemyVector.front() = enemyVector[i];
+			enemyVector[i] = temp;
 			
 		}
 	}
-	 return enemyList.front();
-	
+	return enemyVector;
 }
 
 void CPlayer2D::BreakBlocks(const double dElapsedTime) {

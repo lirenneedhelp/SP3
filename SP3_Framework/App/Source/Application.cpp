@@ -47,6 +47,9 @@ using namespace std;
 //#include "GameStateManagement/Play3DGameState.h"
 // Include CPauseState
 #include "GameStateManagement/PauseState.h"
+//Include COptionsState
+#include "GameStateManagement/Options.h"
+
 
 /**
  @brief Define an error callback
@@ -249,6 +252,7 @@ bool Application::Init(void)
 	CGameStateManager::GetInstance()->AddGameState("PlayGameState", new CPlayGameState());
 	//CGameStateManager::GetInstance()->AddGameState("Play3DGameState", new CPlay3DGameState());
 	CGameStateManager::GetInstance()->AddGameState("PauseState", new CPauseState());
+	CGameStateManager::GetInstance()->AddGameState("OptionsState", new COptions());
 
 	// Set the active scene
 	CGameStateManager::GetInstance()->SetActiveGameState("IntroState");

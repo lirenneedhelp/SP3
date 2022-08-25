@@ -599,6 +599,16 @@ void CGlutton::setHP(float newHealth)
 	health = newHealth;
 }
 
+float CGlutton::getMaxHP(void)
+{
+	return maxHealth;
+}
+
+void CGlutton::setMaxHP(float maxHealth)
+{
+	this->maxHealth = maxHealth;
+}
+
 
 /**
  @brief Constraint the enemy2D's position within a boundary

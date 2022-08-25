@@ -5,7 +5,7 @@
  Date: May 2021
  */
 #include "GUI_Scene2D.h"
-
+#include "Scene2D.h"
 #include "../GameStateManagement/GameStateManager.h"
 
 #include <iostream>
@@ -86,6 +86,9 @@ bool CGUI_Scene2D::Init(void)
 	// Initialise the vector
 	storePlayerItem.clear();
 
+	// Initialise the enemyHealth vector
+	enemyHealth.clear();
+
 	CImageLoader* il = CImageLoader::GetInstance();
 	
 	for (int i = 0; i < 9; ++i)
@@ -151,13 +154,38 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 		ImVec2(cInventoryItem->vec2Size.x * relativeScale_x, cInventoryItem->vec2Size.y * relativeScale_y),
 		ImVec2(0, 1), ImVec2(1, 0));
 	ImGui::SameLine();
-	ImGui::PushStyleColor(ImGuiCol_PlotHistogram, ImVec4(0.0f, 0.0f, 1.0f, 1.0f));
+	ImGui::PushStyleColor(ImGuiCol_PlotHistogram, ImVec4(0.0f, 1.0f, 0.0f, 1.0f));
 	ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(1.0f, 0.0f, 0.0f, 1.0f));
 	ImGui::ProgressBar(cInventoryItem->GetCount() /
 		(float)cInventoryItem->GetMaxCount(), ImVec2(100.0f * relativeScale_x, 20.0f * relativeScale_y));
 	ImGui::PopStyleColor();
 	ImGui::PopStyleColor();
 	ImGui::End();
+
+	// Render the Enemy Health	
+	enemyHealth = CScene2D::GetInstance()->returnEnemyVector();
+	enemyHealth = CPlayer2D::GetInstance()->returnNearestEnemy(enemyHealth);
+
+	ImGui::Begin("Enemy_Health", NULL, healthWindowFlags);
+
+
+	ImGui::SetWindowPos(ImVec2(enemyHealth.front()->vec2Index.x * 25 * relativeScale_x - 10.f, cSettings->iWindowHeight - 50.0f - (enemyHealth.front()->vec2Index.y * 25 * relativeScale_y)));
+	//cout << enemyHealth[i]->vec2Index.x * 25 * relativeScale_x << ", " << cSettings->iWindowHeight - (enemyHealth[i]->vec2Index.y * 25 * relativeScale_y)  << endl;
+
+	ImGui::SetWindowSize(ImVec2(10.0f * relativeScale_x, 2.0f * relativeScale_y));
+	ImGui::SetWindowFontScale(1.0f * relativeScale_y);
+
+	ImGui::PushStyleColor(ImGuiCol_PlotHistogram, ImVec4(1.0f, 0.0f, 0.0f, 1.0f));
+	ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.0f, 0.0f, 1.0f, 1.0f));
+	ImGui::ProgressBar(enemyHealth.front()->health /
+		enemyHealth.front()->maxHealth, ImVec2(50.0f * relativeScale_x, 13.0f * relativeScale_y));
+	ImGui::PopStyleColor();
+	ImGui::PopStyleColor();
+
+	ImGui::End();
+	
+
+
 
 	// Render the Lives
 	ImGuiWindowFlags livesWindowFlags = ImGuiWindowFlags_AlwaysAutoResize |
@@ -191,17 +219,19 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 	window_flags |= ImGuiWindowFlags_NoBackground;
 
 	//ImGui::ShowStyleEditor();
-	//ImGui::ShowDemoWindow();
 	ImGui::Begin("Inventory", NULL, window_flags);
-	ImGui::SetWindowPos(ImVec2(0.0f, 0.0f/*cSettings->iWindowWidth / 9 * 3, cSettings->iWindowHeight * 0.92f)*/));
-	ImGui::SetWindowSize(ImVec2(cSettings->iWindowWidth, cSettings->iWindowHeight/*cSettings->iWindowWidth / 2.4, 50.f * relativeScale_y*/));
-	int move_from = -1, move_to = -1;
+	ImGui::SetWindowPos(ImVec2(0.0f, 0.0f));
+	ImGui::SetWindowSize(ImVec2(cSettings->iWindowWidth, cSettings->iWindowHeight));
 	ImGui::SetCursorPos(ImVec2(cSettings->iWindowWidth / 9 * 3, cSettings->iWindowHeight * 0.92f));
+	int move_from = -1, move_to = -1;
+	//ImGui::ShowDemoWindow();
+
 	for (int i = 0; i < playerInventory.size(); ++i)
 	{
 		//ImGuiDragDropFlags src_flags = 0;
 		//src_flags |= ImGuiDragDropFlags_SourceNoDisableHover;     // Keep the source displayed as hovered
 		//src_flags |= ImGuiDragDropFlags_SourceNoHoldToOpenOthers; // Because our dragging is local, we disable the feature of opening foreign treenodes/tabs while dragging
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(20 * relativeScale_x, 20 * relativeScale_y));
 		if (playerInventory[i].active == true)
 		{
 			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1, 1, 1, 1));
@@ -276,6 +306,7 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 			ImGui::PopStyleColor();
 
 		}
+		ImGui::PopStyleVar();
 		ImGui::SameLine();
 
 
@@ -363,6 +394,7 @@ int CGUI_Scene2D::updateSelection(void)
 	return -1;
 }
 
+// Updates the selected Inventory Slot
 void CGUI_Scene2D::updateButtonActivity(unsigned index)
 {
 	for (int i = 0; i < playerInventory.size(); ++i)
