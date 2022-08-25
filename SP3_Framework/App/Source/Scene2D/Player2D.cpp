@@ -1251,6 +1251,20 @@ void CPlayer2D::InteractWithMap(void)
 		// Play a bell sound
 		cSoundController->PlaySoundByID(1);
 		break;
+	case 75:
+		// Erase the potion from this position
+		cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
+		// Increase logs item by 1
+		cInventoryItem = cInventoryManager->GetItem("logs");
+		cInventoryItem->Add(1);
+		break;
+	case 76:
+		// Erase the potion from this position
+		cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
+		// Increase dirt item by 1
+		cInventoryItem = cInventoryManager->GetItem("dirt");
+		cInventoryItem->Add(1);
+		break;
 	case 99:
 		// Level has been completed
 		CGameManager::GetInstance()->bLevelCompleted = true;
@@ -1451,10 +1465,19 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime) {
 				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 103);
 				break;
 			case 103:
-				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 0);
+				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 76);
 				break;
 			case 105:
 				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x -1, RandItemGen());
+				break;
+			case 106:
+				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 107);
+				break;
+			case 107:
+				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 108);
+				break;
+			case 108:
+				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 75);
 				break;
 			}
 		}
@@ -1468,10 +1491,19 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime) {
 				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 103);
 				break;
 			case 103:
-				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 0);
+				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 76);
 				break;
 			case 105:
 				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, RandItemGen());
+				break;
+			case 106:
+				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 107);
+				break;
+			case 107:
+				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 108);
+				break;
+			case 108:
+				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 75);
 				break;
 			}
 		}
@@ -1496,7 +1528,7 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime) {
 				cMap2D->SetMapInfo(vec2Index.y - 1, vec2Index.x, 103);
 				break;
 			case 103:
-				cMap2D->SetMapInfo(vec2Index.y - 1, vec2Index.x, 0);
+				cMap2D->SetMapInfo(vec2Index.y - 1, vec2Index.x, 76);
 				cPhysics2D.SetStatus(CPhysics2D::STATUS::JUMP);
 				break;
 				
@@ -1522,7 +1554,7 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime) {
 			cMap2D->SetMapInfo(vec2Index.y + 1, vec2Index.x, 103);
 			break;
 		case 103:
-			cMap2D->SetMapInfo(vec2Index.y + 1, vec2Index.x, 0);
+			cMap2D->SetMapInfo(vec2Index.y + 1, vec2Index.x, 76);
 			break;
 		}
 		if (shovelequip == true)
