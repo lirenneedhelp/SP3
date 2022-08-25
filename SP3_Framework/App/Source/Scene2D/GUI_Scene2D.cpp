@@ -197,45 +197,88 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 	ImGui::SetWindowSize(ImVec2(cSettings->iWindowWidth, cSettings->iWindowHeight/*cSettings->iWindowWidth / 2.4, 50.f * relativeScale_y*/));
 	int move_from = -1, move_to = -1;
 	ImGui::SetCursorPos(ImVec2(cSettings->iWindowWidth / 9 * 3, cSettings->iWindowHeight * 0.92f));
-
 	for (int i = 0; i < playerInventory.size(); ++i)
 	{
 		//ImGuiDragDropFlags src_flags = 0;
 		//src_flags |= ImGuiDragDropFlags_SourceNoDisableHover;     // Keep the source displayed as hovered
 		//src_flags |= ImGuiDragDropFlags_SourceNoHoldToOpenOthers; // Because our dragging is local, we disable the feature of opening foreign treenodes/tabs while dragging
-
-		if(ImGui::ImageButton((ImTextureID)playerInventory[i].textureID, ImVec2(20 * relativeScale_x, 20 * relativeScale_y), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0)))
+		if (playerInventory[i].active == true)
 		{
-		
-			cout << playerInventory[i].slotID << endl;
-			playerInventory[i].active = true;
-			updateButtonActivity(i);
+			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1, 1, 1, 1));
+			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0, 1, 1));
 
+			if (ImGui::ImageButton((ImTextureID)playerInventory[i].textureID, ImVec2(20 * relativeScale_x, 20 * relativeScale_y), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0)))
+			{
+			
+				cout << playerInventory[i].slotID << endl;
+				playerInventory[i].active = true;
+				updateButtonActivity(i);
+				
 
-			//src_flags |= ImGuiDragDropFlags_SourceNoPreviewTooltip; // Hide the tooltip
-			//if (ImGui::BeginDragDropSource(src_flags))
-			//{
-			//	if (!(src_flags & ImGuiDragDropFlags_SourceNoPreviewTooltip))
-			//		ImGui::Text("Moving \"%d\"", playerInventory[i].textureID);
-			//	ImGui::SetDragDropPayload("DND_DEMO_NAME", &i, sizeof(int));
-			//	ImGui::EndDragDropSource();
-			//	
-			//}
-			//if (ImGui::BeginDragDropTarget())
-			//{
-			//	ImGuiDragDropFlags target_flags = 0;
-			//	target_flags |= ImGuiDragDropFlags_AcceptBeforeDelivery;    // Don't wait until the delivery (release mouse button on a target) to do something
-			//	target_flags |= ImGuiDragDropFlags_AcceptNoDrawDefaultRect; // Don't display the yellow rectangle
-			//	if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_DEMO_NAME", target_flags))
-			//	{
-			//		move_from = *(const int*)payload->Data;
-			//		move_to = i;
-			//	}
-			//	ImGui::EndDragDropTarget();
-			//}
+				//src_flags |= ImGuiDragDropFlags_SourceNoPreviewTooltip; // Hide the tooltip
+				//if (ImGui::BeginDragDropSource(src_flags))
+				//{
+				//	if (!(src_flags & ImGuiDragDropFlags_SourceNoPreviewTooltip))
+				//		ImGui::Text("Moving \"%d\"", playerInventory[i].textureID);
+				//	ImGui::SetDragDropPayload("DND_DEMO_NAME", &i, sizeof(int));
+				//	ImGui::EndDragDropSource();
+				//	
+				//}
+				//if (ImGui::BeginDragDropTarget())
+				//{
+				//	ImGuiDragDropFlags target_flags = 0;
+				//	target_flags |= ImGuiDragDropFlags_AcceptBeforeDelivery;    // Don't wait until the delivery (release mouse button on a target) to do something
+				//	target_flags |= ImGuiDragDropFlags_AcceptNoDrawDefaultRect; // Don't display the yellow rectangle
+				//	if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_DEMO_NAME", target_flags))
+				//	{
+				//		move_from = *(const int*)payload->Data;
+				//		move_to = i;
+				//	}
+				//	ImGui::EndDragDropTarget();
+				//}
+
+			}
+			ImGui::PopStyleColor();
+			ImGui::PopStyleColor();
+		}
+		else
+		{
+			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0, 1, 1));
+
+			if (ImGui::ImageButton((ImTextureID)playerInventory[i].textureID, ImVec2(20 * relativeScale_x, 20 * relativeScale_y), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0)))
+			{
+				cout << playerInventory[i].slotID << endl;
+				playerInventory[i].active = true;
+				updateButtonActivity(i);
+				//src_flags |= ImGuiDragDropFlags_SourceNoPreviewTooltip; // Hide the tooltip
+				//if (ImGui::BeginDragDropSource(src_flags))
+				//{
+				//	if (!(src_flags & ImGuiDragDropFlags_SourceNoPreviewTooltip))
+				//		ImGui::Text("Moving \"%d\"", playerInventory[i].textureID);
+				//	ImGui::SetDragDropPayload("DND_DEMO_NAME", &i, sizeof(int));
+				//	ImGui::EndDragDropSource();
+				//	
+				//}
+				//if (ImGui::BeginDragDropTarget())
+				//{
+				//	ImGuiDragDropFlags target_flags = 0;
+				//	target_flags |= ImGuiDragDropFlags_AcceptBeforeDelivery;    // Don't wait until the delivery (release mouse button on a target) to do something
+				//	target_flags |= ImGuiDragDropFlags_AcceptNoDrawDefaultRect; // Don't display the yellow rectangle
+				//	if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_DEMO_NAME", target_flags))
+				//	{
+				//		move_from = *(const int*)payload->Data;
+				//		move_to = i;
+				//	}
+				//	ImGui::EndDragDropTarget();
+				//}
+
+			}
+			ImGui::PopStyleColor();
 
 		}
 		ImGui::SameLine();
+
+
 	}
 	//if (move_from != -1 && move_to != -1)
 	//{

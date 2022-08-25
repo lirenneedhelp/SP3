@@ -545,22 +545,10 @@ void CPlayer2D::Update(const double dElapsedTime)
 				// When Sword Equipped
 				if (CGUI_Scene2D::GetInstance()->updateSelection() == SWORD_ID)
 				{
-					//cout << "hello I'm holding left click\n";
-				//damage the enemy and reset the interval
-					attackSpeed = 1.0f;
-					//if (cPhysics2D.CalculateDistance(vec2Index,))
-					enemyList = CScene2D::GetInstance()->returnEnemyVector();
-					//returnNearestPlayer();
-					animatedSprites->PlayAnimation("Attack1", -1, 1.0f);
-					cSoundController->PlaySoundByID(9);
-					for (int enemyIndex = 0; enemyIndex != enemyList.size(); ++enemyIndex)
-					{
-						//cout << "Sword\n";
-						attackSpeed = 0.75f;
-						playerInitialDamage = 30 * strengthValue;
-						attackRange = 1.5;
+					attackSpeed = 0.75f;
+					playerInitialDamage = 30 * strengthValue;
+					attackRange = 1.5;
 
-					}
 				}
 				// When Spear equipped
 				else if (CGUI_Scene2D::GetInstance()->updateSelection() == SPEAR_ID)
@@ -569,6 +557,7 @@ void CPlayer2D::Update(const double dElapsedTime)
 					playerInitialDamage = 40 * strengthValue;
 					attackRange = 2;
 				}
+
 				enemyList = CScene2D::GetInstance()->returnEnemyVector();
 				for (int enemyIndex = 0; enemyIndex != enemyList.size(); ++enemyIndex)
 				{
