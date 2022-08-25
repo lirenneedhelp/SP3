@@ -1429,7 +1429,6 @@ void CPlayer2D::BuildBlocks()
 			
 		}
 	}
-	return itemID;
 }
 
 
