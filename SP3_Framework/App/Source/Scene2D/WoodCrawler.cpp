@@ -769,6 +769,7 @@ bool CWoodCrawler::InteractWithPlayer(void)
 		//playerHP = damageOnPlayer->GetItem("Health");
 		//playerHP->Remove(20);
 		cPlayer2D->UpdateDefense(20);
+		//cSoundController->PlaySoundByID(7);
 		woodAnimatedSprites->PlayAnimation("Pull", -1, 5);
 		hit = true; // hit cooldown
 
