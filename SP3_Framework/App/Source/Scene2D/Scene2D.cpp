@@ -272,7 +272,10 @@ bool CScene2D::Init(void)
 
 	dayCounter = 0.0f;
 
-	enemySpawnTimeCounter = 15.f;
+
+	enemySpawnRate = 15.f;
+
+	enemySpawnTimeCounter = enemySpawnRate;
 	
 	// Load the sounds into CSoundController
 	cSoundController = CSoundController::GetInstance();
@@ -343,10 +346,6 @@ bool CScene2D::Update(const double dElapsedTime)
 			return false;
 		}
 	}
-	if (cKeyboardController->IsKeyReleased(GLFW_KEY_M))
-	{
-
-	}
 
 	// Call the cGUI_Scene2D's update method
 	cGUI_Scene2D->Update(dElapsedTime);
@@ -357,6 +356,7 @@ bool CScene2D::Update(const double dElapsedTime)
 		cMap2D->SetCurrentLevel(cMap2D->GetCurrentLevel()+1);
 		cPlayer2D->Reset();
 		cGameManager->bLevelCompleted = false;
+		enemySpawnRate -= cMap2D->GetCurrentLevel() - 1;
 	}
 
 	// Check if the game has been won by the player
@@ -378,7 +378,7 @@ bool CScene2D::Update(const double dElapsedTime)
 	}
 	else
 	{
-		enemySpawnTimeCounter = 15.f;
+		enemySpawnTimeCounter = enemySpawnRate;
 	}
 
 	if (enemySpawnTimeCounter <= 0)
@@ -424,7 +424,7 @@ bool CScene2D::Update(const double dElapsedTime)
 						enemyVector.push_back(cGlutton);
 					}
 				}
-				enemySpawnTimeCounter = 15.f;
+				enemySpawnTimeCounter = enemySpawnRate;
 
 				break;
 			}

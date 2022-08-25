@@ -95,6 +95,10 @@ protected:
 		SWORD_ID,
 		BOW_ID,
 		SPEAR_ID,
+		WOOD_ID,
+		DIRT_ID,
+		AXE_ID,
+		SHOVEL_ID,
 		TOTAL_NUM,
 	};
 

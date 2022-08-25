@@ -1181,7 +1181,8 @@ void CPlayer2D::InteractWithMap(void)
 		// Increase the potion by 1
 		cInventoryItem = cInventoryManager->GetItem("axe");
 		cInventoryItem->Add(1);
-		axeequip = true;
+		CGUI_Scene2D::GetInstance()->updateInventory(cInventoryItem, AXE_ID);
+
 		// Play a bell sound
 		cSoundController->PlaySoundByID(1);
 		break;
@@ -1191,6 +1192,8 @@ void CPlayer2D::InteractWithMap(void)
 		// Increase the potion by 1
 		cInventoryItem = cInventoryManager->GetItem("shovel");
 		cInventoryItem->Add(1);
+		CGUI_Scene2D::GetInstance()->updateInventory(cInventoryItem, SHOVEL_ID);
+
 		shovelequip = true;
 		// Play a bell sound
 		cSoundController->PlaySoundByID(1);
@@ -1338,12 +1341,23 @@ void CPlayer2D::setPlayerRuntimeColor(glm::vec4 color)
 }
 void CPlayer2D::BuildBlocks()
 {
+	if (CGUI_Scene2D::GetInstance()->updateSelection() == DIRT_ID)
+	{
+		cInventoryItem = cInventoryManager->GetItem("dirt");
+	}
+	else if (CGUI_Scene2D::GetInstance()->updateSelection() == WOOD_ID)
+	{
+		cInventoryItem = cInventoryManager->GetItem("wood");
+
+	}
+
 	if (cKeyboardController->IsKeyDown(GLFW_KEY_L)) {
 		if (direction == 1) {
 			switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x - 1))
 			{
 			case 0:
 				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 100);
+				cInventoryItem->Remove(1);
 				break;
 			}
 		}
@@ -1352,6 +1366,7 @@ void CPlayer2D::BuildBlocks()
 			{
 			case 0:
 				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 100);
+				cInventoryItem->Remove(1);
 				break;
 			}
 		}
@@ -1364,6 +1379,8 @@ void CPlayer2D::BuildBlocks()
 			{
 			case 0:
 				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 100);
+				cInventoryItem->Remove(1);
+
 				break;
 			}
 		}
@@ -1372,6 +1389,8 @@ void CPlayer2D::BuildBlocks()
 			{
 			case 0:
 				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 100);
+				cInventoryItem->Remove(1);
+
 				break;
 			}
 		}
@@ -1382,6 +1401,8 @@ void CPlayer2D::BuildBlocks()
 		{
 		case 0:
 			cMap2D->SetMapInfo(vec2Index.y + 1, vec2Index.x, 100);
+			cInventoryItem->Remove(1);
+
 			break;
 		}
 	}
@@ -1390,6 +1411,8 @@ void CPlayer2D::BuildBlocks()
 		{
 		case 0:
 			cMap2D->SetMapInfo(vec2Index.y - 1, vec2Index.x, 100);
+			cInventoryItem->Remove(1);
+
 			break;
 			
 		}

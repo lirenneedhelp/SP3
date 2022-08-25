@@ -138,7 +138,9 @@ protected:
 
 	bool day;
 
-	float enemySpawnTimeCounter;
+	float enemySpawnTimeCounter; // Countdown before spawning
+	
+	float enemySpawnRate; // Spawn rate
 
 	float dayCounter; // helps with gradual change in the brightness when it changes from day to night vice versa
 

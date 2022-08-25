@@ -77,12 +77,11 @@ bool CGUI_Scene2D::Init(void)
 
 	//// Show the mouse pointer
 	//glfwSetInputMode(CSettings::GetInstance()->pWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-
+	inventoryHotbar = 9;
+	inventorySize = 24;
 	// Initialise the cInventoryManager
 	cInventoryManager = CInventoryManager::GetInstance();
-	// Add a Tree as one of the inventory items
-	cInventoryItem = cInventoryManager->Add("Tree", "Image/Scene2D_TreeTile.tga", 5, 0);
-	cInventoryItem->vec2Size = glm::vec2(25, 25);
+
 	// Initialise the vector
 	storePlayerItem.clear();
 
@@ -91,7 +90,7 @@ bool CGUI_Scene2D::Init(void)
 
 	CImageLoader* il = CImageLoader::GetInstance();
 	
-	for (int i = 0; i < 9; ++i)
+	for (int i = 0; i < inventoryHotbar; ++i)
 	{
 		emptyInventorySlot.fileName = "Image\\GUI\\itemhotbar.png";
 		emptyInventorySlot.textureID = il->LoadTextureGetID(emptyInventorySlot.fileName.c_str(), false);
@@ -166,24 +165,26 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 	enemyHealth = CScene2D::GetInstance()->returnEnemyVector();
 	enemyHealth = CPlayer2D::GetInstance()->returnNearestEnemy(enemyHealth);
 
-	ImGui::Begin("Enemy_Health", NULL, healthWindowFlags);
+	if (enemyHealth.size() > 0)
+	{
+		ImGui::Begin("Enemy_Health", NULL, healthWindowFlags);
 
 
-	ImGui::SetWindowPos(ImVec2(enemyHealth.front()->vec2Index.x * 25 * relativeScale_x - 10.f, cSettings->iWindowHeight - 50.0f - (enemyHealth.front()->vec2Index.y * 25 * relativeScale_y)));
-	//cout << enemyHealth[i]->vec2Index.x * 25 * relativeScale_x << ", " << cSettings->iWindowHeight - (enemyHealth[i]->vec2Index.y * 25 * relativeScale_y)  << endl;
+		ImGui::SetWindowPos(ImVec2(enemyHealth.front()->vec2Index.x * 25 * relativeScale_x - 10.f, cSettings->iWindowHeight - 50.0f - (enemyHealth.front()->vec2Index.y * 25 * relativeScale_y)));
+		//cout << enemyHealth[i]->vec2Index.x * 25 * relativeScale_x << ", " << cSettings->iWindowHeight - (enemyHealth[i]->vec2Index.y * 25 * relativeScale_y)  << endl;
 
-	ImGui::SetWindowSize(ImVec2(10.0f * relativeScale_x, 2.0f * relativeScale_y));
-	ImGui::SetWindowFontScale(1.0f * relativeScale_y);
+		ImGui::SetWindowSize(ImVec2(10.0f * relativeScale_x, 2.0f * relativeScale_y));
+		ImGui::SetWindowFontScale(1.0f * relativeScale_y);
 
-	ImGui::PushStyleColor(ImGuiCol_PlotHistogram, ImVec4(1.0f, 0.0f, 0.0f, 1.0f));
-	ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.0f, 0.0f, 1.0f, 1.0f));
-	ImGui::ProgressBar(enemyHealth.front()->health /
-		enemyHealth.front()->maxHealth, ImVec2(50.0f * relativeScale_x, 13.0f * relativeScale_y));
-	ImGui::PopStyleColor();
-	ImGui::PopStyleColor();
+		ImGui::PushStyleColor(ImGuiCol_PlotHistogram, ImVec4(1.0f, 0.0f, 0.0f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.0f, 0.0f, 1.0f, 1.0f));
+		ImGui::ProgressBar(enemyHealth.front()->health /
+			enemyHealth.front()->maxHealth, ImVec2(50.0f * relativeScale_x, 13.0f * relativeScale_y));
+		ImGui::PopStyleColor();
+		ImGui::PopStyleColor();
 
-	ImGui::End();
-	
+		ImGui::End();
+	}
 
 
 
@@ -226,16 +227,17 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 	int move_from = -1, move_to = -1;
 	//ImGui::ShowDemoWindow();
 
-	for (int i = 0; i < playerInventory.size(); ++i)
+	for (int i = 0; i < inventoryHotbar; ++i)
 	{
 		//ImGuiDragDropFlags src_flags = 0;
 		//src_flags |= ImGuiDragDropFlags_SourceNoDisableHover;     // Keep the source displayed as hovered
 		//src_flags |= ImGuiDragDropFlags_SourceNoHoldToOpenOthers; // Because our dragging is local, we disable the feature of opening foreign treenodes/tabs while dragging
-		ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(20 * relativeScale_x, 20 * relativeScale_y));
+		ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(20 * relativeScale_x, 20 * relativeScale_y));
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1, 1, 1, 1));
+
 		if (playerInventory[i].active == true)
 		{
 			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1, 1, 1, 1));
-			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0, 1, 1));
 
 			if (ImGui::ImageButton((ImTextureID)playerInventory[i].textureID, ImVec2(20 * relativeScale_x, 20 * relativeScale_y), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0)))
 			{
@@ -269,12 +271,9 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 
 			}
 			ImGui::PopStyleColor();
-			ImGui::PopStyleColor();
 		}
 		else
 		{
-			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0, 1, 1));
-
 			if (ImGui::ImageButton((ImTextureID)playerInventory[i].textureID, ImVec2(20 * relativeScale_x, 20 * relativeScale_y), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0)))
 			{
 				cout << playerInventory[i].slotID << endl;
@@ -303,9 +302,9 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 				//}
 
 			}
-			ImGui::PopStyleColor();
 
 		}
+		ImGui::PopStyleColor();
 		ImGui::PopStyleVar();
 		ImGui::SameLine();
 
@@ -410,4 +409,17 @@ void CGUI_Scene2D::updateButtonActivity(unsigned index)
 			continue;
 		}
 	}
+}
+
+int CGUI_Scene2D::getQuantity(void)
+{
+	for (int i = 0; i < inventorySize; i++)
+	{
+		if (playerInventory[i].active)
+		{
+			return storePlayerItem[i]->GetCount();
+		}
+	}
+	return -1;
+	
 }
