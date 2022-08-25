@@ -223,6 +223,8 @@ bool CPlayer2D::Init(void)
 	charge = 0.f;
 
 	direction = 0;
+	itemtype = 1;
+	itemID = 2;
 	breakinterval = 0.2f;
 
 	// Get the handler to the CSoundController
@@ -1362,6 +1364,27 @@ void CPlayer2D::BuildBlocks() {
 	}
 }
 
+int CPlayer2D::RandItemGen()
+{
+	itemtype = rand() % 3;
+	switch (itemtype)
+	{
+	case 0:
+		itemID = rand() % 4 + 2;
+		break;
+	case 1:
+		itemID = rand() % 4 + 30;
+		break;
+	case 2:
+		itemID = rand() % 4 + 40;
+		break;
+	default:
+		itemID = 100;
+		break;
+	}
+	return itemID;
+}
+
 
 CEntity2D* CPlayer2D::returnNearestEnemy(void)
 {
@@ -1401,7 +1424,7 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime) {
 				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 0);
 				break;
 			case 105:
-				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x -1, rand() % 5 + 2);
+				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x -1, RandItemGen());
 				break;
 			}
 		}
@@ -1418,7 +1441,7 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime) {
 				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 0);
 				break;
 			case 105:
-				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, rand() % 3 + 3);
+				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, RandItemGen());
 				break;
 			}
 		}

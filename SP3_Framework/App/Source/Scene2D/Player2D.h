@@ -177,6 +177,9 @@ protected:
 	double breakinterval;
 	void BreakBlocks(const double dElapsedTime);
 	void BuildBlocks();
+	int itemtype;
+	int itemID;
+	int RandItemGen();
 	/*
 		!CODE CHANGES END!
 	*/

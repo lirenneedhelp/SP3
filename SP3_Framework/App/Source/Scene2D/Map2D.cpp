@@ -259,7 +259,7 @@ bool CMap2D::Init(	const unsigned int uiNumLevels,
 	else
 	{
 		// Store the texture ID into MapOfTextureIDs
-		MapOfTextureIDs.insert(pair<int, int>(34, iTextureID));
+		MapOfTextureIDs.insert(pair<int, int>(40, iTextureID));
 	}
 	// Load the helmet texture
 	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/helmet.tga", true);
