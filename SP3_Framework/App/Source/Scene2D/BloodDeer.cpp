@@ -491,6 +491,16 @@ void CBloodDeer::setHP(float newHealth)
 	health = newHealth;
 }
 
+float CBloodDeer::getMaxHP(void)
+{
+	return maxHealth;
+}
+
+void CBloodDeer::setMaxHP(float maxHealth)
+{
+	this->maxHealth = maxHealth;
+}
+
 
 /**
  @brief Constraint the enemy2D's position within a boundary

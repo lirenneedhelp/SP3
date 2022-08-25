@@ -199,6 +199,7 @@ bool CScene2D::Init(void)
 		{
 			cWoodCrawler->SetPlayer2D(cPlayer2D);
 			cWoodCrawler->setHP(10000);
+			cWoodCrawler->setMaxHP(10000);
 			enemyVector.push_back(cWoodCrawler);
 		}
 		else
@@ -220,6 +221,7 @@ bool CScene2D::Init(void)
 		{
 			cGlutton->SetPlayer2D(cPlayer2D);
 			cGlutton->setHP(60);
+			cGlutton->setMaxHP(60);
 			enemyVector.push_back(cGlutton);
 		}
 		else
@@ -241,6 +243,7 @@ bool CScene2D::Init(void)
 		{
 			cBloodDeer->SetPlayer2D(cPlayer2D);
 			cBloodDeer->setHP(300);
+			cBloodDeer->setMaxHP(300);
 			enemyVector.push_back(cBloodDeer);
 		}
 		else
@@ -414,6 +417,7 @@ bool CScene2D::Update(const double dElapsedTime)
 					{
 						cWoodCrawler->SetPlayer2D(cPlayer2D);
 						cWoodCrawler->setHP(60);
+						cWoodCrawler->setMaxHP(60);
 						enemyVector.push_back(cWoodCrawler);
 					}
 				}
@@ -426,6 +430,7 @@ bool CScene2D::Update(const double dElapsedTime)
 					{
 						cGlutton->SetPlayer2D(cPlayer2D);
 						cGlutton->setHP(60);
+						cGlutton->setMaxHP(60);
 						enemyVector.push_back(cGlutton);
 					}
 				}

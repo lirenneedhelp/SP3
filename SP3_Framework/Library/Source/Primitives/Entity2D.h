@@ -63,6 +63,8 @@ public:
 
 	float health;
 
+	float maxHealth;
+
 protected:
 	// Name of Shader Program instance
 	std::string sShaderName;

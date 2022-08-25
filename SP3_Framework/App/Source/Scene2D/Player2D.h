@@ -73,7 +73,9 @@ public:
 
 	void UpdateDefense(float damage);
 
+	void setPlayerRuntimeColor(glm::vec4 color);
 
+	vector<CEntity2D*> returnNearestEnemy(vector<CEntity2D*> enemyVector);
 
 	CInventoryManager* returnPlayerHealth(void);
 
@@ -211,6 +213,5 @@ protected:
 
 	float strengthValue;
 
-	CEntity2D* returnNearestEnemy(void);
 };
 
