@@ -67,10 +67,12 @@ bool CPauseState::Init(void)
 
 	// Load the images for buttons
 	CImageLoader* il = CImageLoader::GetInstance();
-	VolumeIncreaseButtonData.fileName = "Image\\GUI\\VolumeIncreaseButton.png";
-	VolumeIncreaseButtonData.textureID = il->LoadTextureGetID(VolumeIncreaseButtonData.fileName.c_str(), false);
-	VolumeDecreaseButtonData.fileName = "Image\\GUI\\VolumeDecreaseButton.png";
-	VolumeDecreaseButtonData.textureID = il->LoadTextureGetID(VolumeDecreaseButtonData.fileName.c_str(), false);
+	ResumeButtonData.fileName = "Image\\GUI\\Resume.png";
+	ResumeButtonData.textureID = il->LoadTextureGetID(ResumeButtonData.fileName.c_str(), false);
+	OptionsButtonData.fileName = "Image\\GUI\\Options.png";
+	OptionsButtonData.textureID = il->LoadTextureGetID(OptionsButtonData.fileName.c_str(), false);
+	ExitButtonData.fileName = "Image\\GUI\\Exit.png";
+	ExitButtonData.textureID = il->LoadTextureGetID(ExitButtonData.fileName.c_str(), false);
 
 	return true;
 }
@@ -89,8 +91,8 @@ bool CPauseState::Update(const double dElapsedTime)
 	window_flags |= ImGuiWindowFlags_NoCollapse;
 	window_flags |= ImGuiWindowFlags_NoNav;
 
-	float buttonWidth = 256;
-	float buttonHeight = 128;
+	float buttonWidth = 128;
+	float buttonHeight = 64;
 
 	// 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
 	{
@@ -111,22 +113,33 @@ bool CPauseState::Update(const double dElapsedTime)
 		ImGui::TextColored(ImVec4(1, 1, 1, 1), "In-Game Menu");
 
 		// Add codes for Start button here
-		if (ImGui::ImageButton((ImTextureID)VolumeIncreaseButtonData.textureID,
+		if (ImGui::ImageButton((ImTextureID)ResumeButtonData.textureID,
 			ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0)))
 		{
 			// Reset the CKeyboardController
 			CKeyboardController::GetInstance()->Reset();
 
-			CSoundController::GetInstance()->MasterVolumeIncrease();
+			CGameStateManager::GetInstance()->SetPauseGameState("PauseState");
 		}
-		// Add codes for Exit button here
-		if (ImGui::ImageButton((ImTextureID)VolumeDecreaseButtonData.textureID,
+		if (ImGui::ImageButton((ImTextureID)OptionsButtonData.textureID,
 			ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0)))
 		{
 			// Reset the CKeyboardController
 			CKeyboardController::GetInstance()->Reset();
 
-			CSoundController::GetInstance()->MasterVolumeDecrease();
+			CGameStateManager::GetInstance()->SetPauseGameState("PauseState");
+			CGameStateManager::GetInstance()->SetPauseGameState("OptionsState");
+		}
+		if (ImGui::ImageButton((ImTextureID)ExitButtonData.textureID,
+			ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0)))
+		{
+			CKeyboardController::GetInstance()->Reset();
+
+			//CSoundController::GetInstance()->stopSound();
+
+			CGameStateManager::GetInstance()->SetActiveGameState("MenuState");
+			CGameStateManager::GetInstance()->OffPauseGameState();
+
 		}
 	ImGui::End();
 	}

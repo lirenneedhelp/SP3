@@ -199,6 +199,7 @@ bool CScene2D::Init(void)
 		{
 			cWoodCrawler->SetPlayer2D(cPlayer2D);
 			cWoodCrawler->setHP(10000);
+			cWoodCrawler->setMaxHP(10000);
 			enemyVector.push_back(cWoodCrawler);
 		}
 		else
@@ -220,6 +221,7 @@ bool CScene2D::Init(void)
 		{
 			cGlutton->SetPlayer2D(cPlayer2D);
 			cGlutton->setHP(60);
+			cGlutton->setMaxHP(60);
 			enemyVector.push_back(cGlutton);
 		}
 		else
@@ -241,6 +243,7 @@ bool CScene2D::Init(void)
 		{
 			cBloodDeer->SetPlayer2D(cPlayer2D);
 			cBloodDeer->setHP(300);
+			cBloodDeer->setMaxHP(300);
 			enemyVector.push_back(cBloodDeer);
 		}
 		else
@@ -283,7 +286,7 @@ bool CScene2D::Init(void)
 	cSoundController->LoadSound(FileSystem::getPath("Sounds\\punch.ogg"), 8, true); //eound effect for punching
 	cSoundController->LoadSound(FileSystem::getPath("Sounds\\weaponattack.ogg"), 9, true); //sound effect for sword attack
 	cSoundController->LoadSound(FileSystem::getPath("Sounds\\wood-creak.ogg"), 10, true); //sound effect for chest
-	
+	cSoundController->LoadSound(FileSystem::getPath("Sounds\\bow.ogg"), 11, true); //sound effect for chest
 
 	return true;
 }
@@ -364,13 +367,23 @@ bool CScene2D::Update(const double dElapsedTime)
 	// Check if the game should be ended
 	else if (cGameManager->bPlayerLost == true)
 	{
-		cSoundController->PlaySoundByID(2);
+		cSoundController->PlaySoundByID(6);
 		return false;
 	}
 	dayCounter += dElapsedTime;
 
+	if (day == true)
+	{
+		cSoundController->PlaySoundByID(2);
+	}
+	else
+	{
+		cSoundController->PlaySoundByID(1);
+	}
+
 	if (!day)
 	{
+
 		enemySpawnTimeCounter -= dElapsedTime;
 	}
 	else
@@ -404,6 +417,7 @@ bool CScene2D::Update(const double dElapsedTime)
 					{
 						cWoodCrawler->SetPlayer2D(cPlayer2D);
 						cWoodCrawler->setHP(60);
+						cWoodCrawler->setMaxHP(60);
 						enemyVector.push_back(cWoodCrawler);
 					}
 				}
@@ -416,6 +430,7 @@ bool CScene2D::Update(const double dElapsedTime)
 					{
 						cGlutton->SetPlayer2D(cPlayer2D);
 						cGlutton->setHP(60);
+						cGlutton->setMaxHP(60);
 						enemyVector.push_back(cGlutton);
 					}
 				}

@@ -267,14 +267,24 @@ void CWoodCrawler::Update(const double dElapsedTime)
 		}
 		else
 		{
-			//Reduces health
-			damageOnPlayer = cPlayer2D->returnPlayerHealth();
-			playerHP = damageOnPlayer->GetItem("Health");
-			playerHP->Remove(10);
+			if (iFSMCounter < iMaxFSMCounter)
+			{
+				//Reduces health
+				damageOnPlayer = cPlayer2D->returnPlayerHealth();
+				playerHP = damageOnPlayer->GetItem("Health");
+				playerHP->Remove(10);
 
-			//Switch to Attack state
-			sCurrentFSM = ATTACK;
+				//Switch to Attack state
+				sCurrentFSM = ATTACK;
+			}
+			else
+			{
+				sCurrentFSM = PATROL;
+				iFSMCounter = 0;
+			}
 		}
+		iFSMCounter++;
+
 	case ATTACK:
 		if (cPhysics2D.CalculateDistance(vec2Index, cPlayer2D->vec2Index) < 5.0f)
 		{
@@ -461,6 +471,16 @@ float CWoodCrawler::getHP(void)
 void CWoodCrawler::setHP(float newHP)
 {
 	health = newHP;
+}
+
+float CWoodCrawler::getMaxHP(void)
+{
+	return maxHealth;
+}
+
+void CWoodCrawler::setMaxHP(float maxHealth)
+{
+	this->maxHealth = maxHealth;
 }
 
 
@@ -769,6 +789,7 @@ bool CWoodCrawler::InteractWithPlayer(void)
 		//playerHP = damageOnPlayer->GetItem("Health");
 		//playerHP->Remove(20);
 		cPlayer2D->UpdateDefense(20);
+		//cSoundController->PlaySoundByID(7);
 		woodAnimatedSprites->PlayAnimation("Pull", -1, 5);
 		hit = true; // hit cooldown
 

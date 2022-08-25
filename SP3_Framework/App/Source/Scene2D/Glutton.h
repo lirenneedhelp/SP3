@@ -95,6 +95,12 @@ public:
 
 	void setHP(float newHealth);
 
+
+	float getMaxHP(void);
+
+	void setMaxHP(float maxHealth);
+
+
 	// boolean flag to indicate if this enemy is active
 	bool bIsActive;
 
