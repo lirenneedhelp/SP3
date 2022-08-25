@@ -117,18 +117,18 @@ bool CPlayer2D::Init(void)
 	shoot = false;
 
 	//check if weapons are equiped
-	swordequip = false;
-	spearequip = false;
 	axeequip = false;
-	bowequip = false;
 	shovelequip = false;
 	helmetequip = false;
 	chestplateequip = false;
 	leggingsequip = false;
 	bootsequip = false;
-	
 
 	playerInitialDamage = 10;
+
+	strengthValue = 1.0f;
+
+	speed_runtime = 0.f;
 	
 	// By default, microsteps should be zero
 	vec2NumMicroSteps = glm::i32vec2(0, 0);
@@ -146,17 +146,28 @@ bool CPlayer2D::Init(void)
 
 	//CS: Create the animated sprite and setup the animation 
 	animatedSprites = CMeshBuilder::GenerateSpriteAnimation(40, 14, cSettings->TILE_WIDTH, cSettings->TILE_HEIGHT);
+	
+	// Player movement animation
 	animatedSprites->AddAnimation("idle", 0, 3);
 	animatedSprites->AddAnimation("right", 224, 229);
 	animatedSprites->AddAnimation("left", 504, 509);
 	animatedSprites->AddAnimation("jump", 42, 51);
-	//animatedSprites->AddAnimation("jump", 21, 30);
-	animatedSprites->AddAnimation("Attack1", 84, 90);
+	animatedSprites->AddAnimation("jumpLeft", 322, 331);
+
+	//  Fist
+	animatedSprites->AddAnimation("Attack1", 154, 167);
+	animatedSprites->AddAnimation("AttackLeft", 434, 447);
+
+	// Sword Animation & Spear Animation
+	animatedSprites->AddAnimation("SwordAttack", 84, 104);
+	animatedSprites->AddAnimation("leftSwordAttack", 364,384);
+	// Bow Animation
 	animatedSprites->AddAnimation("chargeBow", 252, 258);
 	animatedSprites->AddAnimation("chargeBowLeft", 532, 538);
 
 	animatedSprites->AddAnimation("shootBow", 259, 260);
 	animatedSprites->AddAnimation("shootBowLeft", 539, 540);
+
 
 
 
@@ -496,68 +507,62 @@ void CPlayer2D::Update(const double dElapsedTime)
 		}
 		
 	}
+
 	//Put mouse inputs here
-	if (cMouseController->IsButtonDown(0))
+	if (cMouseController->IsButtonDown(0) && CGUI_Scene2D::GetInstance()->updateSelection() != BOW_ID)
 	{
-		if (firstAttack)
+		if (firstAttack) // Check whether player is holding left click
 		{
 			//cout << "hello I've LEFT CLICKED\n";
-			animatedSprites->PlayAnimation("Attack1", -1, 1.0f);
 			firstAttack = false;
+			if (direction == 2)
+			{
+				if (CGUI_Scene2D::GetInstance()->updateSelection() == SWORD_ID || CGUI_Scene2D::GetInstance()->updateSelection() == SPEAR_ID) // Check whether player equipped the sword & play the attack animation
+				{
+					animatedSprites->PlayAnimation("SwordAttack", -1, 0.5f);
+				}
+				else
+				{
+					animatedSprites->PlayAnimation("Attack1", -1, 1.0f);
+				}
+			}
+			else if (direction == 1)
+			{
+				if (CGUI_Scene2D::GetInstance()->updateSelection() == SWORD_ID || CGUI_Scene2D::GetInstance()->updateSelection() == SPEAR_ID)
+				{
+					animatedSprites->PlayAnimation("leftSwordAttack", -1, 0.5f);
+				}
+				else
+				{
+					animatedSprites->PlayAnimation("AttackLeft", -1, 1.0f);
+				}
+			}
+					
 		}
 		else 
-		{ 
+		{ 			
 			attackSpeed -= dElapsedTime;
 			if (attackSpeed <= 0.f)
 			{
-				
-				//cout << "hello I'm holding left click\n";
-				//damage the enemy and reset the interval
-				attackSpeed = 1.0f;
-				//if (cPhysics2D.CalculateDistance(vec2Index,))
-				enemyList = CScene2D::GetInstance()->returnEnemyVector();
-				//returnNearestPlayer();
-				animatedSprites->PlayAnimation("Attack1", -1, 1.0f);
-				for (int enemyIndex = 0; enemyIndex != enemyList.size(); ++enemyIndex)
+				// When Sword Equipped
+				if (CGUI_Scene2D::GetInstance()->updateSelection() == SWORD_ID)
 				{
-					if (cPhysics2D.CalculateDistance(vec2Index, enemyList[enemyIndex]->vec2Index) <= attackRange && vec2Index.y == enemyList[enemyIndex]->vec2Index.y) // Check if player and enemy are on the same level & check whether the enemy is within the player's range
-					{
-						std::cout << "Hit Enemy Once\n";
-						//TO DO: REDUCE THEIR HP
-						enemyList[enemyIndex]->health -= playerInitialDamage;
-						std::cout << enemyList[enemyIndex]->health << endl;
-						if (enemyList[enemyIndex]->health <= 0)
-						{
-							enemyList[enemyIndex]->~CEntity2D();					
-							enemyList.erase(enemyList.begin() + enemyIndex);
-							CScene2D::GetInstance()->setNewEnemyVector(enemyList);
-						}
-						break;
-					}
-				}
-			}
-		}
+					attackSpeed = 0.75f;
+					playerInitialDamage = 30 * strengthValue;
+					attackRange = 1.5;
 
-		if (swordequip == true)
-		{
-			attackSpeed -= dElapsedTime;
-			if (attackSpeed <= 0.f)
-			{
-				//cout << "hello I'm holding left click\n";
-				//damage the enemy and reset the interval
-				attackSpeed = 2.0f;
-				playerInitialDamage = 30;
-				attackRange *= 1.5;
-				//if (cPhysics2D.CalculateDistance(vec2Index,))
+				}
+				// When Spear equipped
+				else if (CGUI_Scene2D::GetInstance()->updateSelection() == SPEAR_ID)
+				{
+					attackSpeed = 1.0f;
+					playerInitialDamage = 40 * strengthValue;
+					attackRange = 2;
+				}
+
 				enemyList = CScene2D::GetInstance()->returnEnemyVector();
-				//returnNearestEnemy();
-				animatedSprites->PlayAnimation("Attack1", -1, 1.0f);
 				for (int enemyIndex = 0; enemyIndex != enemyList.size(); ++enemyIndex)
 				{
-					/*if (strength = true)
-					{
-						playerInitialDamage *= 1.5;
-					}*/
 					if (cPhysics2D.CalculateDistance(vec2Index, enemyList[enemyIndex]->vec2Index) <= attackRange && vec2Index.y == enemyList[enemyIndex]->vec2Index.y) // Check if player and enemy are on the same level & check whether the enemy is within the player's range
 					{
 						std::cout << "Hit Enemy Once\n";
@@ -569,54 +574,50 @@ void CPlayer2D::Update(const double dElapsedTime)
 							enemyList[enemyIndex]->~CEntity2D();
 							enemyList.erase(enemyList.begin() + enemyIndex);
 							CScene2D::GetInstance()->setNewEnemyVector(enemyList);
+							break;
 						}
-						break;
 					}
 				}
-			}
-		}
-		else if (spearequip == true)
-		{
-			attackSpeed -= dElapsedTime;
-			if (attackSpeed <= 0.f)
-			{
-				//cout << "hello I'm holding left click\n";
-				//damage the enemy and reset the interval
-				attackSpeed = 1.0f;
-				playerInitialDamage = 40;
-				attackRange *= 2;
-				//if (cPhysics2D.CalculateDistance(vec2Index,))
-				enemyList = CScene2D::GetInstance()->returnEnemyVector();
-				//returnNearestEnemy();
-				animatedSprites->PlayAnimation("Attack1", -1, 1.0f);
-				for (int enemyIndex = 0; enemyIndex != enemyList.size(); ++enemyIndex)
+				if (direction == 2)
 				{
-					/*if (strength = true)
+					if (CGUI_Scene2D::GetInstance()->updateSelection() == SWORD_ID || CGUI_Scene2D::GetInstance()->updateSelection() == SPEAR_ID)
 					{
-						playerInitialDamage *= 1.5;
-					}*/
-					if (cPhysics2D.CalculateDistance(vec2Index, enemyList[enemyIndex]->vec2Index) <= attackRange && vec2Index.y == enemyList[enemyIndex]->vec2Index.y) // Check if player and enemy are on the same level & check whether the enemy is within the player's range
+						animatedSprites->PlayAnimation("SwordAttack", -1, 0.5f);
+					}
+					else
 					{
-						std::cout << "Hit Enemy Once\n";
-						//TO DO: REDUCE THEIR HP
-						enemyList[enemyIndex]->health -= playerInitialDamage;
-						std::cout << enemyList[enemyIndex]->health << endl;
-						if (enemyList[enemyIndex]->health <= 0)
-						{
-							enemyList[enemyIndex]->~CEntity2D();
-							enemyList.erase(enemyList.begin() + enemyIndex);
-							CScene2D::GetInstance()->setNewEnemyVector(enemyList);
-						}
-						break;
+						animatedSprites->PlayAnimation("Attack1", -1, 1.0f);
+					}
+
+				}
+				else if (direction == 1)
+				{
+					if (CGUI_Scene2D::GetInstance()->updateSelection() == SWORD_ID || CGUI_Scene2D::GetInstance()->updateSelection() == SPEAR_ID)
+					{
+						animatedSprites->PlayAnimation("leftSwordAttack", -1, 0.5f);
+					}
+					else
+					{
+						animatedSprites->PlayAnimation("AttackLeft", -1, 1.0f);
 					}
 				}
-			}
-		}
-		if (strength == true)
-		{
-			playerInitialDamage *= 1.5;
+				if (CGUI_Scene2D::GetInstance()->updateSelection() == SWORD_ID)
+				{
+					attackSpeed = 0.5f;
+				}
+				else if (CGUI_Scene2D::GetInstance()->updateSelection() == SPEAR_ID)
+				{
+					attackSpeed = 1.0f;
+				}
+				else
+				{
+					attackSpeed = 1.0f;
+				}
+
+			}		
 		}
 	}
+
     else if (cMouseController->IsButtonUp(0))
 	{
 		if (!firstAttack)
@@ -626,8 +627,8 @@ void CPlayer2D::Update(const double dElapsedTime)
 			firstAttack = true;
 		}
 	}
-	//Put mouse inputs here
-	if (bowequip)
+	// When bow equipped
+	if (CGUI_Scene2D::GetInstance()->updateSelection() == BOW_ID)
 	{
 		if (cMouseController->IsButtonDown(0))
 		{
@@ -649,8 +650,6 @@ void CPlayer2D::Update(const double dElapsedTime)
 				if (charge < 5.0f)
 				{
 					charge += dElapsedTime * 10;
-					cout << "charging up:" << charge << endl;
-
 				}
 			}
 		}
@@ -691,13 +690,35 @@ void CPlayer2D::Update(const double dElapsedTime)
 				charge = 0.f;
 				shoot = false;
 			}
-
+		}	
+	}
+	
+	if (strength == true)
+	{
+		strength_runtime += dElapsedTime;
+		if (strength_runtime >= 20.f)
+		{
+			strength = false;
+			strength_runtime = 0.f;
+			cout << "strength's effect worn off!\n";
 		}
-
 		
 	}
-		
+	if (strength)
+	{
+		strengthValue = 2.0f; // basically base damage multiply by 2
+	}
 
+	if (speed == true)
+	{
+		speed_runtime += dElapsedTime;
+		if (speed_runtime >= 3.f)
+		{
+			speed = false;
+			speed_runtime = 0.f;
+			cout << "speed's effect worn off!\n";
+		}
+	}
 	
 
 	//cMouseController->PostUpdate();
@@ -1131,8 +1152,7 @@ void CPlayer2D::InteractWithMap(void)
 		// Increase the potion by 1
 		cInventoryItem = cInventoryManager->GetItem("sword");
 		cInventoryItem->Add(1);
-		CGUI_Scene2D::GetInstance()->updateInventory(cInventoryItem);
-		swordequip = true;
+		CGUI_Scene2D::GetInstance()->updateInventory(cInventoryItem, SWORD_ID);
 		std::cout << "sword equiped\n";
 		// Play a bell sound
 		cSoundController->PlaySoundByID(1);
@@ -1143,7 +1163,7 @@ void CPlayer2D::InteractWithMap(void)
 		// Increase the potion by 1
 		cInventoryItem = cInventoryManager->GetItem("spear");
 		cInventoryItem->Add(1);
-		spearequip = true;
+		CGUI_Scene2D::GetInstance()->updateInventory(cInventoryItem, SPEAR_ID);
 		// Play a bell sound
 		cSoundController->PlaySoundByID(1);
 		break;
@@ -1153,7 +1173,7 @@ void CPlayer2D::InteractWithMap(void)
 		// Increase the potion by 1
 		cInventoryItem = cInventoryManager->GetItem("bow");
 		cInventoryItem->Add(1);
-		bowequip = true;
+		CGUI_Scene2D::GetInstance()->updateInventory(cInventoryItem, BOW_ID);
 		// Play a bell sound
 		cSoundController->PlaySoundByID(1);
 		break;
@@ -1195,6 +1215,7 @@ void CPlayer2D::InteractWithMap(void)
 		// Increase the potion by 1
 		cInventoryItem = cInventoryManager->GetItem("helmet");
 		cInventoryItem->Add(1);
+		//CGUI_Scene2D::GetInstance()->updateInventory(cInventoryItem);
 		std::cout << "got armour" << endl;
 		helmetequip = true;
 		// Play a bell sound
@@ -1270,7 +1291,7 @@ void CPlayer2D::UpdateDefense(float damage)
 	if (helmetequip == true)
 	{	
 		defense = 20;
-		cout << "u're protected!" << endl;
+		cout << "u're protected by helmet!" << endl;
 		damageOnPlayer = returnPlayerHealth();
 		cInventoryItem = damageOnPlayer->GetItem("Health");
 		cInventoryItem->Remove(damage - defense);
@@ -1279,6 +1300,8 @@ void CPlayer2D::UpdateDefense(float damage)
 	else if (chestplateequip == true)
 	{
 		defense = 40;
+		/*std::cout << "u're protected by chestplate!" << endl;
+		damageOnPlayer = returnPlayerHealth();*/
 		std::cout << "u're protected!" << endl;
 		damageOnPlayer = returnPlayerHealth();
 		cInventoryItem = damageOnPlayer->GetItem("Health");
@@ -1297,18 +1320,22 @@ void CPlayer2D::UpdateDefense(float damage)
 	else if (bootsequip == true)
 	{
 		defense = 10;
+		//std::cout << "u're protected by boots!" << endl;
+		//damageOnPlayer = returnPlayerHealth();
 		std::cout << "u're protected!" << endl;
 		damageOnPlayer = returnPlayerHealth();
 		cInventoryItem = damageOnPlayer->GetItem("Health");
 		cInventoryItem->Remove(damage - defense);
 		cout << "damage reduced" << endl;
 	}
+
+	/*
+		!CODE CHANGES START!
+		code here should handle the breaking and placing of blocks
+	*/
 }
-/*
-	!CODE CHANGES START!
-	code here should handle the breaking and placing of blocks
-*/
-void CPlayer2D::BuildBlocks() {
+void CPlayer2D::BuildBlocks()
+{
 	if (cKeyboardController->IsKeyDown(GLFW_KEY_L)) {
 		if (direction == 1) {
 			switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x - 1))
@@ -1327,8 +1354,10 @@ void CPlayer2D::BuildBlocks() {
 			}
 		}
 	}
-	if (cKeyboardController->IsKeyDown(GLFW_KEY_J)) {
-		if (direction == 1) {
+	if (cKeyboardController->IsKeyDown(GLFW_KEY_J)) 
+	{
+		if (direction == 1) 
+		{
 			switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x + 1))
 			{
 			case 0:
@@ -1345,7 +1374,8 @@ void CPlayer2D::BuildBlocks() {
 			}
 		}
 	}
-	if (cKeyboardController->IsKeyDown(GLFW_KEY_I)) {
+	if (cKeyboardController->IsKeyDown(GLFW_KEY_I)) 
+	{
 		switch (cMap2D->GetMapInfo(vec2Index.y + 1, vec2Index.x))
 		{
 		case 0:
@@ -1447,7 +1477,7 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime) {
 		}
 		if (shovelequip == true)
 		{
-			breakinterval = 0.25f;
+			breakinterval = 0.33f;
 		}
 		else
 		{
@@ -1474,7 +1504,7 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime) {
 		}
 		if (shovelequip == true)
 		{
-			breakinterval = 0.25f;
+			breakinterval = 0.33f;
 		}
 		else
 		{
@@ -1497,7 +1527,7 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime) {
 		}
 		if (shovelequip == true)
 		{
-			breakinterval = 0.25f;
+			breakinterval = 0.33f;
 		}
 		else
 		{

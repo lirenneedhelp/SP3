@@ -67,9 +67,20 @@ public:
 	void PostRender(void);
 
 	// Update the Inventory
-	void updateInventory(CInventoryItem* item);
+	void updateInventory(CInventoryItem* item, unsigned item_ID);
+
+	int updateSelection(void);
+
+	void updateButtonActivity(unsigned index); // If one is clicked set the rest to inactive
 
 protected:
+	enum ITEM_ID
+	{
+		SWORD_ID,
+		BOW_ID,
+		SPEAR_ID,
+		TOTAL_NUM,
+	};
 	// Constructor
 	CGUI_Scene2D(void);
 
@@ -77,6 +88,8 @@ protected:
 	virtual ~CGUI_Scene2D(void);
 
 	CKeyboardController* cKeyboardController;
+
+	bool releaseButton;
 
 	// FPS Control
 	CFPSCounter* cFPSCounter;
@@ -96,9 +109,14 @@ protected:
 		std::string fileName;
 		unsigned textureID;
 		unsigned slotID;
+		unsigned itemID;
+		bool active;
 	};
 	vector<CInventoryItem*> storePlayerItem;
 
 	vector<ButtonData> playerInventory;
 	ButtonData emptyInventorySlot;
+
+	bool button1Clicked, button1Hovered;
+
 };

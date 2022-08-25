@@ -508,14 +508,13 @@ bool CBowProjectile::InteractWithEnemies(void)
 	{
 		// Check if the enemy2D is within 1.5 indices of the player2D
 		if (((vec2Index.x >= enemyList[enemyIndex]->vec2Index.x - 0.5) &&
-			(vec2Index.x >= enemyList[enemyIndex]->vec2Index.x + 0.5))
+			(vec2Index.x <= enemyList[enemyIndex]->vec2Index.x + 0.5))
 			&&
-			((vec2Index.y >= enemyList[enemyIndex]->vec2Index.y - 0.5) &&
-				(vec2Index.y <= enemyList[enemyIndex]->vec2Index.y + 0.5)))
+			(vec2Index.y == enemyList[enemyIndex]->vec2Index.y))
 		{
 			cout << "HEADSHOT!\n";
 			hitEnemy = true;
-			enemyList[enemyIndex]->health -= arrowDamage;
+			enemyList[enemyIndex]->health -= static_cast<int>(arrowDamage * amountOfCharge);
 			std::cout << enemyList[enemyIndex]->health << endl;
 			if (enemyList[enemyIndex]->health <= 0)
 			{
@@ -555,7 +554,7 @@ void CBowProjectile::UpdatePosition(void)
 		const int iOldIndex = vec2Index.x;
 		if (vec2Index.x >= 0)
 		{
-			i32vec2NumMicroSteps.x -= (1 * amountOfCharge);
+			i32vec2NumMicroSteps.x -= (0.5f * amountOfCharge);
 			if (i32vec2NumMicroSteps.x < 0)
 			{
 				i32vec2NumMicroSteps.x = ((int)cSettings->NUM_STEPS_PER_TILE_XAXIS) - 1;
@@ -588,7 +587,7 @@ void CBowProjectile::UpdatePosition(void)
 		const int iOldIndex = vec2Index.x;
 		if (vec2Index.x < (int)cSettings->NUM_TILES_XAXIS)
 		{
-			i32vec2NumMicroSteps.x += (1 * amountOfCharge);
+			i32vec2NumMicroSteps.x += (0.5f * amountOfCharge);
 
 			if (i32vec2NumMicroSteps.x >= cSettings->NUM_STEPS_PER_TILE_XAXIS)
 			{
