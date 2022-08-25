@@ -289,7 +289,7 @@ bool CScene2D::Init(void)
 	cSoundController->LoadSound(FileSystem::getPath("Sounds\\punch.ogg"), 8, true); //eound effect for punching
 	cSoundController->LoadSound(FileSystem::getPath("Sounds\\weaponattack.ogg"), 9, true); //sound effect for sword attack
 	cSoundController->LoadSound(FileSystem::getPath("Sounds\\wood-creak.ogg"), 10, true); //sound effect for chest
-	
+	cSoundController->LoadSound(FileSystem::getPath("Sounds\\bow.ogg"), 11, true); //sound effect for chest
 
 	return true;
 }
@@ -367,13 +367,23 @@ bool CScene2D::Update(const double dElapsedTime)
 	// Check if the game should be ended
 	else if (cGameManager->bPlayerLost == true)
 	{
-		cSoundController->PlaySoundByID(2);
+		cSoundController->PlaySoundByID(6);
 		return false;
 	}
 	dayCounter += dElapsedTime;
 
+	if (day == true)
+	{
+		cSoundController->PlaySoundByID(2);
+	}
+	else
+	{
+		cSoundController->PlaySoundByID(1);
+	}
+
 	if (!day)
 	{
+
 		enemySpawnTimeCounter -= dElapsedTime;
 	}
 	else

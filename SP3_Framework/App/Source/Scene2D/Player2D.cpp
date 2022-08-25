@@ -183,19 +183,19 @@ bool CPlayer2D::Init(void)
 
 	// Get the handler to the CInventoryManager instance
 	cInventoryManager = CInventoryManager::GetInstance();
-	cInventoryItem = cInventoryManager->Add("Lives", "Image/Scene2D_Lives.tga", 3, 0);
+	cInventoryItem = cInventoryManager->Add("Lives", "Image/Scene2D_Lives.tga", 100, 100);
 	cInventoryItem->vec2Size = glm::vec2(25, 25);
 
-	cInventoryItem = cInventoryManager->Add("HealthPotion", "Image/Big_red.tga", 3, 0);
+	cInventoryItem = cInventoryManager->Add("HealthPotion", "Image/Big_red.tga", 100, 100);
 	cInventoryItem->vec2Size = glm::vec2(25, 25);
 
-	cInventoryItem = cInventoryManager->Add("StrengthPotion", "Image/Big_green.tga", 3, 0);
+	cInventoryItem = cInventoryManager->Add("StrengthPotion", "Image/Big_green.tga", 100, 100);
 	cInventoryItem->vec2Size = glm::vec2(25, 25);
 
-	cInventoryItem = cInventoryManager->Add("SpeedPotion", "Image/Big_yellow.tga", 3, 0);
+	cInventoryItem = cInventoryManager->Add("SpeedPotion", "Image/Big_yellow.tga", 100, 100);
 	cInventoryItem->vec2Size = glm::vec2(25, 25);
 
-	cInventoryItem = cInventoryManager->Add("JumpPotion", "Image/Big_blue.tga", 3, 0);
+	cInventoryItem = cInventoryManager->Add("JumpPotion", "Image/Big_blue.tga", 100, 100);
 	cInventoryItem->vec2Size = glm::vec2(25, 25);
 
 	cInventoryItem = cInventoryManager->Add("sword", "Image/sword.tga", 100, 100);
@@ -518,10 +518,12 @@ void CPlayer2D::Update(const double dElapsedTime)
 				if (CGUI_Scene2D::GetInstance()->updateSelection() == SWORD_ID || CGUI_Scene2D::GetInstance()->updateSelection() == SPEAR_ID) // Check whether player equipped the sword & play the attack animation
 				{
 					animatedSprites->PlayAnimation("SwordAttack", -1, 0.5f);
+					cSoundController->PlaySoundByID(9);
 				}
 				else
 				{
 					animatedSprites->PlayAnimation("Attack1", -1, 1.0f);
+					cSoundController->PlaySoundByID(8);
 				}
 			}
 			else if (direction == 1)
@@ -529,10 +531,12 @@ void CPlayer2D::Update(const double dElapsedTime)
 				if (CGUI_Scene2D::GetInstance()->updateSelection() == SWORD_ID || CGUI_Scene2D::GetInstance()->updateSelection() == SPEAR_ID)
 				{
 					animatedSprites->PlayAnimation("leftSwordAttack", -1, 0.5f);
+					cSoundController->PlaySoundByID(9);
 				}
 				else
 				{
 					animatedSprites->PlayAnimation("AttackLeft", -1, 1.0f);
+					cSoundController->PlaySoundByID(8);
 				}
 			}
 					
@@ -581,10 +585,12 @@ void CPlayer2D::Update(const double dElapsedTime)
 					if (CGUI_Scene2D::GetInstance()->updateSelection() == SWORD_ID || CGUI_Scene2D::GetInstance()->updateSelection() == SPEAR_ID)
 					{
 						animatedSprites->PlayAnimation("SwordAttack", -1, 0.5f);
+						cSoundController->PlaySoundByID(9);
 					}
 					else
 					{
 						animatedSprites->PlayAnimation("Attack1", -1, 1.0f);
+						cSoundController->PlaySoundByID(8);
 					}
 
 				}
@@ -593,10 +599,12 @@ void CPlayer2D::Update(const double dElapsedTime)
 					if (CGUI_Scene2D::GetInstance()->updateSelection() == SWORD_ID || CGUI_Scene2D::GetInstance()->updateSelection() == SPEAR_ID)
 					{
 						animatedSprites->PlayAnimation("leftSwordAttack", -1, 0.5f);
+						cSoundController->PlaySoundByID(9);
 					}
 					else
 					{
 						animatedSprites->PlayAnimation("AttackLeft", -1, 1.0f);
+						cSoundController->PlaySoundByID(8);
 					}
 				}
 				if (CGUI_Scene2D::GetInstance()->updateSelection() == SWORD_ID)
@@ -658,10 +666,12 @@ void CPlayer2D::Update(const double dElapsedTime)
 				if (direction == 2)
 				{
 					animatedSprites->PlayAnimation("shootBow", 0, 2);
+					cSoundController->PlaySoundByID(11);
 				}
 				else if (direction == 1)
 				{
 					animatedSprites->PlayAnimation("shootBowLeft", 0, 2);
+					cSoundController->PlaySoundByID(11);
 				}
 				//cout << "Shot Bullet\n";
 				
@@ -1111,8 +1121,8 @@ void CPlayer2D::InteractWithMap(void)
 		// Increase the potion by 1
 		cInventoryItem = cInventoryManager->GetItem("Health");
 		cInventoryItem->Add(20);
-		//// Play a bell sound
-		//cSoundController->PlaySoundByID(1);
+		// Play potion pickup sound
+		cSoundController->PlaySoundByID(5);
 		break;
 	case 3:
 		// Erase the potion from this position
@@ -1120,8 +1130,8 @@ void CPlayer2D::InteractWithMap(void)
 		// Increase the potion by 1
 		cInventoryItem = cInventoryManager->GetItem("SpeedPotion");
 		cInventoryItem->Add(1);
-		// Play a bell sound
-		cSoundController->PlaySoundByID(1);
+		// Play potion pickup sound
+		cSoundController->PlaySoundByID(5);
 		speed = true;
 		
 		break;
@@ -1132,7 +1142,8 @@ void CPlayer2D::InteractWithMap(void)
 		cInventoryItem = cInventoryManager->GetItem("StrengthPotion");
 		cInventoryItem->Add(1);
 		strength = true;
-		// Play a aroller->PlaySoundByID(1);
+		//Play potion pickup sound
+		cSoundController->PlaySoundByID(5);
 		break;
 	case 5:
 		// Erase the potion from this position
@@ -1141,8 +1152,8 @@ void CPlayer2D::InteractWithMap(void)
 		cInventoryItem = cInventoryManager->GetItem("JumpPotion");
 		cInventoryItem->Add(1);
 		highjump = true;
-		// Play a bell sound
-		cSoundController->PlaySoundByID(1);
+		// Play potion pickup sound
+		cSoundController->PlaySoundByID(5);
 		break;
 	case 30:
 		// Erase the potion from this position
@@ -1153,7 +1164,7 @@ void CPlayer2D::InteractWithMap(void)
 		CGUI_Scene2D::GetInstance()->updateInventory(cInventoryItem, SWORD_ID);
 		std::cout << "sword equiped\n";
 		// Play a bell sound
-		cSoundController->PlaySoundByID(1);
+		cSoundController->PlaySoundByID(4);
 		break;
 	case 31:
 		// Erase the potion from this position
@@ -1163,7 +1174,7 @@ void CPlayer2D::InteractWithMap(void)
 		cInventoryItem->Add(1);
 		CGUI_Scene2D::GetInstance()->updateInventory(cInventoryItem, SPEAR_ID);
 		// Play a bell sound
-		cSoundController->PlaySoundByID(1);
+		cSoundController->PlaySoundByID(4);
 		break;
 	case 32:
 		// Erase the potion from this position
@@ -1173,7 +1184,7 @@ void CPlayer2D::InteractWithMap(void)
 		cInventoryItem->Add(1);
 		CGUI_Scene2D::GetInstance()->updateInventory(cInventoryItem, BOW_ID);
 		// Play a bell sound
-		cSoundController->PlaySoundByID(1);
+		cSoundController->PlaySoundByID(4);
 		break;
 	case 33:
 		// Erase the potion from this position
@@ -1184,7 +1195,7 @@ void CPlayer2D::InteractWithMap(void)
 		CGUI_Scene2D::GetInstance()->updateInventory(cInventoryItem, AXE_ID);
 
 		// Play a bell sound
-		cSoundController->PlaySoundByID(1);
+		cSoundController->PlaySoundByID(4);
 		break;
 	case 34:
 		// Erase the potion from this position
@@ -1196,7 +1207,7 @@ void CPlayer2D::InteractWithMap(void)
 
 		shovelequip = true;
 		// Play a bell sound
-		cSoundController->PlaySoundByID(1);
+		cSoundController->PlaySoundByID(4);
 		break;
 	case 10:
 		// Increase the lives by 1
@@ -1209,6 +1220,7 @@ void CPlayer2D::InteractWithMap(void)
 		// Decrease the health by 1
 		cInventoryItem = cInventoryManager->GetItem("Health");
 		cInventoryItem->Remove(1);
+		cSoundController->PlaySoundByID(7);
 		break;
 	case 41:
 		// Erase the potion from this position
@@ -1220,6 +1232,7 @@ void CPlayer2D::InteractWithMap(void)
 		std::cout << "got armour" << endl;
 		helmetequip = true;
 		// Play a bell sound
+		cSoundController->PlaySoundByID(4);
 		break;
 	case 42:
 		// Erase the potion from this position
@@ -1229,7 +1242,7 @@ void CPlayer2D::InteractWithMap(void)
 		cInventoryItem->Add(1);
 		chestplateequip = true;
 		// Play a bell sound
-		cSoundController->PlaySoundByID(1);
+		cSoundController->PlaySoundByID(4);
 		break;
 	case 43:
 		// Erase the potion from this position
@@ -1239,7 +1252,7 @@ void CPlayer2D::InteractWithMap(void)
 		cInventoryItem->Add(1);
 		leggingsequip = true;
 		// Play a bell sound
-		cSoundController->PlaySoundByID(1);
+		cSoundController->PlaySoundByID(4);
 		break;
 	case 44:
 		// Erase the potion from this position
@@ -1248,9 +1261,8 @@ void CPlayer2D::InteractWithMap(void)
 		cInventoryItem = cInventoryManager->GetItem("boots");
 		cInventoryItem->Add(1);
 		bootsequip = true;
-
 		// Play a bell sound
-		cSoundController->PlaySoundByID(1);
+		cSoundController->PlaySoundByID(4);
 		break;
 	case 99:
 		// Level has been completed
@@ -1282,6 +1294,7 @@ void CPlayer2D::UpdateHealthLives(void)
 		if (cInventoryItem->GetCount() < 0)
 		{
 			// Player loses the game
+			cSoundController->PlaySoundByID(6);
 			CGameManager::GetInstance()->bPlayerLost = true;
 		}
 	}
@@ -1289,6 +1302,7 @@ void CPlayer2D::UpdateHealthLives(void)
 
 void CPlayer2D::UpdateDefense(float damage)
 {
+	cSoundController->PlaySoundByID(7);
 	if (helmetequip == true)
 	{	
 		defense = 20;
@@ -1361,7 +1375,8 @@ void CPlayer2D::BuildBlocks()
 				break;
 			}
 		}
-		else if (direction == 2) {
+		else if (direction == 2) 
+		{
 			switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x + 1))
 			{
 			case 0:
@@ -1384,7 +1399,8 @@ void CPlayer2D::BuildBlocks()
 				break;
 			}
 		}
-		else if (direction == 2) {
+		else if (direction == 2) 
+		{
 			switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x - 1))
 			{
 			case 0:
@@ -1406,7 +1422,8 @@ void CPlayer2D::BuildBlocks()
 			break;
 		}
 	}
-	if (cKeyboardController->IsKeyDown(GLFW_KEY_K)) {
+	if (cKeyboardController->IsKeyDown(GLFW_KEY_K)) 
+	{
 		switch (cMap2D->GetMapInfo(vec2Index.y - 1, vec2Index.x))
 		{
 		case 0:
@@ -1440,11 +1457,13 @@ vector<CEntity2D*> CPlayer2D::returnNearestEnemy(vector<CEntity2D*> enemyVector)
 	return enemyVector;
 }
 
-void CPlayer2D::BreakBlocks(const double dElapsedTime) {
+void CPlayer2D::BreakBlocks(const double dElapsedTime) 
+{
 	breakinterval -= dElapsedTime;
-	if (cKeyboardController->IsKeyDown(GLFW_KEY_O) && breakinterval <= 0.f) {
-
-		if (direction == 1) {
+	if (cKeyboardController->IsKeyDown(GLFW_KEY_O) && breakinterval <= 0.f) 
+	{
+		if (direction == 1) 
+		{
 			switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x - 1))
 			{
 
@@ -1462,7 +1481,8 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime) {
 				break;
 			}
 		}
-		else if (direction == 2) {
+		else if (direction == 2) 
+		{
 			switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x + 1))
 			{
 			case 100:
@@ -1489,8 +1509,10 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime) {
 		}
 		
 	}
-	if (cKeyboardController->IsKeyDown(GLFW_KEY_U) && breakinterval <= 0.f) {
-		if (direction == 1) {
+	if (cKeyboardController->IsKeyDown(GLFW_KEY_U) && breakinterval <= 0.f) 
+	{
+		if (direction == 1) 
+		{
 			switch (cMap2D->GetMapInfo(vec2Index.y - 1, vec2Index.x))
 			{
 			case 100:
@@ -1515,8 +1537,8 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime) {
 			breakinterval = 1.f;
 		}
 	}
-	if (cKeyboardController->IsKeyDown(GLFW_KEY_P) && breakinterval <= 0.f) {
-
+	if (cKeyboardController->IsKeyDown(GLFW_KEY_P) && breakinterval <= 0.f) 
+	{
 		switch (cMap2D->GetMapInfo(vec2Index.y + 1, vec2Index.x))
 		{
 		case 100:
