@@ -1429,26 +1429,6 @@ void CPlayer2D::BuildBlocks()
 			
 		}
 	}
-}
-
-int CPlayer2D::RandItemGen()
-{
-	itemtype = rand() % 3;
-	switch (itemtype)
-	{
-	case 0:
-		itemID = rand() % 4 + 2;
-		break;
-	case 1:
-		itemID = rand() % 4 + 30;
-		break;
-	case 2:
-		itemID = rand() % 4 + 40;
-		break;
-	default:
-		itemID = 100;
-		break;
-	}
 	return itemID;
 }
 
@@ -1571,8 +1551,8 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime)
 			breakinterval = 1.f;
 		}
 	}
-	if (cKeyboardController->IsKeyDown(GLFW_KEY_P) && breakinterval <= 0.f) 
-	{
+	if (cKeyboardController->IsKeyDown(GLFW_KEY_P) && breakinterval <= 0.f) {
+
 		switch (cMap2D->GetMapInfo(vec2Index.y + 1, vec2Index.x))
 		{
 		case 100:
