@@ -259,7 +259,7 @@ bool CMap2D::Init(	const unsigned int uiNumLevels,
 	else
 	{
 		// Store the texture ID into MapOfTextureIDs
-		MapOfTextureIDs.insert(pair<int, int>(34, iTextureID));
+		MapOfTextureIDs.insert(pair<int, int>(40, iTextureID));
 	}
 	// Load the helmet texture
 	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/helmet.tga", true);
@@ -364,7 +364,55 @@ bool CMap2D::Init(	const unsigned int uiNumLevels,
 	else
 	{
 		// Store the texture ID into MapOfTextureIDs
-		MapOfTextureIDs.insert(pair<int, int>(50, iTextureID));
+		MapOfTextureIDs.insert(pair<int, int>(106, iTextureID));
+
+	}
+	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/tree1.png", true);
+	if (iTextureID == 0)
+	{
+		cout << "Unable to load Image/tree1.png" << endl;
+		return false;
+	}
+	else
+	{
+		// Store the texture ID into MapOfTextureIDs
+		MapOfTextureIDs.insert(pair<int, int>(107, iTextureID));
+
+	}
+	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/tree2.png", true);
+	if (iTextureID == 0)
+	{
+		cout << "Unable to load Image/tree2.png" << endl;
+		return false;
+	}
+	else
+	{
+		// Store the texture ID into MapOfTextureIDs
+		MapOfTextureIDs.insert(pair<int, int>(108, iTextureID));
+
+	}
+	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/logs.png", true);
+	if (iTextureID == 0)
+	{
+		cout << "Unable to load Image/logs.png" << endl;
+		return false;
+	}
+	else
+	{
+		// Store the texture ID into MapOfTextureIDs
+		MapOfTextureIDs.insert(pair<int, int>(75, iTextureID));
+
+	}
+	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/dirtpile.png", true);
+	if (iTextureID == 0)
+	{
+		cout << "Unable to load Image/dirtpile.png" << endl;
+		return false;
+	}
+	else
+	{
+		// Store the texture ID into MapOfTextureIDs
+		MapOfTextureIDs.insert(pair<int, int>(76, iTextureID));
 
 	}
 	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/wood.png", true);
@@ -376,7 +424,31 @@ bool CMap2D::Init(	const unsigned int uiNumLevels,
 	else
 	{
 		// Store the texture ID into MapOfTextureIDs
-		MapOfTextureIDs.insert(pair<int, int>(51, iTextureID));
+		MapOfTextureIDs.insert(pair<int, int>(104, iTextureID));
+
+	}
+	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/chest.png", true);
+	if (iTextureID == 0)
+	{
+		cout << "Unable to load Image/chest.png" << endl;
+		return false;
+	}
+	else
+	{
+		// Store the texture ID into MapOfTextureIDs
+		MapOfTextureIDs.insert(pair<int, int>(105, iTextureID));
+
+	}
+	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/chest.png", true);
+	if (iTextureID == 0)
+	{
+		cout << "Unable to load Image/chest.png" << endl;
+		return false;
+	}
+	else
+	{
+		// Store the texture ID into MapOfTextureIDs
+		MapOfTextureIDs.insert(pair<int, int>(105, iTextureID));
 
 	}
 	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/chest.png", true);
