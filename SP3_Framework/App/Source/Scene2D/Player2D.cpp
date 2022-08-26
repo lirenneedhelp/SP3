@@ -273,7 +273,10 @@ bool CPlayer2D::Reset()
 
 	//CS: Init the color to white
 	runtimeColour = glm::vec4(1.0, 1.0, 1.0, 1.0);
-
+	/*
+	validposition = false;
+	spawnchest();
+	*/
 	return true;
 }
 
@@ -1455,7 +1458,7 @@ void CPlayer2D::BuildBlocks()
 int CPlayer2D::RandItemGen()
 {
 	srand(time(NULL));
-	itemtype = rand() % 11;
+	itemtype = rand() % TOTAL_NUM;
 	switch (itemtype)
 	{
 	case SWORD_ID:
@@ -1660,3 +1663,31 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime)
 	!CODE CHANGES END!
 */     
 
+/*
+void CPlayer2D::spawnchest() {
+	srand(time(NULL));
+
+	while (validposition == false) {
+
+		xChest = rand() % 31 + 1;
+		yChest = rand() % 23 + 1;
+		std::cout << std::endl << xChest << " " << yChest << std::endl;
+		switch (cMap2D->GetMapInfo(xChest, 10))
+		{
+		case 0:
+			cMap2D->SetMapInfo(10, 10, 105);
+			validposition = true;
+			break;
+
+		case 100:
+			cMap2D->SetMapInfo(10, 10, 105);
+			validposition = true;
+			break;
+		default:
+			break;
+		}
+
+	}
+
+}
+*/

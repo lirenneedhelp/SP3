@@ -190,10 +190,11 @@ protected:
 	std::vector<Grid> m_cameFromList;
 	std::vector<glm::vec2> m_directions;
 
+	
 	void spawnchest(void);
 	bool validposition;
 	int xChest;
 	int yChest;
-
+	
 };
 
