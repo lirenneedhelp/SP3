@@ -340,13 +340,10 @@ void CWoodCrawler::Update(const double dElapsedTime)
 		}
 		else
 		{
-			if (iFSMCounter > iMaxFSMCounter)
-			{
-				sCurrentFSM = PATROL;
-				iFSMCounter = 0;
-				cout << "ATTACK : Reset counter: " << iFSMCounter << endl;
-			}
-			iFSMCounter++;
+			sCurrentFSM = PATROL;
+			iFSMCounter = 0;
+			cout << "ATTACK : Reset counter: " << iFSMCounter << endl;
+		
 		}
 		break;
 	default:
