@@ -1551,6 +1551,7 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime)
 	breakinterval -= dElapsedTime;
 	if (cKeyboardController->IsKeyDown(GLFW_KEY_O) && breakinterval <= 0.f)
 	{
+		
 		if (direction == 1)
 		{
 			switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x - 1))
@@ -1593,7 +1594,7 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime)
 				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 76);
 				break;
 			case 105:
-				//cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, RandItemGen());
+				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, RandItemGen());
 				break;
 			case 106:
 				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 107);
@@ -1736,32 +1737,3 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime)
 /*
 	!CODE CHANGES END!
 */     
-
-/*
-void CPlayer2D::spawnchest() {
-	srand(time(NULL));
-
-	while (validposition == false) {
-
-		xChest = rand() % 31 + 1;
-		yChest = rand() % 23 + 1;
-		std::cout << std::endl << xChest << " " << yChest << std::endl;
-		switch (cMap2D->GetMapInfo(xChest, 10))
-		{
-		case 0:
-			cMap2D->SetMapInfo(10, 10, 105);
-			validposition = true;
-			break;
-
-		case 100:
-			cMap2D->SetMapInfo(10, 10, 105);
-			validposition = true;
-			break;
-		default:
-			break;
-		}
-
-	}
-
-}
-*/

@@ -200,7 +200,7 @@ protected:
 	void BuildBlocks();
 	int itemtype;
 	int itemID;
-	//int RandItemGen();
+	int RandItemGen();
 	/*
 		!CODE CHANGES END!
 	*/
@@ -223,6 +223,8 @@ protected:
 	float charge;
 
 	float strengthValue;
+
+
 
 	/*
 	void spawnchest(void);
