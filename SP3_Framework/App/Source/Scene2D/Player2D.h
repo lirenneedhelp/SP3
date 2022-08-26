@@ -200,6 +200,10 @@ protected:
 	void BuildBlocks();
 	int itemtype;
 	int itemID;
+	int helmetdefense;
+	int chestplatedefense;
+	int leggingsdefense;
+	int bootsdefense;
 	int RandItemGen();
 	/*
 		!CODE CHANGES END!

@@ -122,6 +122,11 @@ bool CPlayer2D::Init(void)
 	leggingsequip = false;
 	bootsequip = false;
 
+	helmetdefense = 0;
+	chestplatedefense = 0;
+	leggingsdefense = 0;
+	bootsdefense = 0;
+
 	playerInitialDamage = 10;
 
 	strengthValue = 1.0f;
@@ -1275,9 +1280,10 @@ void CPlayer2D::InteractWithMap(void)
 		cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
 		// Increase logs item by 1
 		cInventoryItem = cInventoryManager->GetItem("wood");
-		cInventoryItem->Add(4);
-		if (cInventoryItem->GetCount() % 64 != 0)
+		if (cInventoryItem->GetCount() % 64 == 0)
 		CGUI_Scene2D::GetInstance()->updateInventory(cInventoryItem, WOOD_ID);
+		cInventoryItem->Add(4);
+
 
 		break;
 	case 76:
@@ -1332,44 +1338,43 @@ void CPlayer2D::UpdateDefense(float damage)
 	cSoundController->PlaySoundByID(7);
 	if (helmetequip == true)
 	{	
-		defense = 20;
+		helmetdefense = 20;
 		cout << "u're protected by helmet!" << endl;
-		damageOnPlayer = returnPlayerHealth();
-		cInventoryItem = damageOnPlayer->GetItem("Health");
-		cInventoryItem->Remove(damage - defense);
+	
 		cout << "damage reduced" << endl;
 	}
-	else if (chestplateequip == true)
+	if (chestplateequip == true)
 	{
-		defense = 40;
+		chestplatedefense = 40;
 		/*std::cout << "u're protected by chestplate!" << endl;
 		damageOnPlayer = returnPlayerHealth();*/
 		std::cout << "u're protected!" << endl;
-		damageOnPlayer = returnPlayerHealth();
-		cInventoryItem = damageOnPlayer->GetItem("Health");
-		cInventoryItem->Remove(damage - defense);
+
 		cout << "damage reduced" << endl;
 	}
-	else if (leggingsequip == true)
+	if (leggingsequip == true)
 	{
-		defense = 30;
+		leggingsdefense = 30;
 		std::cout << "u're protected!" << endl;
-		damageOnPlayer = returnPlayerHealth();
-		cInventoryItem = damageOnPlayer->GetItem("Health");
-		cInventoryItem->Remove(damage - defense);
+
 		cout << "damage reduced" << endl;
 	}
-	else if (bootsequip == true)
+	if (bootsequip == true)
 	{
-		defense = 10;
+		bootsdefense = 10;
 		//std::cout << "u're protected by boots!" << endl;
 		//damageOnPlayer = returnPlayerHealth();
 		std::cout << "u're protected!" << endl;
-		damageOnPlayer = returnPlayerHealth();
-		cInventoryItem = damageOnPlayer->GetItem("Health");
-		cInventoryItem->Remove(damage - defense);
+
 		cout << "damage reduced" << endl;
 	}
+	else
+	{
+	}
+	defense = helmetdefense + chestplatedefense + leggingsdefense + bootsdefense;
+	damageOnPlayer = returnPlayerHealth();
+	cInventoryItem = damageOnPlayer->GetItem("Health");
+	cInventoryItem->Remove(damage - defense);
 
 	/*
 		!CODE CHANGES START!
