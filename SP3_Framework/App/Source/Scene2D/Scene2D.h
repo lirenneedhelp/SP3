@@ -81,6 +81,8 @@ public:
 
 	bool getTime(void);
 	void setTime(bool time);
+	bool checkTimeTransition(void); // get the current transition of the day ( whether day to night / night to day )
+	void setTimeTransition(bool transition);
 	float getDuration(void); // How long has it been day / night
 	void resetDuration(void); //Reset the counter ^
 	vector<CEntity2D*>returnEnemyVector(void); // Returns the enemy vector 
@@ -136,7 +138,7 @@ protected:
 
     
 
-	bool day;
+	bool day, dayToNight;
 
 	float enemySpawnTimeCounter; // Countdown before spawning
 	

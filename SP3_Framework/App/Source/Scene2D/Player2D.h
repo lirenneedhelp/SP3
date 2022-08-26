@@ -192,7 +192,7 @@ protected:
 	void BuildBlocks();
 	int itemtype;
 	int itemID;
-	int RandItemGen();
+	//int RandItemGen();
 	/*
 		!CODE CHANGES END!
 	*/
