@@ -129,6 +129,7 @@ public:
 
 
 	void spawnchest(void);
+	void spawntree(void);
 
 protected:
 	// The variable containing the rapidcsv::Document
@@ -195,6 +196,9 @@ protected:
 
 	
 	bool validposition;
+	bool validposition1;
+	int xTree;
+	int yTree;
 	int xChest;
 	int yChest;
 	

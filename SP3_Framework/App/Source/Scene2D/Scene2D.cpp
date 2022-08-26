@@ -148,6 +148,9 @@ bool CScene2D::Init(void)
 	}
 
 	cMap2D->spawnchest();
+	for (int i = 0; i < 13; i++) {
+		cMap2D->spawntree();
+	}
 	// Activate diagonal movement
 	cMap2D->SetDiagonalMovement(false);
 
@@ -359,6 +362,10 @@ bool CScene2D::Update(const double dElapsedTime)
 	{
 		cMap2D->SetCurrentLevel(cMap2D->GetCurrentLevel()+1); 
 		cMap2D->spawnchest();
+		for (int i = 0; i < 13; i++) {
+
+			cMap2D->spawntree();
+		}
 		cPlayer2D->Reset();
 		cGameManager->bLevelCompleted = false;
 		enemySpawnRate -= cMap2D->GetCurrentLevel() - 1;
