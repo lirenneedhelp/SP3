@@ -1403,7 +1403,10 @@ void CPlayer2D::BuildBlocks()
 				switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x - 1))
 				{
 				case 0:
+					if (CGUI_Scene2D::GetInstance()->updateSelection() == DIRT_ID)
 					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 100);
+					else if (CGUI_Scene2D::GetInstance()->updateSelection() == WOOD_ID)
+						cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 104);
 					cInventoryItem->Remove(1);
 					break;
 				}
@@ -1413,7 +1416,10 @@ void CPlayer2D::BuildBlocks()
 				switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x + 1))
 				{
 				case 0:
-					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 100);
+					if (CGUI_Scene2D::GetInstance()->updateSelection() == DIRT_ID)
+						cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 100);
+					else if (CGUI_Scene2D::GetInstance()->updateSelection() == WOOD_ID)
+						cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 104);
 					cInventoryItem->Remove(1);
 					break;
 				}
@@ -1426,7 +1432,10 @@ void CPlayer2D::BuildBlocks()
 				switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x + 1))
 				{
 				case 0:
-					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 100);
+					if (CGUI_Scene2D::GetInstance()->updateSelection() == DIRT_ID)
+						cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 100);
+					else if (CGUI_Scene2D::GetInstance()->updateSelection() == WOOD_ID)
+						cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 104);					
 					cInventoryItem->Remove(1);
 
 					break;
@@ -1437,7 +1446,10 @@ void CPlayer2D::BuildBlocks()
 				switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x - 1))
 				{
 				case 0:
-					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 100);
+					if (CGUI_Scene2D::GetInstance()->updateSelection() == DIRT_ID)
+						cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 100);
+					else if (CGUI_Scene2D::GetInstance()->updateSelection() == WOOD_ID)
+						cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 104);
 					cInventoryItem->Remove(1);
 
 					break;
@@ -1449,7 +1461,10 @@ void CPlayer2D::BuildBlocks()
 			switch (cMap2D->GetMapInfo(vec2Index.y + 1, vec2Index.x))
 			{
 			case 0:
-				cMap2D->SetMapInfo(vec2Index.y + 1, vec2Index.x, 100);
+				if (CGUI_Scene2D::GetInstance()->updateSelection() == DIRT_ID)
+					cMap2D->SetMapInfo(vec2Index.y + 1, vec2Index.x, 100);
+				else if (CGUI_Scene2D::GetInstance()->updateSelection() == WOOD_ID)
+					cMap2D->SetMapInfo(vec2Index.y + 1, vec2Index.x, 104);					
 				cInventoryItem->Remove(1);
 
 				break;
@@ -1460,7 +1475,10 @@ void CPlayer2D::BuildBlocks()
 			switch (cMap2D->GetMapInfo(vec2Index.y - 1, vec2Index.x))
 			{
 			case 0:
-				cMap2D->SetMapInfo(vec2Index.y - 1, vec2Index.x, 100);
+				if (CGUI_Scene2D::GetInstance()->updateSelection() == DIRT_ID)
+					cMap2D->SetMapInfo(vec2Index.y - 1, vec2Index.x, 100);
+				else if (CGUI_Scene2D::GetInstance()->updateSelection() == WOOD_ID)
+					cMap2D->SetMapInfo(vec2Index.y - 1, vec2Index.x, 104);				
 				cInventoryItem->Remove(1);
 
 				break;

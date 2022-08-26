@@ -389,7 +389,7 @@ bool CScene2D::Update(const double dElapsedTime)
 	}
 	else
 	{
-		cSoundController->PlaySoundByID(1);
+		//cSoundController->PlaySoundByID(1);
 	}
 
 	if (!day)
