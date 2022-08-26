@@ -396,7 +396,7 @@ int CGUI_Scene2D::updateSelection(void)
 						playerInventory[i].textureID = emptyInventorySlot.textureID;
 						playerInventory[i].itemID = emptyInventorySlot.itemID;
 					}
-					cout << playerInventory[i].noOfItems << endl;
+					//cout << playerInventory[i].noOfItems << endl;
 					return playerInventory[i].itemID;
 				}
 				else

@@ -200,6 +200,10 @@ protected:
 	void BuildBlocks();
 	int itemtype;
 	int itemID;
+	int helmetdefense;
+	int chestplatedefense;
+	int leggingsdefense;
+	int bootsdefense;
 	int RandItemGen();
 	/*
 		!CODE CHANGES END!
@@ -224,5 +228,13 @@ protected:
 
 	float strengthValue;
 
+
+
+	/*
+	void spawnchest(void);
+	bool validposition;
+	int xChest;
+	int yChest;
+	*/
 };
 
