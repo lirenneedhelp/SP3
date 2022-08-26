@@ -88,7 +88,10 @@ bool CGUI_Scene2D::Init(void)
 	// Initialise the enemyHealth vector
 	enemyHealth.clear();
 
+
 	CImageLoader* il = CImageLoader::GetInstance();
+	emptyInventoryTextureID = il->LoadTextureGetID("Image\\GUI\\itemhotbar.png", false);
+
 	emptyInventorySlot.fileName = "Image\\GUI\\itemhotbar.png";
 	emptyInventorySlot.itemID = -1;
 	emptyInventorySlot.active = false;
@@ -96,12 +99,11 @@ bool CGUI_Scene2D::Init(void)
 
 	for (int i = 0; i < inventoryHotbar; ++i)
 	{
-		emptyInventorySlot.textureID = il->LoadTextureGetID(emptyInventorySlot.fileName.c_str(), false);
+		emptyInventorySlot.textureID = il->LoadTextureGetID("Image\\GUI\\itemhotbar.png", false);
 		emptyInventorySlot.slotID = i;
 		playerInventory.push_back(emptyInventorySlot);
 	}
 
-	emptyInventoryTextureID = il->LoadTextureGetID("Image\\GUI\\itemhotbar.png", false);
 	// Store the keyboard controller singleton instance here
 	cKeyboardController = CKeyboardController::GetInstance();
 	// Reset all keys since we are starting a new game
@@ -115,6 +117,7 @@ bool CGUI_Scene2D::Init(void)
  */
 void CGUI_Scene2D::Update(const double dElapsedTime)
 {
+//	cout << playerInventory.size() << " , " << storePlayerItem.size() << endl;
 	// Calculate the relative scale to our default windows width
 	const float relativeScale_x = cSettings->iWindowWidth / 800.0f;
 	const float relativeScale_y = cSettings->iWindowHeight / 600.0f;
@@ -360,7 +363,7 @@ void CGUI_Scene2D::PostRender(void)
 {
 }
 
-void CGUI_Scene2D::updateInventory(CInventoryItem* item, unsigned item_ID)
+void CGUI_Scene2D::updateInventory(CInventoryItem* item, int item_ID)
 {
 	storePlayerItem.push_back(item);
 	for (int i = 0; i < storePlayerItem.size(); ++i)
@@ -393,11 +396,15 @@ int CGUI_Scene2D::updateSelection(void)
 					playerInventory[i].noOfItems = storePlayerItem[i]->GetCount();
 					if (playerInventory[i].noOfItems == 0)
 					{
+						//ButtonData temp = playerInventory[i];
 						playerInventory[i].textureID = emptyInventorySlot.textureID;
 						playerInventory[i].itemID = emptyInventorySlot.itemID;
+						reshuffleInventory();
+						storePlayerItem.erase(storePlayerItem.begin() + i);					
+						
 					}
 					//cout << playerInventory[i].noOfItems << endl;
-					return playerInventory[i].itemID;
+ 					return playerInventory[i].itemID;
 				}
 				else
 				{
@@ -424,6 +431,36 @@ void CGUI_Scene2D::updateButtonActivity(unsigned index)
 		{
 			//cout << "Button " << i << " is active\n";
 			continue;
+		}
+	}
+}
+
+void CGUI_Scene2D::reshuffleInventory(void)
+{
+	for (int i = 0; i < playerInventory.size(); i++)
+	{
+		if (playerInventory[i].itemID != -1)
+		{
+			continue;
+		}
+		else // Means inventory slot is empty
+		{
+			if (i != playerInventory.size() - 1)
+			{
+				if (playerInventory[i + 1].itemID != -1) // check if neighbour is empty
+				{
+					ButtonData temp = playerInventory[i + 1];
+					playerInventory[i + 1] = playerInventory[i];
+					playerInventory[i + 1].active = false;
+					playerInventory[i] = temp;
+					playerInventory[i].active = true;
+					
+				}
+				else
+				{
+					break;
+				}
+			}
 		}
 	}
 }

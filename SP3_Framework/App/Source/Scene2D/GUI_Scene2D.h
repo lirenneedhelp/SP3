@@ -67,12 +67,13 @@ public:
 	void PostRender(void);
 
 	// Update the Inventory
-	void updateInventory(CInventoryItem* item, unsigned item_ID);
+	void updateInventory(CInventoryItem* item, int item_ID);
 
 	int updateSelection(void);
 
 	void updateButtonActivity(unsigned index); // If one is clicked set the rest to inactive
 
+	void reshuffleInventory(void);
 	int getQuantity(void);
 
 protected:
@@ -115,7 +116,7 @@ protected:
 		std::string fileName;
 		unsigned textureID;
 		unsigned slotID;
-		unsigned itemID;
+		int itemID;
 		unsigned noOfItems;
 		bool active;
 	};
