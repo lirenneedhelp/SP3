@@ -95,10 +95,18 @@ protected:
 		SWORD_ID,
 		BOW_ID,
 		SPEAR_ID,
-		WOOD_ID,
-		DIRT_ID,
 		AXE_ID,
 		SHOVEL_ID,
+		HELMET_ID,
+		LEGGINGS_ID,
+		BOOTS_ID,
+		CHESTPLATE_ID,
+		BIGRED_ID,
+		BIGYELLOW_ID,
+		BIGGREEN_ID,
+		BIGBLUE_ID,
+		WOOD_ID,
+		DIRT_ID,
 		TOTAL_NUM,
 	};
 
@@ -198,10 +206,6 @@ protected:
 	*/
 	bool speed;
 	bool strength;
-	bool swordequip;
-	bool spearequip;
-	bool axeequip;
-	bool shovelequip;
 	bool bowequip;
 	bool helmetequip;
 	bool chestplateequip;

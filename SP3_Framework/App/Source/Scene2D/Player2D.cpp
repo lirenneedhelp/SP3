@@ -116,9 +116,7 @@ bool CPlayer2D::Init(void)
 	firstAttack = true; // Check if it's the first click
 	shoot = false;
 
-	//check if weapons are equiped
-	axeequip = false;
-	shovelequip = false;
+	//check if armour are equiped
 	helmetequip = false;
 	chestplateequip = false;
 	leggingsequip = false;
@@ -1201,7 +1199,6 @@ void CPlayer2D::InteractWithMap(void)
 		cInventoryItem = cInventoryManager->GetItem("axe");
 		cInventoryItem->Add(1);
 		CGUI_Scene2D::GetInstance()->updateInventory(cInventoryItem, AXE_ID);
-
 		// Play a bell sound
 		cSoundController->PlaySoundByID(4);
 		break;
@@ -1212,8 +1209,6 @@ void CPlayer2D::InteractWithMap(void)
 		cInventoryItem = cInventoryManager->GetItem("shovel");
 		cInventoryItem->Add(1);
 		CGUI_Scene2D::GetInstance()->updateInventory(cInventoryItem, SHOVEL_ID);
-
-		shovelequip = true;
 		// Play a bell sound
 		cSoundController->PlaySoundByID(4);
 		break;
@@ -1467,6 +1462,67 @@ void CPlayer2D::BuildBlocks()
 	}
 }
 
+int CPlayer2D::RandItemGen()
+{
+	srand(time(NULL));
+	itemtype = rand() % 11;
+	switch (itemtype)
+	{
+	case SWORD_ID:
+		return 30;
+		break;
+
+	case BOW_ID:
+		return 32;
+		break;
+
+	case SPEAR_ID:
+		return 31;
+		break;
+	case AXE_ID:
+		return 33;
+		break;
+	case SHOVEL_ID:
+		return 40;
+		break;
+	case HELMET_ID:
+		return 41;
+		break;
+
+	case LEGGINGS_ID:
+		return 43;
+		break;
+
+	case BOOTS_ID:
+		return 44;
+		break;
+
+	case CHESTPLATE_ID:
+		return 42;
+		break;
+
+	case BIGRED_ID:
+		return 2;
+		break;
+
+	case BIGYELLOW_ID:
+		return 3;
+		break;
+
+	case BIGGREEN_ID:
+		return 4;
+		break;
+
+	case BIGBLUE_ID:
+		return 5;
+		break;
+
+
+	default:
+		return 2;
+	}
+}
+
 
 vector<CEntity2D*> CPlayer2D::returnNearestEnemy(vector<CEntity2D*> enemyVector)
 {
@@ -1490,9 +1546,9 @@ vector<CEntity2D*> CPlayer2D::returnNearestEnemy(vector<CEntity2D*> enemyVector)
 void CPlayer2D::BreakBlocks(const double dElapsedTime) 
 {
 	breakinterval -= dElapsedTime;
-	if (cKeyboardController->IsKeyDown(GLFW_KEY_O) && breakinterval <= 0.f) 
+	if (cKeyboardController->IsKeyDown(GLFW_KEY_O) && breakinterval <= 0.f)
 	{
-		if (direction == 1) 
+		if (direction == 1)
 		{
 			switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x - 1))
 			{
@@ -1507,7 +1563,7 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime)
 				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 76);
 				break;
 			case 105:
-				//cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1,RandItemGen());
+				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, RandItemGen());
 				break;
 			case 106:
 				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 107);
@@ -1520,7 +1576,7 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime)
 				break;
 			}
 		}
-		else if (direction == 2) 
+		else if (direction == 2)
 		{
 			switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x + 1))
 			{
@@ -1547,15 +1603,79 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime)
 				break;
 			}
 		}
-		if (shovelequip == true)
+		if (CGUI_Scene2D::GetInstance()->updateSelection() == SHOVEL_ID)
 		{
+			if (direction == 1)
+			{
+				switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x - 1))
+				{
+				case 100:
+					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 102);
+					break;
+				case 102:
+					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 103);
+					break;
+				case 103:
+					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 76);
+					break;
+				}
+			}
+			else if (direction == 2)
+			{
+				switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x + 1))
+				{
+				case 100:
+					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 102);
+					break;
+				case 102:
+					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 103);
+					break;
+				case 103:
+					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 76);
+					break;
+				}
+			}
+			breakinterval = 0.33f;
+		}
+		else if (CGUI_Scene2D::GetInstance()->updateSelection() == AXE_ID)
+		{
+			if (direction == 1)
+			{
+				switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x - 1))
+				{
+				case 106:
+					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 107);
+					break;
+				case 107:
+					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 108);
+					break;
+				case 108:
+					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 75);
+					break;
+				}
+			}
+			else if (direction == 2)
+			{
+				switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x + 1))
+				{
+				case 106:
+					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 107);
+					break;
+				case 107:
+					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 108);
+					break;
+				case 108:
+					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 75);
+					break;
+				}
+			}
 			breakinterval = 0.33f;
 		}
 		else
 		{
 			breakinterval = 1.f;
 		}
-		
+
 	}
 	if (cKeyboardController->IsKeyDown(GLFW_KEY_U) && breakinterval <= 0.f) 
 	{
@@ -1576,7 +1696,7 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime)
 				
 			}
 		}
-		if (shovelequip == true)
+		if (CGUI_Scene2D::GetInstance()->updateSelection() == SHOVEL_ID)
 		{
 			breakinterval = 0.33f;
 		}
@@ -1599,9 +1719,10 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime)
 			cMap2D->SetMapInfo(vec2Index.y + 1, vec2Index.x, 76);
 			break;
 		}
-		if (shovelequip == true)
+
+		if (CGUI_Scene2D::GetInstance()->updateSelection() == SHOVEL_ID)
 		{
-			breakinterval = 0.33f;
+			breakinterval = 0.5f;
 		}
 		else
 		{

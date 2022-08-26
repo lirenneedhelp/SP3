@@ -439,30 +439,6 @@ bool CMap2D::Init(	const unsigned int uiNumLevels,
 		MapOfTextureIDs.insert(pair<int, int>(105, iTextureID));
 
 	}
-	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/chest.png", true);
-	if (iTextureID == 0)
-	{
-		cout << "Unable to load Image/chest.png" << endl;
-		return false;
-	}
-	else
-	{
-		// Store the texture ID into MapOfTextureIDs
-		MapOfTextureIDs.insert(pair<int, int>(105, iTextureID));
-
-	}
-	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/chest.png", true);
-	if (iTextureID == 0)
-	{
-		cout << "Unable to load Image/chest.png" << endl;
-		return false;
-	}
-	else
-	{
-		// Store the texture ID into MapOfTextureIDs
-		MapOfTextureIDs.insert(pair<int, int>(105, iTextureID));
-
-	}
 
 	// Initialise the variables for AStar
 	m_weight = 1;
@@ -480,6 +456,10 @@ bool CMap2D::Init(	const unsigned int uiNumLevels,
 
 	//// Clear AStar memory
 	//ClearAStar();
+
+	validposition = true;
+	xChest = 32;
+	yChest = 24;
 
 	return true;
 }
@@ -1028,4 +1008,13 @@ unsigned int heuristic::euclidean(const glm::vec2& v1, const glm::vec2& v2, int 
 {
 	glm::vec2 delta = v2 - v1;
 	return static_cast<unsigned int>(weight * sqrt((delta.x * delta.x) + (delta.y * delta.y)));
+}
+
+void CMap2D::spawnchest() {
+	srand(time(NULL));
+	while (validposition == true) {
+		xChest = rand() % 32;
+		yChest = rand() % 24;
+		GetMapInfo(yChest, xChest);
+	}
 }

@@ -124,11 +124,11 @@ void CSoundController::PlaySoundByID(const int ID)
 		cout << "Sound #" << ID << " is not playable." << endl;
 		return;
 	}
-	else if (cSoundEngine->isCurrentlyPlaying(pSoundInfo->GetSound()))
+	/*else if (cSoundEngine->isCurrentlyPlaying(pSoundInfo->GetSound()))
 	{
 		cout << "Sound #" << ID << " is currently being played." << endl;
 		return;
-	}
+	}*/
 
 	if (pSoundInfo->GetSoundType() == CSoundInfo::SOUNDTYPE::_2D)
 	{
