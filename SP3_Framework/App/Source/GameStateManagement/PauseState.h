@@ -47,6 +47,7 @@ protected:
 		unsigned textureID;
 	};
 
+	CBackgroundEntity* background;
 
 	ButtonData ResumeButtonData;
 	ButtonData OptionsButtonData;

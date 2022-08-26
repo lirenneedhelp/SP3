@@ -64,7 +64,10 @@ bool CPauseState::Init(void)
 
 	CShaderManager::GetInstance()->Use("Shader2D");
 	//CShaderManager::GetInstance()->activeShader->setInt("texture1", 0);
-
+	//Create Background Entity
+	background = new CBackgroundEntity("Image/background.png");
+	background->SetShader("Shader2D");
+	background->Init();
 	// Load the images for buttons
 	CImageLoader* il = CImageLoader::GetInstance();
 	ResumeButtonData.fileName = "Image\\GUI\\Resume.png";
@@ -91,6 +94,16 @@ bool CPauseState::Update(const double dElapsedTime)
 	window_flags |= ImGuiWindowFlags_NoCollapse;
 	window_flags |= ImGuiWindowFlags_NoNav;
 
+	ImGuiWindowFlags main_menu_flags = 0;
+	main_menu_flags |= ImGuiWindowFlags_NoTitleBar;
+	main_menu_flags |= ImGuiWindowFlags_NoScrollbar;
+	//main_menu_flags |= ImGuiWindowFlags_MenuBar;
+	//main_menu_flags |= ImGuiWindowFlags_NoBackground;
+	main_menu_flags |= ImGuiWindowFlags_NoMove;
+	main_menu_flags |= ImGuiWindowFlags_NoCollapse;
+	main_menu_flags |= ImGuiWindowFlags_NoNav;
+
+
 	float buttonWidth = 128;
 	float buttonHeight = 64;
 
@@ -98,16 +111,16 @@ bool CPauseState::Update(const double dElapsedTime)
 	{
 		static float f = 0.0f;
 		static int counter = 0;
-
 		// Create a window called "Hello, world!" and append into it.
 		ImGui::Begin("Main Menu", NULL, window_flags);
 		ImGui::SetWindowPos(ImVec2(CSettings::GetInstance()->iWindowWidth/2.0 - buttonWidth/2.0, 
 			CSettings::GetInstance()->iWindowHeight/3.0));				// Set the top-left of the window at (10,10)
-		ImGui::SetWindowSize(ImVec2(CSettings::GetInstance()->iWindowWidth, CSettings::GetInstance()->iWindowHeight));
+		ImGui::SetWindowSize(ImVec2(buttonWidth  + 30, buttonHeight * 3 + 60));
 
 		//Added rounding for nicer effect
 		ImGuiStyle& style = ImGui::GetStyle();
 		style.FrameRounding = 200.0f;
+
 
 		// Display the FPS
 		ImGui::TextColored(ImVec4(1, 1, 1, 1), "In-Game Menu");
