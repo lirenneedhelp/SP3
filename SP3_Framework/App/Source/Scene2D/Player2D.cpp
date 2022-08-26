@@ -1469,7 +1469,12 @@ int CPlayer2D::RandItemGen()
 	case SPEAR_ID:
 		return 31;
 		break;
-
+	case AXE_ID:
+		return 33;
+		break;
+	case SHOVEL_ID:
+		return 40;
+		break;
 	case HELMET_ID:
 		return 41;
 		break;

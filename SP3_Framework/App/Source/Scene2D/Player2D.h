@@ -95,6 +95,8 @@ protected:
 		SWORD_ID,
 		BOW_ID,
 		SPEAR_ID,
+		AXE_ID,
+		SHOVEL_ID,
 		HELMET_ID,
 		LEGGINGS_ID,
 		BOOTS_ID,
@@ -103,6 +105,8 @@ protected:
 		BIGYELLOW_ID,
 		BIGGREEN_ID,
 		BIGBLUE_ID,
+		WOOD_ID,
+		DIRT_ID,
 		TOTAL_NUM,
 	};
 
