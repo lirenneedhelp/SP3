@@ -200,16 +200,12 @@ protected:
 	void BuildBlocks();
 	int itemtype;
 	int itemID;
-	int RandItemGen();
+	//int RandItemGen();
 	/*
 		!CODE CHANGES END!
 	*/
 	bool speed;
 	bool strength;
-	bool swordequip;
-	bool spearequip;
-	bool axeequip;
-	bool shovelequip;
 	bool bowequip;
 	bool helmetequip;
 	bool chestplateequip;

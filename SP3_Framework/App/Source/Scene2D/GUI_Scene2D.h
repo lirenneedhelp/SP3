@@ -116,6 +116,7 @@ protected:
 		unsigned textureID;
 		unsigned slotID;
 		unsigned itemID;
+		unsigned noOfItems;
 		bool active;
 	};
 	vector<CInventoryItem*> storePlayerItem;
@@ -129,6 +130,7 @@ protected:
 
 	vector <CEntity2D*> enemyHealth; // Stores the enemy health
 
+	int emptyInventoryTextureID;
 
 
 };

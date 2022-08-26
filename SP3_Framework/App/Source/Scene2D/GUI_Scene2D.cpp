@@ -89,16 +89,19 @@ bool CGUI_Scene2D::Init(void)
 	enemyHealth.clear();
 
 	CImageLoader* il = CImageLoader::GetInstance();
-	
+	emptyInventorySlot.fileName = "Image\\GUI\\itemhotbar.png";
+	emptyInventorySlot.itemID = -1;
+	emptyInventorySlot.active = false;
+	emptyInventorySlot.noOfItems = 0;
+
 	for (int i = 0; i < inventoryHotbar; ++i)
 	{
-		emptyInventorySlot.fileName = "Image\\GUI\\itemhotbar.png";
 		emptyInventorySlot.textureID = il->LoadTextureGetID(emptyInventorySlot.fileName.c_str(), false);
 		emptyInventorySlot.slotID = i;
-		emptyInventorySlot.itemID = -1;
-		emptyInventorySlot.active = false;
 		playerInventory.push_back(emptyInventorySlot);
 	}
+
+	emptyInventoryTextureID = il->LoadTextureGetID("Image\\GUI\\itemhotbar.png", false);
 	// Store the keyboard controller singleton instance here
 	cKeyboardController = CKeyboardController::GetInstance();
 	// Reset all keys since we are starting a new game
@@ -362,10 +365,17 @@ void CGUI_Scene2D::updateInventory(CInventoryItem* item, unsigned item_ID)
 	storePlayerItem.push_back(item);
 	for (int i = 0; i < storePlayerItem.size(); ++i)
 	{
-		if (storePlayerItem[i]->GetTextureID() != playerInventory[i].textureID) // Check whether the inventory is empty
+		if (storePlayerItem[i]->GetTextureID() != playerInventory[i].textureID) // check if the slot has no items
 		{
 			playerInventory[i].textureID = storePlayerItem[i]->GetTextureID();
 			playerInventory[i].itemID = item_ID;
+		}
+		
+		else  // Check if inventory alr has an item
+		{
+			
+		    continue;
+			
 		}
 	}
 }
@@ -380,6 +390,13 @@ int CGUI_Scene2D::updateSelection(void)
 			{
 				if (playerInventory[i].itemID == j)
 				{
+					playerInventory[i].noOfItems = storePlayerItem[i]->GetCount();
+					if (playerInventory[i].noOfItems == 0)
+					{
+						playerInventory[i].textureID = emptyInventorySlot.textureID;
+						playerInventory[i].itemID = emptyInventorySlot.itemID;
+					}
+					cout << playerInventory[i].noOfItems << endl;
 					return playerInventory[i].itemID;
 				}
 				else

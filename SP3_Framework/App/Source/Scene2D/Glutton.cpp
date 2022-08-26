@@ -373,7 +373,7 @@ void CGlutton::Update(const double dElapsedTime)
 			auto path = cMap2D->PathFind(vec2Index,
 				destination,
 				heuristic::euclidean,
-				10);
+				3);
 			//cout << "=== Printing out the path ===" << endl;
 
 			// Calculate new destination
@@ -1035,7 +1035,7 @@ void CGlutton::UpdatePosition(void)
 	}
 
 	// if the player is above the enemy2D, then jump to attack
-	if (i32vec2Direction.y > 0)
+	if (i32vec2Direction.y > 0 && cPlayer2D->vec2Index.y - vec2Index.y < 5.f)
 	{
 		if (cPhysics2D.GetStatus() == CPhysics2D::STATUS::IDLE)
 		{

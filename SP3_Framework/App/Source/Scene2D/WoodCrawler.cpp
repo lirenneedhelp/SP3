@@ -918,7 +918,7 @@ void CWoodCrawler::UpdatePosition(void)
 	}
 
 	// if the player is above the enemy2D, then jump to attack
-	if (i32vec2Direction.y > 0)
+	if (i32vec2Direction.y > 0 && cPlayer2D->vec2Index.y - vec2Index.y  < 5.f)
 	{
 		if (cPhysics2D.GetStatus() == CPhysics2D::STATUS::IDLE)
 		{

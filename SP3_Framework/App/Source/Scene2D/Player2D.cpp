@@ -116,9 +116,7 @@ bool CPlayer2D::Init(void)
 	firstAttack = true; // Check if it's the first click
 	shoot = false;
 
-	//check if weapons are equiped
-	axeequip = false;
-	shovelequip = false;
+	//check if armour are equiped
 	helmetequip = false;
 	chestplateequip = false;
 	leggingsequip = false;
@@ -183,46 +181,52 @@ bool CPlayer2D::Init(void)
 
 	// Get the handler to the CInventoryManager instance
 	cInventoryManager = CInventoryManager::GetInstance();
-	cInventoryItem = cInventoryManager->Add("Lives", "Image/Scene2D_Lives.tga", 100, 100);
+	cInventoryItem = cInventoryManager->Add("Lives", "Image/Scene2D_Lives.tga", 100, 0);
 	cInventoryItem->vec2Size = glm::vec2(25, 25);
 
-	cInventoryItem = cInventoryManager->Add("HealthPotion", "Image/Big_red.tga", 100, 100);
+	cInventoryItem = cInventoryManager->Add("HealthPotion", "Image/Big_red.tga", 100, 0);
 	cInventoryItem->vec2Size = glm::vec2(25, 25);
 
-	cInventoryItem = cInventoryManager->Add("StrengthPotion", "Image/Big_green.tga", 100, 100);
+	cInventoryItem = cInventoryManager->Add("StrengthPotion", "Image/Big_green.tga", 100, 0);
 	cInventoryItem->vec2Size = glm::vec2(25, 25);
 
-	cInventoryItem = cInventoryManager->Add("SpeedPotion", "Image/Big_yellow.tga", 100, 100);
+	cInventoryItem = cInventoryManager->Add("SpeedPotion", "Image/Big_yellow.tga", 100, 0);
 	cInventoryItem->vec2Size = glm::vec2(25, 25);
 
-	cInventoryItem = cInventoryManager->Add("JumpPotion", "Image/Big_blue.tga", 100, 100);
+	cInventoryItem = cInventoryManager->Add("JumpPotion", "Image/Big_blue.tga", 100, 0);
 	cInventoryItem->vec2Size = glm::vec2(25, 25);
 
-	cInventoryItem = cInventoryManager->Add("sword", "Image/sword.tga", 100, 100);
+	cInventoryItem = cInventoryManager->Add("sword", "Image/sword.tga", 100, 0);
 	cInventoryItem->vec2Size = glm::vec2(25, 25);
 
-	cInventoryItem = cInventoryManager->Add("spear", "Image/spear.tga", 100, 100);
+	cInventoryItem = cInventoryManager->Add("spear", "Image/spear.tga", 100, 0);
 	cInventoryItem->vec2Size = glm::vec2(25, 25);
 
-	cInventoryItem = cInventoryManager->Add("bow", "Image/bow.tga", 100, 100);
+	cInventoryItem = cInventoryManager->Add("bow", "Image/bow.tga", 100, 0);
 	cInventoryItem->vec2Size = glm::vec2(25, 25);
 
-	cInventoryItem = cInventoryManager->Add("axe", "Image/axe.tga", 100, 100);
+	cInventoryItem = cInventoryManager->Add("axe", "Image/axe.tga", 100, 0);
 	cInventoryItem->vec2Size = glm::vec2(25, 25);
 
-	cInventoryItem = cInventoryManager->Add("shovel", "Image/shovel.tga", 100, 100);
+	cInventoryItem = cInventoryManager->Add("shovel", "Image/shovel.tga", 100, 0);
 	cInventoryItem->vec2Size = glm::vec2(25, 25);
 
-	cInventoryItem = cInventoryManager->Add("helmet", "Image/helmet.tga", 100, 100);
+	cInventoryItem = cInventoryManager->Add("helmet", "Image/helmet.tga", 100, 0);
 	cInventoryItem->vec2Size = glm::vec2(25, 25);
 
-	cInventoryItem = cInventoryManager->Add("chestplate", "Image/chestplate.tga", 100, 100);
+	cInventoryItem = cInventoryManager->Add("chestplate", "Image/chestplate.tga", 100, 0);
 	cInventoryItem->vec2Size = glm::vec2(25, 25);
 
-	cInventoryItem = cInventoryManager->Add("leggings", "Image/leggings.tga", 100, 100);
+	cInventoryItem = cInventoryManager->Add("leggings", "Image/leggings.tga", 100, 0);
 	cInventoryItem->vec2Size = glm::vec2(25, 25);
 
-	cInventoryItem = cInventoryManager->Add("boots", "Image/boots.tga", 100, 100);
+	cInventoryItem = cInventoryManager->Add("boots", "Image/boots.tga", 100, 0);
+	cInventoryItem->vec2Size = glm::vec2(25, 25);
+
+	cInventoryItem = cInventoryManager->Add("dirt", "Image/dirtblock.png", 1536, 0);
+	cInventoryItem->vec2Size = glm::vec2(25, 25);
+
+	cInventoryItem = cInventoryManager->Add("wood", "Image/wood.png", 1536, 0);
 	cInventoryItem->vec2Size = glm::vec2(25, 25);
 
 	// Add a Health icon as one of the inventory items
@@ -1198,7 +1202,6 @@ void CPlayer2D::InteractWithMap(void)
 		cInventoryItem = cInventoryManager->GetItem("axe");
 		cInventoryItem->Add(1);
 		CGUI_Scene2D::GetInstance()->updateInventory(cInventoryItem, AXE_ID);
-
 		// Play a bell sound
 		cSoundController->PlaySoundByID(4);
 		break;
@@ -1209,8 +1212,6 @@ void CPlayer2D::InteractWithMap(void)
 		cInventoryItem = cInventoryManager->GetItem("shovel");
 		cInventoryItem->Add(1);
 		CGUI_Scene2D::GetInstance()->updateInventory(cInventoryItem, SHOVEL_ID);
-
-		shovelequip = true;
 		// Play a bell sound
 		cSoundController->PlaySoundByID(4);
 		break;
@@ -1273,15 +1274,22 @@ void CPlayer2D::InteractWithMap(void)
 		// Erase the potion from this position
 		cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
 		// Increase logs item by 1
-		cInventoryItem = cInventoryManager->GetItem("logs");
-		cInventoryItem->Add(1);
+		cInventoryItem = cInventoryManager->GetItem("wood");
+		cInventoryItem->Add(4);
+		if (cInventoryItem->GetCount() % 64 != 0)
+		CGUI_Scene2D::GetInstance()->updateInventory(cInventoryItem, WOOD_ID);
+
 		break;
 	case 76:
 		// Erase the potion from this position
 		cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
 		// Increase dirt item by 1
 		cInventoryItem = cInventoryManager->GetItem("dirt");
+		if (cInventoryItem->GetCount() % 64 == 0)
+		CGUI_Scene2D::GetInstance()->updateInventory(cInventoryItem, DIRT_ID);
 		cInventoryItem->Add(1);
+
+
 		break;
 	case 99:
 		// Level has been completed
@@ -1383,74 +1391,76 @@ void CPlayer2D::BuildBlocks()
 		cInventoryItem = cInventoryManager->GetItem("wood");
 
 	}
-
-	if (cKeyboardController->IsKeyDown(GLFW_KEY_L)) {
-		if (direction == 1) {
-			switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x - 1))
-			{
-			case 0:
-				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 100);
-				cInventoryItem->Remove(1);
-				break;
-			}
-		}
-		else if (direction == 2) 
-		{
-			switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x + 1))
-			{
-			case 0:
-				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 100);
-				cInventoryItem->Remove(1);
-				break;
-			}
-		}
-	}
-	if (cKeyboardController->IsKeyDown(GLFW_KEY_J)) 
+	if (CGUI_Scene2D::GetInstance()->updateSelection() == DIRT_ID || CGUI_Scene2D::GetInstance()->updateSelection() == WOOD_ID)
 	{
-		if (direction == 1) 
+		if (cKeyboardController->IsKeyDown(GLFW_KEY_L)) {
+			if (direction == 1) {
+				switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x - 1))
+				{
+				case 0:
+					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 100);
+					cInventoryItem->Remove(1);
+					break;
+				}
+			}
+			else if (direction == 2)
+			{
+				switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x + 1))
+				{
+				case 0:
+					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 100);
+					cInventoryItem->Remove(1);
+					break;
+				}
+			}
+		}
+		if (cKeyboardController->IsKeyDown(GLFW_KEY_J))
 		{
-			switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x + 1))
+			if (direction == 1)
+			{
+				switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x + 1))
+				{
+				case 0:
+					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 100);
+					cInventoryItem->Remove(1);
+
+					break;
+				}
+			}
+			else if (direction == 2)
+			{
+				switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x - 1))
+				{
+				case 0:
+					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 100);
+					cInventoryItem->Remove(1);
+
+					break;
+				}
+			}
+		}
+		if (cKeyboardController->IsKeyDown(GLFW_KEY_I))
+		{
+			switch (cMap2D->GetMapInfo(vec2Index.y + 1, vec2Index.x))
 			{
 			case 0:
-				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 100);
+				cMap2D->SetMapInfo(vec2Index.y + 1, vec2Index.x, 100);
 				cInventoryItem->Remove(1);
 
 				break;
 			}
 		}
-		else if (direction == 2) 
+		if (cKeyboardController->IsKeyDown(GLFW_KEY_K))
 		{
-			switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x - 1))
+			switch (cMap2D->GetMapInfo(vec2Index.y - 1, vec2Index.x))
 			{
 			case 0:
-				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 100);
+				cMap2D->SetMapInfo(vec2Index.y - 1, vec2Index.x, 100);
 				cInventoryItem->Remove(1);
 
 				break;
+
 			}
-		}
-	}
-	if (cKeyboardController->IsKeyDown(GLFW_KEY_I)) 
-	{
-		switch (cMap2D->GetMapInfo(vec2Index.y + 1, vec2Index.x))
-		{
-		case 0:
-			cMap2D->SetMapInfo(vec2Index.y + 1, vec2Index.x, 100);
-			cInventoryItem->Remove(1);
-
-			break;
-		}
-	}
-	if (cKeyboardController->IsKeyDown(GLFW_KEY_K)) 
-	{
-		switch (cMap2D->GetMapInfo(vec2Index.y - 1, vec2Index.x))
-		{
-		case 0:
-			cMap2D->SetMapInfo(vec2Index.y - 1, vec2Index.x, 100);
-			cInventoryItem->Remove(1);
-
-			break;
-			
 		}
 	}
 }
@@ -1521,8 +1531,7 @@ vector<CEntity2D*> CPlayer2D::returnNearestEnemy(vector<CEntity2D*> enemyVector)
 {
 	for (int i = 0; i != enemyVector.size(); ++i)
 	{
-		if (cPhysics2D.CalculateDistance(vec2Index, enemyVector.front()->vec2Index) <= (cPhysics2D.CalculateDistance(vec2Index, enemyVector[i]->vec2Index)) && 
-			enemyVector.size() > 0)
+		if (cPhysics2D.CalculateDistance(vec2Index, enemyVector.front()->vec2Index) <= (cPhysics2D.CalculateDistance(vec2Index, enemyVector[i]->vec2Index)))
 		{
 			continue;
 		}
@@ -1540,9 +1549,9 @@ vector<CEntity2D*> CPlayer2D::returnNearestEnemy(vector<CEntity2D*> enemyVector)
 void CPlayer2D::BreakBlocks(const double dElapsedTime) 
 {
 	breakinterval -= dElapsedTime;
-	if (cKeyboardController->IsKeyDown(GLFW_KEY_O) && breakinterval <= 0.f) 
+	if (cKeyboardController->IsKeyDown(GLFW_KEY_O) && breakinterval <= 0.f)
 	{
-		if (direction == 1) 
+		if (direction == 1)
 		{
 			switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x - 1))
 			{
@@ -1557,7 +1566,7 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime)
 				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 76);
 				break;
 			case 105:
-				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x -1, RandItemGen());
+				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, RandItemGen());
 				break;
 			case 106:
 				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 107);
@@ -1570,7 +1579,7 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime)
 				break;
 			}
 		}
-		else if (direction == 2) 
+		else if (direction == 2)
 		{
 			switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x + 1))
 			{
@@ -1584,7 +1593,7 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime)
 				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 76);
 				break;
 			case 105:
-				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, RandItemGen());
+				//cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, RandItemGen());
 				break;
 			case 106:
 				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 107);
@@ -1597,15 +1606,79 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime)
 				break;
 			}
 		}
-		if (shovelequip == true)
+		if (CGUI_Scene2D::GetInstance()->updateSelection() == SHOVEL_ID)
 		{
+			if (direction == 1)
+			{
+				switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x - 1))
+				{
+				case 100:
+					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 102);
+					break;
+				case 102:
+					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 103);
+					break;
+				case 103:
+					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 76);
+					break;
+				}
+			}
+			else if (direction == 2)
+			{
+				switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x + 1))
+				{
+				case 100:
+					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 102);
+					break;
+				case 102:
+					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 103);
+					break;
+				case 103:
+					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 76);
+					break;
+				}
+			}
+			breakinterval = 0.33f;
+		}
+		else if (CGUI_Scene2D::GetInstance()->updateSelection() == AXE_ID)
+		{
+			if (direction == 1)
+			{
+				switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x - 1))
+				{
+				case 106:
+					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 107);
+					break;
+				case 107:
+					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 108);
+					break;
+				case 108:
+					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 75);
+					break;
+				}
+			}
+			else if (direction == 2)
+			{
+				switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x + 1))
+				{
+				case 106:
+					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 107);
+					break;
+				case 107:
+					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 108);
+					break;
+				case 108:
+					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 75);
+					break;
+				}
+			}
 			breakinterval = 0.33f;
 		}
 		else
 		{
 			breakinterval = 1.f;
 		}
-		
+
 	}
 	if (cKeyboardController->IsKeyDown(GLFW_KEY_U) && breakinterval <= 0.f) 
 	{
@@ -1626,7 +1699,7 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime)
 				
 			}
 		}
-		if (shovelequip == true)
+		if (CGUI_Scene2D::GetInstance()->updateSelection() == SHOVEL_ID)
 		{
 			breakinterval = 0.33f;
 		}
@@ -1649,9 +1722,10 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime)
 			cMap2D->SetMapInfo(vec2Index.y + 1, vec2Index.x, 76);
 			break;
 		}
-		if (shovelequip == true)
+
+		if (CGUI_Scene2D::GetInstance()->updateSelection() == SHOVEL_ID)
 		{
-			breakinterval = 0.33f;
+			breakinterval = 0.5f;
 		}
 		else
 		{

@@ -268,7 +268,7 @@ bool CScene2D::Init(void)
 
 	bgColor = glm::vec3(0.0f, 0, 1.0f);
 
-	day = true;
+	day = dayToNight = true;
 
 	dayCounter = 0.0f;
 
@@ -290,6 +290,9 @@ bool CScene2D::Init(void)
 	cSoundController->LoadSound(FileSystem::getPath("Sounds\\weaponattack.ogg"), 9, true); //sound effect for sword attack
 	cSoundController->LoadSound(FileSystem::getPath("Sounds\\wood-creak.ogg"), 10, true); //sound effect for chest
 	cSoundController->LoadSound(FileSystem::getPath("Sounds\\bow.ogg"), 11, true); //sound effect for chest
+
+	cSoundController->PlaySoundByID(2);
+
 
 	return true;
 }
@@ -357,6 +360,14 @@ bool CScene2D::Update(const double dElapsedTime)
 		cPlayer2D->Reset();
 		cGameManager->bLevelCompleted = false;
 		enemySpawnRate -= cMap2D->GetCurrentLevel() - 1;
+
+		// Destroy the enemies
+		for (int i = 0; i < enemyVector.size(); i++)
+		{
+			delete enemyVector[i];
+			enemyVector[i] = NULL;
+		}
+		enemyVector.clear();
 	}
 
 	// Check if the game has been won by the player
@@ -374,7 +385,7 @@ bool CScene2D::Update(const double dElapsedTime)
 
 	if (day == true)
 	{
-		cSoundController->PlaySoundByID(2);
+		//cSoundController->PlaySoundByID(2);
 	}
 	else
 	{
@@ -536,6 +547,16 @@ bool CScene2D::getTime(void)
 void CScene2D::setTime(bool time)
 {
 	day = time;
+}
+
+bool CScene2D::checkTimeTransition(void)
+{
+	return dayToNight;
+}
+
+void CScene2D::setTimeTransition(bool transition)
+{
+	dayToNight = transition;
 }
 
 float CScene2D::getDuration(void)
