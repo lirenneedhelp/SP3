@@ -457,7 +457,7 @@ bool CMap2D::Init(	const unsigned int uiNumLevels,
 	//// Clear AStar memory
 	//ClearAStar();
 
-	validposition = true;
+	validposition = false;
 	xChest = 32;
 	yChest = 24;
 
@@ -469,6 +469,7 @@ bool CMap2D::Init(	const unsigned int uiNumLevels,
 */
 void CMap2D::Update(const double dElapsedTime)
 {
+	spawnchest();
 }
 
 /**
@@ -1012,9 +1013,29 @@ unsigned int heuristic::euclidean(const glm::vec2& v1, const glm::vec2& v2, int 
 
 void CMap2D::spawnchest() {
 	srand(time(NULL));
-	while (validposition == true) {
-		xChest = rand() % 32;
-		yChest = rand() % 24;
-		GetMapInfo(yChest, xChest);
+
+	while (validposition == false) {
+
+		xChest = rand() % 31 + 1;
+		yChest = rand() % 23 + 1;
+		std::cout << std::endl << xChest << " " << yChest << std::endl;
+
+		switch (GetMapInfo(xChest, yChest))
+		{
+		case 0:
+			SetMapInfo(xChest, yChest, 105);
+			
+			validposition = true;
+			break;
+
+		case 100:
+			SetMapInfo(xChest, yChest, 105);
+			validposition = true;
+			break;
+		default:
+			break;
+		}
+
 	}
+
 }
