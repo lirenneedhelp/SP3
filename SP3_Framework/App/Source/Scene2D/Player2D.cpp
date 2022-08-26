@@ -1572,70 +1572,17 @@ vector<CEntity2D*> CPlayer2D::returnNearestEnemy(vector<CEntity2D*> enemyVector)
 void CPlayer2D::BreakBlocks(const double dElapsedTime) 
 {
 	breakinterval -= dElapsedTime;
-	if (cKeyboardController->IsKeyDown(GLFW_KEY_O) && breakinterval <= 0.f)
+
+	if (cKeyboardController->IsKeyDown(GLFW_KEY_O))
 	{
 		
 		if (direction == 1)
 		{
-			switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x - 1))
-			{
-
-			case 100:
-				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 102);
-				break;
-			case 102:
-				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 103);
-				break;
-			case 103:
-				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 76);
-				break;
-			case 105:
-				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, RandItemGen());
-				break;
-			case 106:
-				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 107);
-				break;
-			case 107:
-				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 108);
-				break;
-			case 108:
-				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 75);
-				break;
-			}
-		}
-		else if (direction == 2)
-		{
-			switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x + 1))
-			{
-			case 100:
-				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 102);
-				break;
-			case 102:
-				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 103);
-				break;
-			case 103:
-				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 76);
-				break;
-			case 105:
-				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, RandItemGen());
-				break;
-			case 106:
-				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 107);
-				break;
-			case 107:
-				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 108);
-				break;
-			case 108:
-				cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 75);
-				break;
-			}
-		}
-		if (CGUI_Scene2D::GetInstance()->updateSelection() == SHOVEL_ID)
-		{
-			if (direction == 1)
+			if (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x - 1) >= 100 && cMap2D->GetMapInfo(vec2Index.y, vec2Index.x - 1) <= 103 && CGUI_Scene2D::GetInstance()->updateSelection() == SHOVEL_ID && breakinterval <= 0.33f)
 			{
 				switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x - 1))
 				{
+
 				case 100:
 					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 102);
 					break;
@@ -1646,11 +1593,95 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime)
 					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 76);
 					break;
 				}
+				breakinterval = 0.5f;
 			}
-			else if (direction == 2)
+			else if (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x - 1) >= 106 && cMap2D->GetMapInfo(vec2Index.y, vec2Index.x - 1) <= 108 && CGUI_Scene2D::GetInstance()->updateSelection() == SHOVEL_ID && breakinterval <= 1.f) {
+				switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x - 1))
+				{
+
+				case 106:
+					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 107);
+					break;
+				case 107:
+					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 108);
+					break;
+				case 108:
+					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 75);
+					break;
+				}
+				breakinterval = 2.f;
+			}
+
+			if (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x - 1) >= 106 && cMap2D->GetMapInfo(vec2Index.y, vec2Index.x - 1) <= 108 && CGUI_Scene2D::GetInstance()->updateSelection() == AXE_ID && breakinterval <= 0)
+			{
+				switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x - 1))
+				{
+				case 105:
+					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, RandItemGen());
+					break;
+				case 106:
+					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 107);
+					break;
+				case 107:
+					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 108);
+					break;
+				case 108:
+					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 75);
+					break;
+				}
+				breakinterval = 0.5f;
+			}
+			else if (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x - 1) >= 100 && cMap2D->GetMapInfo(vec2Index.y, vec2Index.x - 1) <= 103 && CGUI_Scene2D::GetInstance()->updateSelection() == AXE_ID && breakinterval <= 0) {
+				switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x - 1))
+				{
+
+				case 100:
+					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 102);
+					break;
+				case 102:
+					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 103);
+					break;
+				case 103:
+					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 76);
+					break;
+				}
+				breakinterval = 2.f;
+			}
+
+			if (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x - 1) >= 100 && cMap2D->GetMapInfo(vec2Index.y, vec2Index.x - 1) <= 108 && CGUI_Scene2D::GetInstance()->updateSelection() != SHOVEL_ID && CGUI_Scene2D::GetInstance()->updateSelection() != AXE_ID && breakinterval <= 0)
+			{
+				switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x - 1))
+				{
+
+				case 100:
+					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 102);
+					break;
+				case 102:
+					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 103);
+					break;
+				case 103:
+					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 76);
+					break;
+				case 106:
+					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 107);
+					break;
+				case 107:
+					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 108);
+					break;
+				case 108:
+					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 75);
+					break;
+				}
+				breakinterval = 2.f;
+			}
+
+		}
+		if (direction == 2) {
+			if (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x + 1) >= 100 && cMap2D->GetMapInfo(vec2Index.y, vec2Index.x + 1) <= 103 && CGUI_Scene2D::GetInstance()->updateSelection() == SHOVEL_ID && breakinterval <= 0.33f)
 			{
 				switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x + 1))
 				{
+
 				case 100:
 					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 102);
 					break;
@@ -1661,15 +1692,12 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime)
 					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 76);
 					break;
 				}
+				breakinterval = 0.5f;
 			}
-			breakinterval = 0.33f;
-		}
-		else if (CGUI_Scene2D::GetInstance()->updateSelection() == AXE_ID)
-		{
-			if (direction == 1)
-			{
-				switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x - 1))
+			else if (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x + 1) >= 106 && cMap2D->GetMapInfo(vec2Index.y, vec2Index.x + 1) <= 108 && CGUI_Scene2D::GetInstance()->updateSelection() == SHOVEL_ID && breakinterval <= 1.f) {
+				switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x + 1))
 				{
+
 				case 106:
 					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 107);
 					break;
@@ -1680,11 +1708,16 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime)
 					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 75);
 					break;
 				}
+				breakinterval = 2.f;
 			}
-			else if (direction == 2)
+
+			if (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x + 1) >= 106 && cMap2D->GetMapInfo(vec2Index.y, vec2Index.x + 1) <= 108 && CGUI_Scene2D::GetInstance()->updateSelection() == AXE_ID && breakinterval <= 0)
 			{
 				switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x + 1))
 				{
+				case 105:
+					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, RandItemGen());
+					break;
 				case 106:
 					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 107);
 					break;
@@ -1695,21 +1728,60 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime)
 					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 75);
 					break;
 				}
+				breakinterval = 0.5f;
 			}
-			breakinterval = 0.33f;
-		}
-		else
-		{
-			breakinterval = 1.f;
-		}
+			else if (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x + 1) >= 100 && cMap2D->GetMapInfo(vec2Index.y, vec2Index.x + 1) <= 103 && CGUI_Scene2D::GetInstance()->updateSelection() == AXE_ID && breakinterval <= 0) {
+				switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x + 1))
+				{
 
+				case 100:
+					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 102);
+					break;
+				case 102:
+					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 103);
+					break;
+				case 103:
+					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 76);
+					break;
+				}
+				breakinterval = 2.f;
+			}
+
+			if (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x + 1) >= 100 && cMap2D->GetMapInfo(vec2Index.y, vec2Index.x + 1) <= 108 && CGUI_Scene2D::GetInstance()->updateSelection() != SHOVEL_ID && CGUI_Scene2D::GetInstance()->updateSelection() != AXE_ID && breakinterval <= 0)
+			{
+				switch (cMap2D->GetMapInfo(vec2Index.y, vec2Index.x + 1))
+				{
+
+				case 100:
+					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 102);
+					break;
+				case 102:
+					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 103);
+					break;
+				case 103:
+					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 76);
+					break;
+				case 106:
+					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 107);
+					break;
+				case 107:
+					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 108);
+					break;
+				case 108:
+					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 75);
+					break;
+				}
+				breakinterval = 2.f;
+			}
+		}
 	}
-	if (cKeyboardController->IsKeyDown(GLFW_KEY_U) && breakinterval <= 0.f) 
+	if (cKeyboardController->IsKeyDown(GLFW_KEY_U)) 
 	{
-		if (direction == 1) 
+		if (cMap2D->GetMapInfo(vec2Index.y - 1, vec2Index.x) >= 100 && cMap2D->GetMapInfo(vec2Index.y - 1, vec2Index.x) <= 103 && CGUI_Scene2D::GetInstance()->updateSelection() == SHOVEL_ID && breakinterval <= 0.33f)
 		{
 			switch (cMap2D->GetMapInfo(vec2Index.y - 1, vec2Index.x))
 			{
+
 			case 100:
 				cMap2D->SetMapInfo(vec2Index.y - 1, vec2Index.x, 102);
 				break;
@@ -1718,43 +1790,190 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime)
 				break;
 			case 103:
 				cMap2D->SetMapInfo(vec2Index.y - 1, vec2Index.x, 76);
-				cPhysics2D.SetStatus(CPhysics2D::STATUS::JUMP);
 				break;
-				
 			}
-		}
-		if (CGUI_Scene2D::GetInstance()->updateSelection() == SHOVEL_ID)
-		{
-			breakinterval = 0.33f;
-		}
-		else
-		{
-			breakinterval = 1.f;
-		}
-	}
-	if (cKeyboardController->IsKeyDown(GLFW_KEY_P) && breakinterval <= 0.f) {
-
-		switch (cMap2D->GetMapInfo(vec2Index.y + 1, vec2Index.x))
-		{
-		case 100:
-			cMap2D->SetMapInfo(vec2Index.y + 1, vec2Index.x, 102);
-			break;
-		case 102:
-			cMap2D->SetMapInfo(vec2Index.y + 1, vec2Index.x, 103);
-			break;
-		case 103:
-			cMap2D->SetMapInfo(vec2Index.y + 1, vec2Index.x, 76);
-			break;
-		}
-
-		if (CGUI_Scene2D::GetInstance()->updateSelection() == SHOVEL_ID)
-		{
 			breakinterval = 0.5f;
 		}
-		else
-		{
-			breakinterval = 1.5f;
+		else if (cMap2D->GetMapInfo(vec2Index.y - 1, vec2Index.x) >= 106 && cMap2D->GetMapInfo(vec2Index.y - 1, vec2Index.x) <= 108 && CGUI_Scene2D::GetInstance()->updateSelection() == SHOVEL_ID && breakinterval <= 1.f) {
+			switch (cMap2D->GetMapInfo(vec2Index.y - 1, vec2Index.x))
+			{
+
+			case 106:
+				cMap2D->SetMapInfo(vec2Index.y - 1, vec2Index.x, 107);
+				break;
+			case 107:
+				cMap2D->SetMapInfo(vec2Index.y - 1, vec2Index.x, 108);
+				break;
+			case 108:
+				cMap2D->SetMapInfo(vec2Index.y - 1, vec2Index.x, 75);
+				break;
+			}
+			breakinterval = 2.f;
 		}
+
+		if (cMap2D->GetMapInfo(vec2Index.y - 1, vec2Index.x) >= 106 && cMap2D->GetMapInfo(vec2Index.y - 1, vec2Index.x) <= 108 && CGUI_Scene2D::GetInstance()->updateSelection() == AXE_ID && breakinterval <= 0)
+		{
+			switch (cMap2D->GetMapInfo(vec2Index.y - 1, vec2Index.x))
+			{
+			case 105:
+				cMap2D->SetMapInfo(vec2Index.y - 1, vec2Index.x, RandItemGen());
+				break;
+			case 106:
+				cMap2D->SetMapInfo(vec2Index.y - 1, vec2Index.x, 107);
+				break;
+			case 107:
+				cMap2D->SetMapInfo(vec2Index.y - 1, vec2Index.x, 108);
+				break;
+			case 108:
+				cMap2D->SetMapInfo(vec2Index.y - 1, vec2Index.x, 75);
+				break;
+			}
+			breakinterval = 0.5f;
+		}
+		else if (cMap2D->GetMapInfo(vec2Index.y - 1, vec2Index.x) >= 100 && cMap2D->GetMapInfo(vec2Index.y - 1, vec2Index.x) <= 103 && CGUI_Scene2D::GetInstance()->updateSelection() == AXE_ID && breakinterval <= 0) {
+			switch (cMap2D->GetMapInfo(vec2Index.y - 1, vec2Index.x))
+			{
+
+			case 100:
+				cMap2D->SetMapInfo(vec2Index.y - 1, vec2Index.x, 102);
+				break;
+			case 102:
+				cMap2D->SetMapInfo(vec2Index.y - 1, vec2Index.x, 103);
+				break;
+			case 103:
+				cMap2D->SetMapInfo(vec2Index.y - 1, vec2Index.x, 76);
+				break;
+			}
+			breakinterval = 2.f;
+		}
+
+		if (cMap2D->GetMapInfo(vec2Index.y - 1, vec2Index.x) >= 100 && cMap2D->GetMapInfo(vec2Index.y - 1, vec2Index.x) <= 108 && CGUI_Scene2D::GetInstance()->updateSelection() != SHOVEL_ID && CGUI_Scene2D::GetInstance()->updateSelection() != AXE_ID && breakinterval <= 0)
+		{
+			switch (cMap2D->GetMapInfo(vec2Index.y - 1, vec2Index.x))
+			{
+
+			case 100:
+				cMap2D->SetMapInfo(vec2Index.y - 1, vec2Index.x, 102);
+				break;
+			case 102:
+				cMap2D->SetMapInfo(vec2Index.y - 1, vec2Index.x, 103);
+				break;
+			case 103:
+				cMap2D->SetMapInfo(vec2Index.y - 1, vec2Index.x, 76);
+				break;
+			case 106:
+				cMap2D->SetMapInfo(vec2Index.y - 1, vec2Index.x, 107);
+				break;
+			case 107:
+				cMap2D->SetMapInfo(vec2Index.y - 1, vec2Index.x, 108);
+				break;
+			case 108:
+				cMap2D->SetMapInfo(vec2Index.y - 1, vec2Index.x, 75);
+				break;
+			}
+			breakinterval = 2.f;
+		}
+	}
+	if (cKeyboardController->IsKeyDown(GLFW_KEY_P)) {
+
+
+		if (cMap2D->GetMapInfo(vec2Index.y + 1, vec2Index.x) >= 100 && cMap2D->GetMapInfo(vec2Index.y + 1, vec2Index.x) <= 103 && CGUI_Scene2D::GetInstance()->updateSelection() == SHOVEL_ID && breakinterval <= 0.33f)
+		{
+			switch (cMap2D->GetMapInfo(vec2Index.y + 1, vec2Index.x))
+			{
+
+			case 100:
+				cMap2D->SetMapInfo(vec2Index.y + 1, vec2Index.x, 102);
+				break;
+			case 102:
+				cMap2D->SetMapInfo(vec2Index.y + 1, vec2Index.x, 103);
+				break;
+			case 103:
+				cMap2D->SetMapInfo(vec2Index.y + 1, vec2Index.x, 76);
+				break;
+			}
+			breakinterval = 0.5f;
+		}
+		else if (cMap2D->GetMapInfo(vec2Index.y + 1, vec2Index.x) >= 106 && cMap2D->GetMapInfo(vec2Index.y + 1, vec2Index.x) <= 108 && CGUI_Scene2D::GetInstance()->updateSelection() == SHOVEL_ID && breakinterval <= 1.f) {
+			switch (cMap2D->GetMapInfo(vec2Index.y + 1, vec2Index.x))
+			{
+
+			case 106:
+				cMap2D->SetMapInfo(vec2Index.y + 1, vec2Index.x, 107);
+				break;
+			case 107:
+				cMap2D->SetMapInfo(vec2Index.y + 1, vec2Index.x, 108);
+				break;
+			case 108:
+				cMap2D->SetMapInfo(vec2Index.y + 1, vec2Index.x, 75);
+				break;
+			}
+			breakinterval = 2.f;
+		}
+
+		if (cMap2D->GetMapInfo(vec2Index.y + 1, vec2Index.x) >= 106 && cMap2D->GetMapInfo(vec2Index.y + 1, vec2Index.x) <= 108 && CGUI_Scene2D::GetInstance()->updateSelection() == AXE_ID && breakinterval <= 0)
+		{
+			switch (cMap2D->GetMapInfo(vec2Index.y + 1, vec2Index.x))
+			{
+			case 105:
+				cMap2D->SetMapInfo(vec2Index.y + 1, vec2Index.x, RandItemGen());
+				break;
+			case 106:
+				cMap2D->SetMapInfo(vec2Index.y + 1, vec2Index.x, 107);
+				break;
+			case 107:
+				cMap2D->SetMapInfo(vec2Index.y + 1, vec2Index.x, 108);
+				break;
+			case 108:
+				cMap2D->SetMapInfo(vec2Index.y + 1, vec2Index.x, 75);
+				break;
+			}
+			breakinterval = 0.5f;
+		}
+		else if (cMap2D->GetMapInfo(vec2Index.y + 1, vec2Index.x) >= 100 && cMap2D->GetMapInfo(vec2Index.y + 1, vec2Index.x) <= 103 && CGUI_Scene2D::GetInstance()->updateSelection() == AXE_ID && breakinterval <= 0) {
+			switch (cMap2D->GetMapInfo(vec2Index.y + 1, vec2Index.x))
+			{
+
+			case 100:
+				cMap2D->SetMapInfo(vec2Index.y + 1, vec2Index.x, 102);
+				break;
+			case 102:
+				cMap2D->SetMapInfo(vec2Index.y + 1, vec2Index.x, 103);
+				break;
+			case 103:
+				cMap2D->SetMapInfo(vec2Index.y + 1, vec2Index.x, 76);
+				break;
+			}
+			breakinterval = 2.f;
+		}
+
+		if (cMap2D->GetMapInfo(vec2Index.y + 1, vec2Index.x) >= 100 && cMap2D->GetMapInfo(vec2Index.y + 1, vec2Index.x) <= 108 && CGUI_Scene2D::GetInstance()->updateSelection() != SHOVEL_ID && CGUI_Scene2D::GetInstance()->updateSelection() != AXE_ID && breakinterval <= 0)
+		{
+			switch (cMap2D->GetMapInfo(vec2Index.y + 1, vec2Index.x))
+			{
+
+			case 100:
+				cMap2D->SetMapInfo(vec2Index.y + 1, vec2Index.x, 102);
+				break;
+			case 102:
+				cMap2D->SetMapInfo(vec2Index.y + 1, vec2Index.x, 103);
+				break;
+			case 103:
+				cMap2D->SetMapInfo(vec2Index.y + 1, vec2Index.x, 76);
+				break;
+			case 106:
+				cMap2D->SetMapInfo(vec2Index.y + 1, vec2Index.x, 107);
+				break;
+			case 107:
+				cMap2D->SetMapInfo(vec2Index.y + 1, vec2Index.x, 108);
+				break;
+			case 108:
+				cMap2D->SetMapInfo(vec2Index.y + 1, vec2Index.x, 75);
+				break;
+			}
+			breakinterval = 2.f;
+		}
+
 	}
 }
 /*

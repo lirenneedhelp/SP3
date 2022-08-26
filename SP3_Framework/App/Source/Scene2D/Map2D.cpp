@@ -458,8 +458,11 @@ bool CMap2D::Init(	const unsigned int uiNumLevels,
 	//ClearAStar();
 
 	validposition = false;
+	validposition1 = false;
 	xChest = 32;
 	yChest = 24;
+	xTree = 32;
+	yTree = 24;
 
 	return true;
 }
@@ -469,7 +472,7 @@ bool CMap2D::Init(	const unsigned int uiNumLevels,
 */
 void CMap2D::Update(const double dElapsedTime)
 {
-	spawnchest();
+	//spawnchest();
 }
 
 /**
@@ -1018,24 +1021,60 @@ void CMap2D::spawnchest() {
 
 		yChest = rand() % 31 + 1;
 		xChest = rand() % 23 + 1;
-		std::cout << std::endl << xChest << " " << yChest << std::endl;
 
 		switch (GetMapInfo(xChest, yChest))
 		{
 		case 0:
-			SetMapInfo(xChest, yChest, 105);
-			
-			validposition = true;
-			break;
 
+			if (GetMapInfo(xChest - 1, yChest) == 100)
+			{
+				SetMapInfo(xChest, yChest, 105);
+
+				validposition = true;
+			}
+			else
+				continue;
+
+			break;
+		/*
 		case 100:
 			SetMapInfo(xChest, yChest, 105);
 			validposition = true;
-			break;
+			break;*/
 		default:
 			break;
 		}
 
 	}
+	validposition = false;
+}
+void CMap2D::spawntree() {
+	srand(time(NULL));
 
+	while (validposition1 == false) {
+
+		yTree = rand() % 31 + 1;
+		xTree = rand() % 23 + 1;
+
+		switch (GetMapInfo(xTree, yTree))
+		{
+		case 0:
+
+			if (GetMapInfo(xTree - 1, yTree) == 100)
+			{
+				SetMapInfo(xTree, yTree, 106);
+
+				validposition1 = true;
+			}
+			else
+				continue;
+
+			break;
+			
+		default:
+			break;
+		}
+
+	}
+	validposition1 = false;
 }
