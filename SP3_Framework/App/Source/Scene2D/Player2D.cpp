@@ -1431,6 +1431,62 @@ void CPlayer2D::BuildBlocks()
 	}
 }
 
+int CPlayer2D::RandItemGen()
+{
+	srand(time(NULL));
+	itemtype = rand() % 11;
+	switch (itemtype)
+	{
+	case SWORD_ID:
+		return 30;
+		break;
+
+	case BOW_ID:
+		return 32;
+		break;
+
+	case SPEAR_ID:
+		return 31;
+		break;
+
+	case HELMET_ID:
+		return 41;
+		break;
+
+	case LEGGINGS_ID:
+		return 43;
+		break;
+
+	case BOOTS_ID:
+		return 44;
+		break;
+
+	case CHESTPLATE_ID:
+		return 42;
+		break;
+
+	case BIGRED_ID:
+		return 2;
+		break;
+
+	case BIGYELLOW_ID:
+		return 3;
+		break;
+
+	case BIGGREEN_ID:
+		return 4;
+		break;
+
+	case BIGBLUE_ID:
+		return 5;
+		break;
+
+
+	default:
+		return 2;
+	}
+}
+
 
 vector<CEntity2D*> CPlayer2D::returnNearestEnemy(vector<CEntity2D*> enemyVector)
 {
