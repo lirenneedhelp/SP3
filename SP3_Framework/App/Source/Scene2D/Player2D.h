@@ -228,7 +228,7 @@ protected:
 
 	float strengthValue;
 
-
+	
 
 	/*
 	void spawnchest(void);

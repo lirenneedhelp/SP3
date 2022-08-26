@@ -127,6 +127,9 @@ public:
 	// Print out details about this class instance in the console window
 	void PrintSelf(void) const;
 
+
+	void spawnchest(void);
+
 protected:
 	// The variable containing the rapidcsv::Document
 	// We will load the CSV file's content into this Document
@@ -191,7 +194,6 @@ protected:
 	std::vector<glm::vec2> m_directions;
 
 	
-	void spawnchest(void);
 	bool validposition;
 	int xChest;
 	int yChest;

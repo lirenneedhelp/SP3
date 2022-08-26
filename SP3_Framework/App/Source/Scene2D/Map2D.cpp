@@ -469,7 +469,7 @@ bool CMap2D::Init(	const unsigned int uiNumLevels,
 */
 void CMap2D::Update(const double dElapsedTime)
 {
-	spawnchest();
+	//spawnchest();
 }
 
 /**
@@ -1023,19 +1023,26 @@ void CMap2D::spawnchest() {
 		switch (GetMapInfo(xChest, yChest))
 		{
 		case 0:
-			SetMapInfo(xChest, yChest, 105);
-			
-			validposition = true;
-			break;
 
+			if (GetMapInfo(xChest - 1, yChest) == 100)
+			{
+				SetMapInfo(xChest, yChest, 105);
+
+				validposition = true;
+			}
+			else
+				continue;
+
+			break;
+		/*
 		case 100:
 			SetMapInfo(xChest, yChest, 105);
 			validposition = true;
-			break;
+			break;*/
 		default:
 			break;
 		}
 
 	}
-
+	validposition = false;
 }
