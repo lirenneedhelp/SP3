@@ -73,12 +73,18 @@ public:
 
 	void updateButtonActivity(unsigned index); // If one is clicked set the rest to inactive
 
+	int getQuantity(void);
+
 protected:
 	enum ITEM_ID
 	{
 		SWORD_ID,
 		BOW_ID,
 		SPEAR_ID,
+		WOOD_ID,
+		DIRT_ID,
+		AXE_ID,
+		SHOVEL_ID,
 		TOTAL_NUM,
 	};
 	// Constructor
@@ -116,8 +122,6 @@ protected:
 
 	vector<ButtonData> playerInventory;
 	ButtonData emptyInventorySlot;
-
-	bool button1Clicked, button1Hovered;
 
 	int inventoryHotbar; // Size of the hotbar
 
