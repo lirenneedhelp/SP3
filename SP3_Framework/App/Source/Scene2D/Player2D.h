@@ -228,6 +228,8 @@ protected:
 
 	float strengthValue;
 
+
+
 	/*
 	void spawnchest(void);
 	bool validposition;

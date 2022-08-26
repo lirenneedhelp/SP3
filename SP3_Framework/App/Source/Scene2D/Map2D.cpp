@@ -1016,8 +1016,8 @@ void CMap2D::spawnchest() {
 
 	while (validposition == false) {
 
-		xChest = rand() % 31 + 1;
-		yChest = rand() % 23 + 1;
+		yChest = rand() % 31 + 1;
+		xChest = rand() % 23 + 1;
 		std::cout << std::endl << xChest << " " << yChest << std::endl;
 
 		switch (GetMapInfo(xChest, yChest))
