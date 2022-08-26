@@ -1273,7 +1273,7 @@ void CPlayer2D::InteractWithMap(void)
 		// Increase logs item by 1
 		cInventoryItem = cInventoryManager->GetItem("wood");
 		cInventoryItem->Add(4);
-		if (cInventoryItem->GetCount() % 64 != 0)
+		if (cInventoryItem->GetCount() % 64 == 0)
 		CGUI_Scene2D::GetInstance()->updateInventory(cInventoryItem, WOOD_ID);
 
 		break;
@@ -1465,7 +1465,7 @@ void CPlayer2D::BuildBlocks()
 int CPlayer2D::RandItemGen()
 {
 	srand(time(NULL));
-	itemtype = rand() % 11;
+	itemtype = rand() % TOTAL_NUM;
 	switch (itemtype)
 	{
 	case SWORD_ID:
