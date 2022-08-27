@@ -1323,7 +1323,7 @@ void CPlayer2D::InteractWithMap(void)
 		break;
 	case 99:
 		// Level has been completed
-		if (killCounter == CScene2D::GetInstance()->getTotalEnemies())
+		if (killCounter >= CScene2D::GetInstance()->getTotalEnemies())
 		{
 			killCounter = 0;
 			CGameManager::GetInstance()->bLevelCompleted = true;
