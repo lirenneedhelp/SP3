@@ -116,6 +116,9 @@ bool CPlayer2D::Init(void)
 	firstAttack = true; // Check if it's the first click
 	shoot = false;
 
+	killCounter = 0;
+	level = 1;
+
 	//check if armour are equiped
 	helmetequip = false;
 	chestplateequip = false;
@@ -127,7 +130,7 @@ bool CPlayer2D::Init(void)
 	leggingsdefense = 0;
 	bootsdefense = 0;
 
-	playerInitialDamage = 10;
+	playerInitialDamage = 20;
 
 	strengthValue = 1.0f;
 
@@ -186,7 +189,7 @@ bool CPlayer2D::Init(void)
 
 	// Get the handler to the CInventoryManager instance
 	cInventoryManager = CInventoryManager::GetInstance();
-	cInventoryItem = cInventoryManager->Add("Lives", "Image/Scene2D_Lives.tga", 100, 0);
+	cInventoryItem = cInventoryManager->Add("Lives", "Image/Scene2D_Lives.tga", 1, 1);
 	cInventoryItem->vec2Size = glm::vec2(25, 25);
 
 	cInventoryItem = cInventoryManager->Add("HealthPotion", "Image/Big_red.tga", 100, 0);
@@ -475,7 +478,7 @@ void CPlayer2D::Update(const double dElapsedTime)
 					iJumpCount += 1;
 					// Play a jump sound
 					cSoundController->PlaySoundByID(3);
-					animatedSprites->PlayAnimation("jump", -1, 0.5f);
+					animatedSprites->PlayAnimation("jump", -1, 1.0f);
 				}
 				else
 				{
@@ -575,21 +578,27 @@ void CPlayer2D::Update(const double dElapsedTime)
 					playerInitialDamage = 40 * strengthValue;
 					attackRange = 2;
 				}
+				else
+				{
+					playerInitialDamage = 10 * strengthValue;
+					attackRange = 1;
+				}
 
 				enemyList = CScene2D::GetInstance()->returnEnemyVector();
 				for (int enemyIndex = 0; enemyIndex != enemyList.size(); ++enemyIndex)
 				{
 					if (cPhysics2D.CalculateDistance(vec2Index, enemyList[enemyIndex]->vec2Index) <= attackRange && vec2Index.y == enemyList[enemyIndex]->vec2Index.y) // Check if player and enemy are on the same level & check whether the enemy is within the player's range
 					{
-						std::cout << "Hit Enemy Once\n";
+						//std::cout << "Hit Enemy Once\n";
 						//TO DO: REDUCE THEIR HP
 						enemyList[enemyIndex]->health -= playerInitialDamage;
-						std::cout << enemyList[enemyIndex]->health << endl;
+						//std::cout << enemyList[enemyIndex]->health << endl;
 						if (enemyList[enemyIndex]->health <= 0)
 						{
 							enemyList[enemyIndex]->~CEntity2D();
 							enemyList.erase(enemyList.begin() + enemyIndex);
 							CScene2D::GetInstance()->setNewEnemyVector(enemyList);
+							killCounter++;
 							break;
 						}
 					}
@@ -706,7 +715,7 @@ void CPlayer2D::Update(const double dElapsedTime)
 					CScene2D::GetInstance()->pushArrow(cBowProjectile);
 					if (cBowProjectile->Init() == true)
 					{
-						cout << "Shot an arrow\n";
+						//cout << "Shot an arrow\n";
 					}
 				
 				charge = 0.f;
@@ -722,7 +731,7 @@ void CPlayer2D::Update(const double dElapsedTime)
 		{
 			strength = false;
 			strength_runtime = 0.f;
-			cout << "strength's effect worn off!\n";
+			//cout << "strength's effect worn off!\n";
 		}
 		
 	}
@@ -738,7 +747,7 @@ void CPlayer2D::Update(const double dElapsedTime)
 		{
 			speed = false;
 			speed_runtime = 0.f;
-			cout << "speed's effect worn off!\n";
+			//cout << "speed's effect worn off!\n";
 		}
 	}
 	
@@ -831,6 +840,21 @@ CInventoryManager* CPlayer2D::returnPlayerHealth(void)
 float CPlayer2D::returnCharge(void)
 {
 	return charge;
+}
+
+int CPlayer2D::getPlayerKills(void)
+{
+	return killCounter;
+}
+
+void CPlayer2D::addPlayerKills(int kill)
+{
+	killCounter += kill;
+}
+
+void CPlayer2D::updatePlayerLevel(int level)
+{
+	this->level = level;
 }
 
 /**
@@ -1176,7 +1200,7 @@ void CPlayer2D::InteractWithMap(void)
 		cInventoryItem = cInventoryManager->GetItem("sword");
 		cInventoryItem->Add(1);
 		CGUI_Scene2D::GetInstance()->updateInventory(cInventoryItem, SWORD_ID);
-		std::cout << "sword equiped\n";
+		//std::cout << "sword equiped\n";
 		// Play a bell sound
 		cSoundController->PlaySoundByID(4);
 		break;
@@ -1210,7 +1234,7 @@ void CPlayer2D::InteractWithMap(void)
 		// Play a bell sound
 		cSoundController->PlaySoundByID(4);
 		break;
-	case 34:
+	case 40:
 		// Erase the potion from this position
 		cMap2D->SetMapInfo(vec2Index.y, vec2Index.x, 0);
 		// Increase the potion by 1
@@ -1299,7 +1323,15 @@ void CPlayer2D::InteractWithMap(void)
 		break;
 	case 99:
 		// Level has been completed
-		CGameManager::GetInstance()->bLevelCompleted = true;
+		if (killCounter == CScene2D::GetInstance()->getTotalEnemies())
+		{
+			killCounter = 0;
+			CGameManager::GetInstance()->bLevelCompleted = true;
+			if (level > 6)
+			{
+				CGameManager::GetInstance()->bPlayerWon = true;
+			}
+		}
 		break;
 	case 98:
 		// Level has been completed
@@ -1324,11 +1356,11 @@ void CPlayer2D::UpdateHealthLives(void)
 		cInventoryItem = cInventoryManager->GetItem("Lives");
 		cInventoryItem->Remove(1);
 		// Check if there is no lives left...
-		if (cInventoryItem->GetCount() < 0)
+		if (cInventoryItem->GetCount() <= 0)
 		{
 			// Player loses the game
 			cSoundController->PlaySoundByID(6);
-			CGameManager::GetInstance()->bPlayerLost = true;
+  			CGameManager::GetInstance()->bPlayerLost = true;
 		}
 	}
 }
@@ -1339,18 +1371,18 @@ void CPlayer2D::UpdateDefense(float damage)
 	if (helmetequip == true)
 	{	
 		helmetdefense = 20;
-		cout << "u're protected by helmet!" << endl;
+		//cout << "u're protected by helmet!" << endl;
 	
-		cout << "damage reduced" << endl;
+		//cout << "damage reduced" << endl;
 	}
 	if (chestplateequip == true)
 	{
 		chestplatedefense = 40;
 		/*std::cout << "u're protected by chestplate!" << endl;
 		damageOnPlayer = returnPlayerHealth();*/
-		std::cout << "u're protected!" << endl;
+		//std::cout << "u're protected!" << endl;
 
-		cout << "damage reduced" << endl;
+		//cout << "damage reduced" << endl;
 	}
 	if (leggingsequip == true)
 	{
@@ -1364,9 +1396,9 @@ void CPlayer2D::UpdateDefense(float damage)
 		bootsdefense = 10;
 		//std::cout << "u're protected by boots!" << endl;
 		//damageOnPlayer = returnPlayerHealth();
-		std::cout << "u're protected!" << endl;
+		//std::cout << "u're protected!" << endl;
 
-		cout << "damage reduced" << endl;
+		//cout << "damage reduced" << endl;
 	}
 	else
 	{
@@ -1662,6 +1694,9 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime)
 				case 103:
 					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 76);
 					break;
+				case 105:
+					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, RandItemGen());
+					break;
 				case 106:
 					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x - 1, 107);
 					break;
@@ -1760,6 +1795,9 @@ void CPlayer2D::BreakBlocks(const double dElapsedTime)
 					break;
 				case 103:
 					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 76);
+					break;
+				case 105:
+					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, RandItemGen());
 					break;
 				case 106:
 					cMap2D->SetMapInfo(vec2Index.y, vec2Index.x + 1, 107);

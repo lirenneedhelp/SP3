@@ -12,7 +12,7 @@
 #include <includes/gtc/matrix_transform.hpp>
 #include <includes/gtc/type_ptr.hpp>
 
-#include "MenuState.h"
+#include "Win.h"
 
 // Include CGameStateManager
 #include "GameStateManager.h"
@@ -39,7 +39,7 @@ using namespace std;
 /**
  @brief Constructor
  */
-CMenuState::CMenuState(void)
+CWinState::CWinState(void)
 	: background(NULL)
 {
 
@@ -48,7 +48,7 @@ CMenuState::CMenuState(void)
 /**
  @brief Destructor
  */
-CMenuState::~CMenuState(void)
+CWinState::~CWinState(void)
 {
 
 }
@@ -56,15 +56,15 @@ CMenuState::~CMenuState(void)
 /**
  @brief Init this class instance
  */
-bool CMenuState::Init(void)
+bool CWinState::Init(void)
 {
-	cout << "CMenuState::Init()\n" << endl;
+	cout << "CWinState::Init()\n" << endl;
 
 	CShaderManager::GetInstance()->Use("Shader2D");
 	//CShaderManager::GetInstance()->activeShader->setInt("texture1", 0);
 
 	//Create Background Entity
-	background = new CBackgroundEntity("Image/background.png");
+	background = new CBackgroundEntity("Image/winscreen.png");
 	background->SetShader("Shader2D");
 	background->Init();
 
@@ -82,15 +82,6 @@ bool CMenuState::Init(void)
 	const char* glsl_version = "#version 330";
 	ImGui_ImplOpenGL3_Init(glsl_version);
 
-	// Load the images for buttons
-	CImageLoader* il = CImageLoader::GetInstance();
-	play2DButtonData.fileName = "Image\\GUI\\Play.png";
-	play2DButtonData.textureID = il->LoadTextureGetID(play2DButtonData.fileName.c_str(), false);
-
-
-	exitButtonData.fileName = "Image\\GUI\\Exit.png";
-	exitButtonData.textureID = il->LoadTextureGetID(exitButtonData.fileName.c_str(), false);
-
 	// Enable the cursor
 	if (CSettings::GetInstance()->bDisableMousePointer == true)
 		glfwSetInputMode(CSettings::GetInstance()->pWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
@@ -101,7 +92,7 @@ bool CMenuState::Init(void)
 /**
  @brief Update this class instance
  */
-bool CMenuState::Update(const double dElapsedTime)
+bool CWinState::Update(const double dElapsedTime)
 {
 	// Start the Dear ImGui frame
 	ImGui_ImplOpenGL3_NewFrame();
@@ -127,37 +118,18 @@ bool CMenuState::Update(const double dElapsedTime)
 
 		// Create a window called "Hello, world!" and append into it.
 		ImGui::Begin("Main Menu", NULL, window_flags);
-		ImGui::SetWindowPos(ImVec2(CSettings::GetInstance()->iWindowWidth/2.0 - buttonWidth/2.0, 
-			CSettings::GetInstance()->iWindowHeight/5.0));				// Set the top-left of the window at (10,10)
+		ImGui::SetWindowPos(ImVec2(CSettings::GetInstance()->iWindowWidth/1.8, 
+			CSettings::GetInstance()->iWindowHeight/10));				// Set the top-left of the window at (10,10)
 		ImGui::SetWindowSize(ImVec2(CSettings::GetInstance()->iWindowWidth, CSettings::GetInstance()->iWindowHeight));
+		ImGui::SetWindowFontScale(2.0f);
 
-		//Added rounding for nicer effect
-		ImGuiStyle& style = ImGui::GetStyle();
-		style.FrameRounding = 200.0f;
+
+		//ImGui::CalcTextSize("PRESS SPACE TO GO BACK TO THE MAIN MENU", " PRESS ESC TO GO BACK TO EXIT GAME");
+		ImGui::TextColored(ImVec4(1, 1, 1, 1), " PRESS SPACE TO GO BACK ");
+		ImGui::TextColored(ImVec4(1, 1, 1, 1), " TO THE MAIN MENU ");
+		ImGui::TextColored(ImVec4(1, 1, 1, 1), " PRESS ESC TO GO BACK");
+		ImGui::TextColored(ImVec4(1, 1, 1, 1), " TO EXIT GAME");
 		
-		// Add codes for Start button here
-		if (ImGui::ImageButton((ImTextureID)play2DButtonData.textureID, 
-			ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0)))
-		{
-			// Reset the CKeyboardController
-			CKeyboardController::GetInstance()->Reset();
-
-			// Load the menu state
-			cout << "Loading PlayGameState" << endl;
-			CGameStateManager::GetInstance()->SetActiveGameState("PlayGameState");
-		}
-		// Add codes for Exit button here
-		if (ImGui::ImageButton((ImTextureID)exitButtonData.textureID,
-			ImVec2(buttonWidth, buttonHeight), ImVec2(0.0, 0.0), ImVec2(1.0, 1.0)))
-		{
-			// Reset the CKeyboardController
-			CKeyboardController::GetInstance()->Reset();
-
-			// Load the menu state
-			cout << "Quitting the game from MenuState" << endl;
-
-			return false;
-		}
 		ImGui::End();
 	}
 
@@ -168,20 +140,11 @@ bool CMenuState::Update(const double dElapsedTime)
 		CKeyboardController::GetInstance()->Reset();
 
 		// Load the menu state
-		cout << "Loading PlayGameState" << endl;
-		CGameStateManager::GetInstance()->SetActiveGameState("PlayGameState");
+		cout << "Loading MenuState" << endl;
+		CGameStateManager::GetInstance()->SetActiveGameState("MenuState");
 		return true;
 	}
-	else if (CKeyboardController::GetInstance()->IsKeyReleased(GLFW_KEY_ENTER))
-	{
-		//// Reset the CKeyboardController
-		//CKeyboardController::GetInstance()->Reset();
 
-		//// Load the menu state
-		//cout << "Loading PlayGameState" << endl;
-		//CGameStateManager::GetInstance()->SetActiveGameState("Play3DGameState");
-		return true;
-	}
 	else if (CKeyboardController::GetInstance()->IsKeyReleased(GLFW_KEY_ESCAPE))
 	{
 		// Reset the CKeyboardController
@@ -198,7 +161,7 @@ bool CMenuState::Update(const double dElapsedTime)
 /**
  @brief Render this class instance
  */
-void CMenuState::Render(void)
+void CWinState::Render(void)
 {
 	// Clear the screen and buffer
 	glClearColor(0.0f, 0.55f, 1.00f, 1.00f);
@@ -210,13 +173,13 @@ void CMenuState::Render(void)
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-	//cout << "CMenuState::Render()\n" << endl;
+	//cout << "CWinState::Render()\n" << endl;
 }
 
 /**
  @brief Destroy this class instance
  */
-void CMenuState::Destroy(void)
+void CWinState::Destroy(void)
 {
 	// Disable the cursor
 	if (CSettings::GetInstance()->bDisableMousePointer == true)
@@ -238,5 +201,5 @@ void CMenuState::Destroy(void)
 	ImGui_ImplGlfw_Shutdown();
 	ImGui::DestroyContext();
 
-	cout << "CMenuState::Destroy()\n" << endl;
+	cout << "CWinState::Destroy()\n" << endl;
 }

@@ -1015,8 +1015,10 @@ unsigned int heuristic::euclidean(const glm::vec2& v1, const glm::vec2& v2, int 
 }
 
 void CMap2D::spawnchest() {
-	srand(time(NULL));
+	srand((unsigned)time(NULL));
 
+	float randNumOfChest = rand() % 5 + 3;
+	float numOfChest = 0;
 	while (validposition == false) {
 
 		yChest = rand() % 31 + 1;
@@ -1029,8 +1031,9 @@ void CMap2D::spawnchest() {
 			if (GetMapInfo(xChest - 1, yChest) == 100)
 			{
 				SetMapInfo(xChest, yChest, 105);
-
-				validposition = true;
+				numOfChest++;
+				if (numOfChest == randNumOfChest)
+					validposition = true;			
 			}
 			else
 				continue;

@@ -785,13 +785,14 @@ bool CWoodCrawler::InteractWithPlayer(void)
 		//damageOnPlayer = cPlayer2D->returnPlayerHealth();
 		//playerHP = damageOnPlayer->GetItem("Health");
 		//playerHP->Remove(20);
-		cPlayer2D->UpdateDefense(20);
+		cPlayer2D->UpdateDefense(5);
 		//cSoundController->PlaySoundByID(7);
 		woodAnimatedSprites->PlayAnimation("Pull", -1, 5);
 		hit = true; // hit cooldown
 
 	
 		// Since the player has been caught, then reset the FSM
+		sCurrentFSM = IDLE;
 		iFSMCounter = 0;
 		return true;
 	}

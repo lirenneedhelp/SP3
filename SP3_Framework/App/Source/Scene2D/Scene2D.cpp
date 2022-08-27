@@ -98,50 +98,50 @@ bool CScene2D::Init(void)
 		cout << "Failed to load CMap2D" << endl;
 		return false;
 	}
+	//// Load the map into an array
+	//if (cMap2D->LoadMap("Maps/DM2213_Map_Level_01.csv") == false)
+	//{
+	//	// The loading of a map has failed. Return false
+	//	return false;
+	//}
+	//// Load the map into an array
+	//if (cMap2D->LoadMap("Maps/DM2213_Map_Level_02.csv", 1) == false)
+	//{
+	//	// The loading of a map has failed. Return false
+	//	return false;
+	//}
 	// Load the map into an array
-	if (cMap2D->LoadMap("Maps/DM2213_Map_Level_01.csv") == false)
+	if (cMap2D->LoadMap("Maps/DM2213_Map_Level_cave.csv", 0) == false)
 	{
 		// The loading of a map has failed. Return false
 		return false;
 	}
 	// Load the map into an array
-	if (cMap2D->LoadMap("Maps/DM2213_Map_Level_02.csv", 1) == false)
+	if (cMap2D->LoadMap("Maps/DM2213_Map_Level_forest.csv", 1) == false)
 	{
 		// The loading of a map has failed. Return false
 		return false;
 	}
 	// Load the map into an array
-	if (cMap2D->LoadMap("Maps/DM2213_Map_Level_cave.csv", 2) == false)
+	if (cMap2D->LoadMap("Maps/DM2213_Map_Level_hills.csv", 2) == false)
 	{
 		// The loading of a map has failed. Return false
 		return false;
 	}
 	// Load the map into an array
-	if (cMap2D->LoadMap("Maps/DM2213_Map_Level_forest.csv", 3) == false)
+	if (cMap2D->LoadMap("Maps/DM2213_Map_Level_islands.csv", 3) == false)
 	{
 		// The loading of a map has failed. Return false
 		return false;
 	}
 	// Load the map into an array
-	if (cMap2D->LoadMap("Maps/DM2213_Map_Level_hills.csv", 4) == false)
+	if (cMap2D->LoadMap("Maps/DM2213_Map_Level_plains.csv", 4) == false)
 	{
 		// The loading of a map has failed. Return false
 		return false;
 	}
 	// Load the map into an array
-	if (cMap2D->LoadMap("Maps/DM2213_Map_Level_islands.csv", 5) == false)
-	{
-		// The loading of a map has failed. Return false
-		return false;
-	}
-	// Load the map into an array
-	if (cMap2D->LoadMap("Maps/DM2213_Map_Level_plains.csv", 6) == false)
-	{
-		// The loading of a map has failed. Return false
-		return false;
-	}
-	// Load the map into an array
-	if (cMap2D->LoadMap("Maps/DM2213_Map_Level_valley.csv", 7) == false)
+	if (cMap2D->LoadMap("Maps/DM2213_Map_Level_valley.csv", 5) == false)
 	{
 		// The loading of a map has failed. Return false
 		return false;
@@ -274,17 +274,24 @@ bool CScene2D::Init(void)
 
 	day = dayToNight = true;
 
+	daySoundPlayed = true;
+	nightSoundPlayed = false;
+
+	bossSpawned = false;
+
 	dayCounter = 0.0f;
 
-
+	enemyCheck = 20;
+	noOfMiniBoss = 0;
+	enemiesPerLevel = 10;
 	enemySpawnRate = 15.f;
 
 	enemySpawnTimeCounter = enemySpawnRate;
 	
 	// Load the sounds into CSoundController
 	cSoundController = CSoundController::GetInstance();
-	cSoundController->LoadSound(FileSystem::getPath("Sounds\\creepy-night.ogg"), 1, true); //background sound for night 
-	cSoundController->LoadSound(FileSystem::getPath("Sounds\\Theme4.ogg"), 2, true); // background sound for day
+	cSoundController->LoadSound(FileSystem::getPath("Sounds\\creepy-night.ogg"), 1, true, true); //background sound for night 
+	cSoundController->LoadSound(FileSystem::getPath("Sounds\\Theme4.ogg"), 2, true, true); // background sound for day
 	cSoundController->LoadSound(FileSystem::getPath("Sounds\\jump.ogg"), 3, true);
 	cSoundController->LoadSound(FileSystem::getPath("Sounds\\item-equip.ogg"), 4, true); //sound effect for equipping an item
 	cSoundController->LoadSound(FileSystem::getPath("Sounds\\potionpickup.ogg"), 5, true); //sound effect for potions
@@ -293,7 +300,7 @@ bool CScene2D::Init(void)
 	cSoundController->LoadSound(FileSystem::getPath("Sounds\\punch.ogg"), 8, true); //eound effect for punching
 	cSoundController->LoadSound(FileSystem::getPath("Sounds\\weaponattack.ogg"), 9, true); //sound effect for sword attack
 	cSoundController->LoadSound(FileSystem::getPath("Sounds\\wood-creak.ogg"), 10, true); //sound effect for chest
-	cSoundController->LoadSound(FileSystem::getPath("Sounds\\bow.ogg"), 11, true); //sound effect for chest
+	cSoundController->LoadSound(FileSystem::getPath("Sounds\\bow.ogg"), 11, true); //sound effect for bow
 
 	cSoundController->PlaySoundByID(2);
 
@@ -360,16 +367,20 @@ bool CScene2D::Update(const double dElapsedTime)
 	// Check if the game should go to the next level
 	if (cGameManager->bLevelCompleted == true)
 	{
-		cMap2D->SetCurrentLevel(cMap2D->GetCurrentLevel()+1); 
+		cMap2D->SetCurrentLevel(cMap2D->GetCurrentLevel() + 1);
 		cMap2D->spawnchest();
 		for (int i = 0; i < 13; i++) {
 
 			cMap2D->spawntree();
 		}
 		cPlayer2D->Reset();
+		cPlayer2D->updatePlayerLevel(cMap2D->GetCurrentLevel() + 2);
 		cGameManager->bLevelCompleted = false;
-		enemySpawnRate -= cMap2D->GetCurrentLevel() - 1;
+		enemySpawnRate -= 1;
+		enemyCheck -= 2;
+		enemiesPerLevel *= 2;
 
+		bgColor = glm::vec3(0.0f, 0, 1.0f); 
 
 
 		// Destroy the enemies
@@ -385,27 +396,39 @@ bool CScene2D::Update(const double dElapsedTime)
 	if (cGameManager->bPlayerWon == true)
 	{
 		// End the game and switch to Win screen
+		cSoundController->stopSound();
+
 	}
 	// Check if the game should be ended
 	else if (cGameManager->bPlayerLost == true)
 	{
+		cSoundController->stopSound();
 		cSoundController->PlaySoundByID(6);
 		return false;
 	}
 	dayCounter += dElapsedTime;
 
-	if (day == true)
+	if (!day && !nightSoundPlayed)
 	{
-		//cSoundController->PlaySoundByID(2);
+		nightSoundPlayed = true;
+		daySoundPlayed = false;
+		cSoundController->stopSound();
+		cSoundController->PlaySoundByID(1);
 	}
 	else
 	{
-		//cSoundController->PlaySoundByID(1);
+		if (!daySoundPlayed && day)
+		{
+			nightSoundPlayed = false;
+			daySoundPlayed = true;
+			cSoundController->stopSound();
+			cSoundController->PlaySoundByID(2);
+		}
 	}
 
 	if (!day)
 	{
-
+		//cout << "NIGHT\n";
 		enemySpawnTimeCounter -= dElapsedTime;
 	}
 	else
@@ -415,10 +438,13 @@ bool CScene2D::Update(const double dElapsedTime)
 
 	if (enemySpawnTimeCounter <= 0)
 	{ 
+		srand((unsigned)time(NULL));
+		float batches = rand() % 5 + 1;
+		float counter = 0;
+		float randEnemy = rand() % 2 + 1;
+
 		while (true)
 		{
-			srand((unsigned)time(NULL));
-
 			float randcol = rand() % (CSettings::GetInstance()->NUM_TILES_XAXIS - 1); // no of col
 			float randrow = rand() % (CSettings::GetInstance()->NUM_TILES_YAXIS - 1); // no of rows
 			//cout << randcol << " , " << randrow << endl;
@@ -428,8 +454,7 @@ bool CScene2D::Update(const double dElapsedTime)
 			}
 			else
 			{
-				float randEnemy = rand() % 2 + 1;
-				cout << randEnemy << endl;
+				//cout << randEnemy << endl;
 				if (randEnemy == 1)
 				{
 					CWoodCrawler* cWoodCrawler = new CWoodCrawler();
@@ -456,11 +481,53 @@ bool CScene2D::Update(const double dElapsedTime)
 						enemyVector.push_back(cGlutton);
 					}
 				}
-				enemySpawnTimeCounter = enemySpawnRate;
-
-				break;
+				counter++;
+				if (counter == batches)
+				{
+					enemySpawnTimeCounter = enemySpawnRate;
+					break;
+				}			
 			}
 		}
+	}
+	if (cPlayer2D->getPlayerKills() % enemyCheck == 0 && cPlayer2D->getPlayerKills() != 0)
+	{
+		if (!bossSpawned)
+		{
+			while (true)
+			{
+				srand((unsigned)time(NULL));
+
+				float randcol = rand() % (CSettings::GetInstance()->NUM_TILES_XAXIS - 1) / 2 + (CSettings::GetInstance()->NUM_TILES_XAXIS - 1) / 3; // no of col
+				float randrow = rand() % (CSettings::GetInstance()->NUM_TILES_YAXIS - 1); // no of rows
+				//cout << randcol << " , " << randrow << endl;
+				if (cMap2D->GetMapInfo(randrow, randcol) != 0)
+				{
+					continue;
+				}
+				else
+				{
+
+					CBloodDeer* cBloodDeer = new CBloodDeer();
+					cBloodDeer->SetShader("Shader2D_Colour");
+					cBloodDeer->Seti32vec2Index(randcol, randrow);
+					if (cBloodDeer->Init2() == true)
+					{
+						cBloodDeer->SetPlayer2D(cPlayer2D);
+						cBloodDeer->setHP(300);
+						cBloodDeer->setMaxHP(300);
+						enemyVector.push_back(cBloodDeer);
+					}
+					bossSpawned = true;
+
+					break;
+				}
+			}
+		}
+	}
+	else
+	{
+		bossSpawned = false;
 	}
 
 	return true;
@@ -618,4 +685,15 @@ void CScene2D::setLiveArrowVector(vector<CEntity2D*>& vectorOfArrows)
 vector<CEntity2D*> CScene2D::getLiveArrowVector(void)
 {
 	return liveArrows;
+}
+
+int CScene2D::getTotalEnemies(void)
+{
+	return enemiesPerLevel;
+}
+
+int CScene2D::getMiniBossQuantity(void)
+{
+	noOfMiniBoss = enemiesPerLevel / enemyCheck;
+	return noOfMiniBoss;
 }

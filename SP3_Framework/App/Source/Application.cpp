@@ -50,6 +50,9 @@ using namespace std;
 //Include COptionsState
 #include "GameStateManagement/Options.h"
 
+#include "GameStateManagement/GameOver.h"
+
+#include "GameStateManagement/Win.h"
 
 /**
  @brief Define an error callback
@@ -253,6 +256,9 @@ bool Application::Init(void)
 	//CGameStateManager::GetInstance()->AddGameState("Play3DGameState", new CPlay3DGameState());
 	CGameStateManager::GetInstance()->AddGameState("PauseState", new CPauseState());
 	CGameStateManager::GetInstance()->AddGameState("OptionsState", new COptions());
+	CGameStateManager::GetInstance()->AddGameState("GameOverState", new CGameOverState());
+	CGameStateManager::GetInstance()->AddGameState("WinState", new CWinState());
+
 
 	// Set the active scene
 	CGameStateManager::GetInstance()->SetActiveGameState("IntroState");

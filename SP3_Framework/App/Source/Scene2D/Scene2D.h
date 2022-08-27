@@ -79,13 +79,18 @@ public:
 
 	glm::vec3 bgColor;
 
-	bool getTime(void);
-	void setTime(bool time);
+	bool getTime(void); // Get Current Time Day / Night
+
+	void setTime(bool time); // Set Current Time Day / Night
+
 	bool checkTimeTransition(void); // get the current transition of the day ( whether day to night / night to day )
+
 	void setTimeTransition(bool transition);
 	float getDuration(void); // How long has it been day / night
+
 	void resetDuration(void); //Reset the counter ^
 	vector<CEntity2D*>returnEnemyVector(void); // Returns the enemy vector 
+
 	void setNewEnemyVector(vector<CEntity2D*>& newList);// Set new enemy vector
 	// Push Bullet into the vector
 	void pushBullet(CEntity2D* bullet);
@@ -104,7 +109,10 @@ public:
 	// Getter for arrow vector
 	vector<CEntity2D*> getLiveArrowVector(void);
 
+	// Get the number of enemies per wave
+	int getTotalEnemies(void);
 	
+	int getMiniBossQuantity(void);
 	
 
 protected:
@@ -145,6 +153,17 @@ protected:
 	float enemySpawnRate; // Spawn rate
 
 	float dayCounter; // helps with gradual change in the brightness when it changes from day to night vice versa
+
+	int enemyCheck; // Checks whether a specific number of enemies has been killed to spawn the mini boss
+
+	int enemiesPerLevel; // Number of enemies that will spawn and the player needs to kill
+
+	bool bossSpawned;
+
+	bool daySoundPlayed, nightSoundPlayed;
+
+	int noOfMiniBoss;
+	
 
 	// Constructor
 	CScene2D(void);

@@ -121,7 +121,7 @@ bool CEnemyProjectile::Init(void)
 	bulletStorage = CScene2D::GetInstance()->getLiveBulletVector();
 	hitPlayer = false;
 
-	bulletDamage = 20;
+	bulletDamage = 10;
 
 	// If this class is initialised properly, then set the bIsActive to true
 	bIsActive = true;

@@ -81,6 +81,12 @@ public:
 
 	float returnCharge(void);
 
+	int getPlayerKills(void);
+
+	void addPlayerKills(int kill);
+
+	void updatePlayerLevel(int level);
+
 protected:
 	enum DIRECTION
 	{
@@ -162,6 +168,10 @@ protected:
 
 	float defense;
 
+	// Player kill counter
+
+	int killCounter;
+
 	// Handler to the CSoundController
 	CSoundController* cSoundController;
 
@@ -228,6 +238,7 @@ protected:
 
 	float strengthValue;
 
+	int level; // Indicate map level
 	
 
 	/*

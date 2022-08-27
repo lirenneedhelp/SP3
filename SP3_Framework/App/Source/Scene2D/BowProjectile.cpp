@@ -521,6 +521,7 @@ bool CBowProjectile::InteractWithEnemies(void)
 				enemyList[enemyIndex]->~CEntity2D();
 				enemyList.erase(enemyList.begin() + enemyIndex);
 				CScene2D::GetInstance()->setNewEnemyVector(enemyList);
+				cPlayer2D->addPlayerKills(1);
 			}
 			// Since the player has been caught, then reset the FSM
 			return true;

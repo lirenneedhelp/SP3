@@ -1,7 +1,7 @@
 #pragma once
 
 /**
- COptions
+ CWinState
  @brief This class is derived from CGameState. It will introduce the game to the player.
  By: Toh Da Jun
  Date: July 2021
@@ -20,18 +20,18 @@
 #include "GUI\imgui.h"
 #include "GUI\backends\imgui_impl_glfw.h"
 #include "GUI\backends\imgui_impl_opengl3.h"
-#include "../SoundController/SoundController.h"
-#include "../App/Source/Scene2D/Player2D.h"
 #define IMGUI_ACTIVE
 #endif
 
-class COptions : public CGameStateBase
+
+
+class CWinState : public CGameStateBase
 {
 public:
 	// Constructor
-	COptions(void);
+	CWinState(void);
 	// Destructor
-	~COptions(void);
+	~CWinState(void);
 
 	// Init this class instance
 	virtual bool Init(void);
@@ -43,17 +43,5 @@ public:
 	virtual void Destroy(void);
 
 protected:
-	struct ButtonData
-	{
-		std::string fileName;
-		unsigned textureID;
-	};
-
-	float masterVolume;
-	float playerVolume;
-	float itemVolume;
-	int selectedSize;
-	ButtonData BackButtonData;
-	CSoundController* cSoundController;
-	CPlayer2D* cPlayer2D;
+	CBackgroundEntity* background;
 };

@@ -50,6 +50,18 @@ public:
 	bool VolumeIncrease(const int ID);
 	// Decrease volume of a ISoundSource
 	bool VolumeDecrease(const int ID);
+	//Returns Master Volume
+	float returnMasterVolume(void);
+	//Set Master Volume
+	void setMasterVolume(float currentVolume);
+
+	// Set Doppler Effect
+	void setDopplerEffect(void);
+	void stopSound(void);
+	//Set In Game Volume
+	float returnVolume(const int ID);
+
+	void setVolume(float volume, const int ID);
 
 	// For 3D sounds only
 	// Set Listener position
@@ -70,6 +82,8 @@ protected:
 	bool RemoveSound(const int ID);
 	// Get the number of sounds in this map
 	int GetNumOfSounds(void) const;
+
+
 
 	// The handler to the irrklang Sound Engine
 	ISoundEngine* cSoundEngine;

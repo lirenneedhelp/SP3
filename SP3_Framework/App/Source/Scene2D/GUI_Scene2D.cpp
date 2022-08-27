@@ -103,6 +103,11 @@ bool CGUI_Scene2D::Init(void)
 		emptyInventorySlot.slotID = i;
 		playerInventory.push_back(emptyInventorySlot);
 	}
+	cInventoryItem = cInventoryManager->Add("deerUI", "Image\\GUI\\blooddeerGUI.png", 0, 0);
+	cInventoryItem->vec2Size = glm::vec2(25, 25);
+
+	cInventoryItem = cInventoryManager->Add("enemyUI", "Image\\GUI\\enemyGUI.png", 0, 0);
+	cInventoryItem->vec2Size = glm::vec2(25, 25);
 
 	// Store the keyboard controller singleton instance here
 	cKeyboardController = CKeyboardController::GetInstance();
@@ -213,6 +218,42 @@ void CGUI_Scene2D::Update(const double dElapsedTime)
 	ImGui::SetWindowFontScale(1.5f * relativeScale_y);
 	ImGui::TextColored(ImVec4(1, 1, 0, 1), "%d / %d",
 		cInventoryItem->GetCount(), cInventoryItem->GetMaxCount());
+	ImGui::End();
+
+	ImGui::Begin("Level_Indicator", NULL, livesWindowFlags);
+	ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * 0.4, cSettings->iWindowHeight * 0.03f));
+	ImGui::SetWindowSize(ImVec2(100.0f * relativeScale_x, 25.0f * relativeScale_y));
+	cInventoryItem = cInventoryManager->GetItem("Lives");
+	ImGui::SetWindowFontScale(2.0f * relativeScale_y);
+	ImGui::TextColored(ImVec4(1, 1, 0, 1), " Level %d",
+		CMap2D::GetInstance()->GetCurrentLevel() + 1);
+	ImGui::End();
+
+
+	ImGui::Begin("Enemies_Left", NULL, livesWindowFlags);
+	ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * 0.79f, cSettings->iWindowHeight * 0.2f));
+	ImGui::SetWindowSize(ImVec2(100.0f * relativeScale_x, 25.0f * relativeScale_y));
+	cInventoryItem = cInventoryManager->GetItem("enemyUI");
+	ImGui::Image((void*)(intptr_t)cInventoryItem->GetTextureID(),
+		ImVec2(cInventoryItem->vec2Size.x * relativeScale_x, cInventoryItem->vec2Size.y * relativeScale_y),
+		ImVec2(0, 1), ImVec2(1, 0));
+	ImGui::SameLine();
+	ImGui::SetWindowFontScale(1.5f * relativeScale_y);
+	ImGui::TextColored(ImVec4(1, 1, 0, 1), "%d / %d Slain",
+		 CPlayer2D::GetInstance()->getPlayerKills(), CScene2D::GetInstance()->getTotalEnemies());
+	ImGui::End();
+
+	ImGui::Begin("MiniBoss", NULL, livesWindowFlags);
+	ImGui::SetWindowPos(ImVec2(cSettings->iWindowWidth * 0.8f, cSettings->iWindowHeight * 0.3f));
+	ImGui::SetWindowSize(ImVec2(100.0f * relativeScale_x, 25.0f * relativeScale_y));
+	ImGui::SetWindowFontScale(1.5f * relativeScale_y);
+	cInventoryItem = cInventoryManager->GetItem("deerUI");
+	ImGui::Image((void*)(intptr_t)cInventoryItem->GetTextureID(),
+		ImVec2(cInventoryItem->vec2Size.x * relativeScale_x, cInventoryItem->vec2Size.y * relativeScale_y),
+		ImVec2(0, 1), ImVec2(1, 0));
+	ImGui::SameLine();
+	ImGui::TextColored(ImVec4(1, 1, 0, 1), "%d Incoming",
+		CScene2D::GetInstance()->getMiniBossQuantity());
 	ImGui::End();
 	
 	ImGuiWindowFlags window_flags = 0;

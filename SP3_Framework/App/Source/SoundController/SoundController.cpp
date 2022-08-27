@@ -124,11 +124,11 @@ void CSoundController::PlaySoundByID(const int ID)
 		cout << "Sound #" << ID << " is not playable." << endl;
 		return;
 	}
-	/*else if (cSoundEngine->isCurrentlyPlaying(pSoundInfo->GetSound()))
+	else if (cSoundEngine->isCurrentlyPlaying(pSoundInfo->GetSound()))
 	{
 		cout << "Sound #" << ID << " is currently being played." << endl;
 		return;
-	}*/
+	}
 
 	if (pSoundInfo->GetSoundType() == CSoundInfo::SOUNDTYPE::_2D)
 	{
@@ -182,6 +182,19 @@ bool CSoundController::MasterVolumeDecrease(void)
 	return true;
 }
 
+
+float CSoundController::returnVolume(const int ID)
+{
+	ISoundSource* pISoundSource = GetSound(ID)->GetSound();
+
+	return pISoundSource->getDefaultVolume();
+}
+
+void CSoundController::setVolume(float volume, const int ID)
+{
+	ISoundSource* pISoundSource = GetSound(ID)->GetSound();
+	pISoundSource->setDefaultVolume(volume);
+}
 
 /**
  @brief Increase volume of a ISoundSource
@@ -303,4 +316,25 @@ bool CSoundController::RemoveSound(const int ID)
 int CSoundController::GetNumOfSounds(void) const
 {
 	return soundMap.size();
+}
+
+float CSoundController::returnMasterVolume(void)
+{
+	return cSoundEngine->getSoundVolume();
+}
+
+void CSoundController::setMasterVolume(float currentVolume)
+{
+	cSoundEngine->setSoundVolume(currentVolume);
+
+}
+
+void CSoundController::setDopplerEffect(void)
+{
+	cSoundEngine->setDopplerEffectParameters(10.f,10.f);
+}
+
+void CSoundController::stopSound(void)
+{
+	cSoundEngine->stopAllSounds();
 }

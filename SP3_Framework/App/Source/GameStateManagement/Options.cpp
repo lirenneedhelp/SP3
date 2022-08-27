@@ -69,10 +69,10 @@ bool COptions::Init(void)
 
 	cPlayer2D = CPlayer2D::GetInstance();
 	cSoundController = CSoundController::GetInstance();
-	/*masterVolume = cSoundController->returnMasterVolume() * 100;
+	masterVolume = cSoundController->returnMasterVolume() * 100;
 	playerVolume = cSoundController->returnVolume(3) * 100;
-	portalVolume = cSoundController->returnVolume(4) * 100;
-	bgmVolume = cSoundController->returnVolume(6) * 100;*/
+	itemVolume = cSoundController->returnVolume(10) * 100;
+	//bgmVolume = cSoundController->returnVolume(6) * 100;
 	// Load the images for buttons
 	CImageLoader* il = CImageLoader::GetInstance();
 	BackButtonData.fileName = "Image\\GUI\\tickbutton.png";
@@ -114,7 +114,7 @@ bool COptions::Update(const double dElapsedTime)
 		ImGui::Begin("Main Menu", NULL, window_flags);
 		ImGui::SetWindowPos(ImVec2(CSettings::GetInstance()->iWindowWidth/6.0, 
 			CSettings::GetInstance()->iWindowHeight/4.0));				// Set the top-left of the window at (10,10)
-		ImGui::SetWindowSize(ImVec2(CSettings::GetInstance()->iWindowWidth / 2, CSettings::GetInstance()->iWindowHeight / 2));
+		ImGui::SetWindowSize(ImVec2(CSettings::GetInstance()->iWindowWidth / 2 + 60, CSettings::GetInstance()->iWindowHeight / 2));
 
 		//Added rounding for nicer effect
 		ImGuiStyle& style = ImGui::GetStyle();
@@ -130,27 +130,29 @@ bool COptions::Update(const double dElapsedTime)
 			CGameStateManager::GetInstance()->SetPauseGameState("OptionsState"); // Since it alr turns pointer into nullptr I didn't feel the need to pass in a nullptr in there
 			CGameStateManager::GetInstance()->SetPauseGameState("PauseState");
 		}
+		ImGui::Columns(2, "locations");
+		ImGui::TextColored(ImVec4(1, 0, 0, 1), "Sounds");
 		ImGui::BeginChild("Master Volume");
 		{
 			ImGui::SliderFloat("", &masterVolume, 0.0f, 100.0f, "Master Fx:%.1f");
-			//cSoundController->setMasterVolume(masterVolume / 100);
+			cSoundController->setMasterVolume(masterVolume / 100);
 			ImGui::BeginChild("Jump Volume");
 			{
-				ImGui::SliderFloat("", &playerVolume, 0.0f, 100.0f, "Jump Fx:%.1f");
-				//cSoundController->setVolume(playerVolume / 100, 3);
-				ImGui::BeginChild("Portal Volume");
-				{
-					ImGui::SliderFloat("", &portalVolume, 0.0f, 100.0f, "Portal Fx:%.1f");
-					//cSoundController->setVolume(portalVolume / 100, 4);
-					ImGui::BeginChild("Player Colour");
-					{
-						static float color[] = { 1.f,0.f,0.f,1.f };
-						ImGui::ColorEdit4("Edit", color);
-						ImGui::ColorPicker4("Pick", color);
-						cPlayer2D->setPlayerRuntimeColor(glm::vec4(color[0], color[1], color[2], color[3]));
+				ImGui::SliderFloat("", &playerVolume, 0.0f, 100.0f, "Player Fx:%.1f");
+				cSoundController->setVolume(playerVolume / 100, 3);
+				cSoundController->setVolume(playerVolume / 100, 4);
+				cSoundController->setVolume(playerVolume / 100, 5);
+				cSoundController->setVolume(playerVolume / 100, 6);
+				cSoundController->setVolume(playerVolume / 100, 7);
+				cSoundController->setVolume(playerVolume / 100, 8);
+				cSoundController->setVolume(playerVolume / 100, 9);
+				cSoundController->setVolume(playerVolume / 100, 11);
 
-					}
-					ImGui::EndChild();
+
+				ImGui::BeginChild("Item Volume");
+				{
+					ImGui::SliderFloat("", &itemVolume, 0.0f, 100.0f, "Misc Fx:%.1f");
+					cSoundController->setVolume(itemVolume / 100, 4);
 
 				}
 				ImGui::EndChild();
@@ -158,6 +160,19 @@ bool COptions::Update(const double dElapsedTime)
 			ImGui::EndChild();
 		}
 		ImGui::EndChild();
+
+		ImGui::NextColumn();
+
+		ImGui::BeginChild("Player Colour");
+		{
+			static float color[] = { 1.f,0.f,0.f,1.f };
+			ImGui::ColorEdit4("Choose your colour", color);
+			ImGui::ColorPicker4("Select", color);
+			cPlayer2D->setPlayerRuntimeColor(glm::vec4(color[0], color[1], color[2], color[3]));
+
+		}
+		ImGui::EndChild();
+
 
 	ImGui::End();
 	}

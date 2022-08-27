@@ -78,7 +78,23 @@ bool CPlayGameState::Update(const double dElapsedTime)
 		cout << "Loading PauseState" << endl;
 		CGameStateManager::GetInstance()->SetPauseGameState("PauseState");
 	}
+	else if (CGameManager::GetInstance()->bPlayerLost)
+	{
+		// Reset the CKeyboardController
+		CKeyboardController::GetInstance()->Reset();
 
+		// Load the menu state
+		cout << "Loading MenuState" << endl;
+		CGameStateManager::GetInstance()->SetActiveGameState("GameOverState");
+		CGameStateManager::GetInstance()->OffPauseGameState();
+	}
+	else if (CGameManager::GetInstance()->bPlayerWon)
+	{
+		// Load the menu state
+		cout << "Loading MenuState" << endl;
+		CGameStateManager::GetInstance()->SetActiveGameState("WinState");
+		CGameStateManager::GetInstance()->OffPauseGameState();
+	}
 	// Call the cScene2D's Update method
 	cScene2D->Update(dElapsedTime);
 

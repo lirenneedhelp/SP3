@@ -159,6 +159,65 @@ bool CBloodDeer::Init(void)
 	return true;
 }
 
+bool CBloodDeer::Init2(void)
+{
+	// Get the handler to the CSettings instance
+	cSettings = CSettings::GetInstance();
+
+	// Get the handler to the CMap2D instance
+	cMap2D = CMap2D::GetInstance();
+
+	glGenVertexArrays(1, &VAO);
+	glBindVertexArray(VAO);
+
+	//CS: Create the Quad Mesh using the mesh builder
+	quadMesh = CMeshBuilder::GenerateQuad(glm::vec4(1, 1, 1, 1), cSettings->TILE_WIDTH, cSettings->TILE_HEIGHT);
+
+	// Load the enemy2D texture
+	iTextureID = CImageLoader::GetInstance()->LoadTextureGetID("Image/blooddeer.png", true);
+	if (iTextureID == 0)
+	{
+		cout << "Unable to load blooddeer.png" << endl;
+		return false;
+	}
+
+	deerAnimationSprites = CMeshBuilder::GenerateSpriteAnimation(9, 3, cSettings->TILE_WIDTH, cSettings->TILE_HEIGHT);
+	deerAnimationSprites->AddAnimation("Left", 0, 2);
+	deerAnimationSprites->AddAnimation("Right", 3, 5);
+	deerAnimationSprites->AddAnimation("rageLeft", 6, 8);
+	deerAnimationSprites->AddAnimation("rageRight", 9, 11);
+	deerAnimationSprites->AddAnimation("AttackLeft", 12, 14);
+	deerAnimationSprites->AddAnimation("AttackRight", 15, 17);
+	deerAnimationSprites->AddAnimation("rageAttackLeft", 18, 20);
+	deerAnimationSprites->AddAnimation("rageAttackRight", 21, 23);
+	deerAnimationSprites->AddAnimation("Idle", 24, 26);
+
+	deerAnimationSprites->PlayAnimation("Idle", -1, 5);
+
+	//CS: Init the color to white
+	runtimeColour = glm::vec4(1.0, 1.0, 1.0, 1.0);
+
+	// Set the Physics to fall status by default
+	cPhysics2D.Init();
+	cPhysics2D.SetStatus(CPhysics2D::STATUS::FALL);
+
+	// If this class is initialised properly, then set the bIsActive to true
+	bIsActive = true;
+
+	buffDamage = 1.0f;
+	buffSpeed = 1.0f;
+	buffAtkSpeed = 1.0f;
+
+	rageCounter = 0;
+	rage_runtime = 0;
+	hitIntervals = 4.0f;
+
+	rage = false;
+	hit = false;
+
+	return true;
+}
+
 /**
  @brief Update this instance
  */
@@ -831,6 +890,7 @@ bool CBloodDeer::InteractWithPlayer(void)
 		}
 		// Since the player has been caught, then reset the FSM
 		iFSMCounter = 0;
+		sCurrentFSM = IDLE;
 		return true;
 	}
 	return false;
