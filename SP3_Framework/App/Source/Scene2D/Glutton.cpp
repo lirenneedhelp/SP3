@@ -210,7 +210,7 @@ void CGlutton::Update(const double dElapsedTime)
 		{
 			sCurrentFSM = PATROL;
 			iFSMCounter = 0;
-			cout << "Switching to Patrol State" << endl;
+			//cout << "Switching to Patrol State" << endl;
 		}
 		iFSMCounter++;
 		break;
@@ -219,19 +219,19 @@ void CGlutton::Update(const double dElapsedTime)
 		{
 			sCurrentFSM = IDLE;
 			iFSMCounter = 0;
-			cout << "Switching to Idle State" << endl;
+			//cout << "Switching to Idle State" << endl;
 		}
 		else if (cPhysics2D.CalculateDistance(vec2Index, cPlayer2D->vec2Index) < 25.0f)
 		{
 			sCurrentFSM = TRACE;
 			iFSMCounter = 0;
-			cout << "Switching to TRACE State" << endl;
+			//cout << "Switching to TRACE State" << endl;
 		}
 		else if (checkForWall())
 		{
 			sCurrentFSM = JUMP_OVER_WALL;
 			iFSMCounter = 0;
-			cout << "Switching to JUMP_OVER_WALL State" << endl;
+			//cout << "Switching to JUMP_OVER_WALL State" << endl;
 
 		}
 		
@@ -302,14 +302,14 @@ void CGlutton::Update(const double dElapsedTime)
 			{
 				sCurrentFSM = JUMP_OVER_WALL;
 				iFSMCounter = 0;
-				cout << "TRACE TO JUMP_OVER_WALL\n";
+				//cout << "TRACE TO JUMP_OVER_WALL\n";
 
 			}
 			else
 			{
 				sCurrentFSM = SHOOT;
 				iFSMCounter = 0;
-				cout << "TRACE to SHOOT\n";
+				//cout << "TRACE to SHOOT\n";
 			}
 						
 			
@@ -357,7 +357,7 @@ void CGlutton::Update(const double dElapsedTime)
 		{		
 			sCurrentFSM = IDLE;
 			iFSMCounter = 0;
-			cout << "SHOOT TO IDLE\n";
+			//cout << "SHOOT TO IDLE\n";
 			
 		}
 		

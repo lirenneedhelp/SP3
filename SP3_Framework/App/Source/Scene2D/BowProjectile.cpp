@@ -512,7 +512,7 @@ bool CBowProjectile::InteractWithEnemies(void)
 			&&
 			(vec2Index.y == enemyList[enemyIndex]->vec2Index.y))
 		{
-			cout << "HEADSHOT!\n";
+			//cout << "HEADSHOT!\n";
 			hitEnemy = true;
 			enemyList[enemyIndex]->health -= static_cast<int>(arrowDamage * amountOfCharge);
 			std::cout << enemyList[enemyIndex]->health << endl;

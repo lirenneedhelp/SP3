@@ -249,7 +249,7 @@ void CBloodDeer::Update(const double dElapsedTime)
 		{
 			sCurrentFSM = PATROL;
 			iFSMCounter = 0;
-			cout << "Switching to Patrol State" << endl;
+			//cout << "Switching to Patrol State" << endl;
 		}
 		iFSMCounter++;
 		break;
@@ -258,7 +258,7 @@ void CBloodDeer::Update(const double dElapsedTime)
 		{
 			sCurrentFSM = IDLE;
 			iFSMCounter = 0;
-			cout << "Switching to Idle State" << endl;
+			//cout << "Switching to Idle State" << endl;
 		}
 		else if (cPhysics2D.CalculateDistance(vec2Index, cPlayer2D->vec2Index) < 10.0f)
 		{
@@ -333,13 +333,13 @@ void CBloodDeer::Update(const double dElapsedTime)
 				sCurrentFSM = PATROL;
 				rageCounter = 0.f;
 				iFSMCounter = 0;
-				cout << "ATTACK : Reset counter: " << iFSMCounter << endl;
+				//cout << "ATTACK : Reset counter: " << iFSMCounter << endl;
 			}
 			iFSMCounter++;
 		}
 		if (rage)
 		{
-			cout << "Boss Mad \n";
+			//cout << "Boss Mad \n";
 			sCurrentFSM = RAGE;
 		}
 		break;
@@ -362,7 +362,7 @@ void CBloodDeer::Update(const double dElapsedTime)
 			rage_runtime = 0.f; // Resets the rage timer
 			rageCounter = 0.f; // Resets the rage counter
 			buffDamage = buffSpeed = buffAtkSpeed = 1.0f;
-			cout << "Switch from Rage State to Attack State" << endl;
+			//cout << "Switch from Rage State to Attack State" << endl;
 			sCurrentFSM = ATTACK;
 		}
 
