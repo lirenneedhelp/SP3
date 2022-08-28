@@ -285,6 +285,7 @@ bool CScene2D::Init(void)
 	noOfMiniBoss = 0;
 	enemiesPerLevel = 10;
 	enemySpawnRate = 15.f;
+	totalSpawned = 0;
 
 	enemySpawnTimeCounter = enemySpawnRate;
 	
@@ -378,7 +379,7 @@ bool CScene2D::Update(const double dElapsedTime)
 	// Check if the game should go to the next level
 	if (cGameManager->bLevelCompleted == true)
 	{
-		cMap2D->SetCurrentLevel(cMap2D->GetCurrentLevel() + 5);
+		cMap2D->SetCurrentLevel(cMap2D->GetCurrentLevel() + 1);
 		cMap2D->spawnchest();
 		for (int i = 0; i < 13; i++) {
 
@@ -389,6 +390,7 @@ bool CScene2D::Update(const double dElapsedTime)
 		enemySpawnRate -= 1;
 		enemyCheck -= 2;
 		enemiesPerLevel *= 2;
+		totalSpawned = 0;
 
 		bgColor = glm::vec3(0.0f, 0, 1.0f); 
 
@@ -447,7 +449,7 @@ bool CScene2D::Update(const double dElapsedTime)
 		enemySpawnTimeCounter = enemySpawnRate;
 	}
 
-	if (enemySpawnTimeCounter <= 0)
+	if (enemySpawnTimeCounter <= 0 && totalSpawned < enemiesPerLevel)
 	{ 
 		srand((unsigned)time(NULL));
 		float batches = rand() % 5 + 1;
@@ -492,6 +494,8 @@ bool CScene2D::Update(const double dElapsedTime)
 					}
 				}
 				counter++;
+				totalSpawned++;
+
 				if (counter == batches)
 				{
 					enemySpawnTimeCounter = enemySpawnRate;
@@ -529,7 +533,7 @@ bool CScene2D::Update(const double dElapsedTime)
 						enemyVector.push_back(cBloodDeer);
 					}
 					bossSpawned = true;
-
+					totalSpawned++;
 					break;
 				}
 			}

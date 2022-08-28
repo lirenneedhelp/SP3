@@ -164,6 +164,7 @@ protected:
 
 	int noOfMiniBoss;
 	
+	int totalSpawned; // Tracks the number of enemies that has alr been spawned into the map
 
 	// Constructor
 	CScene2D(void);
