@@ -360,6 +360,17 @@ bool CScene2D::Update(const double dElapsedTime)
 			return false;
 		}
 	}
+	if (cKeyboardController->IsKeyReleased(GLFW_KEY_F5))
+	{
+		cMap2D->SetCurrentLevel(5);
+		cPlayer2D->Reset();
+		cMap2D->spawnchest();
+		for (int i = 0; i < 13; i++) {
+
+			cMap2D->spawntree();
+		}
+
+	}
 
 	// Call the cGUI_Scene2D's update method
 	cGUI_Scene2D->Update(dElapsedTime);
@@ -367,14 +378,13 @@ bool CScene2D::Update(const double dElapsedTime)
 	// Check if the game should go to the next level
 	if (cGameManager->bLevelCompleted == true)
 	{
-		cMap2D->SetCurrentLevel(cMap2D->GetCurrentLevel() + 1);
+		cMap2D->SetCurrentLevel(cMap2D->GetCurrentLevel() + 5);
 		cMap2D->spawnchest();
 		for (int i = 0; i < 13; i++) {
 
 			cMap2D->spawntree();
 		}
 		cPlayer2D->Reset();
-		cPlayer2D->updatePlayerLevel(cMap2D->GetCurrentLevel() + 2);
 		cGameManager->bLevelCompleted = false;
 		enemySpawnRate -= 1;
 		enemyCheck -= 2;
@@ -391,6 +401,7 @@ bool CScene2D::Update(const double dElapsedTime)
 		}
 		enemyVector.clear();
 	}
+	
 
 	// Check if the game has been won by the player
 	if (cGameManager->bPlayerWon == true)
@@ -441,11 +452,10 @@ bool CScene2D::Update(const double dElapsedTime)
 		srand((unsigned)time(NULL));
 		float batches = rand() % 5 + 1;
 		float counter = 0;
-		float randEnemy = rand() % 2 + 1;
-
 		while (true)
 		{
-			float randcol = rand() % (CSettings::GetInstance()->NUM_TILES_XAXIS - 1); // no of col
+			float randEnemy = rand() % 2 + 1;
+			float randcol = rand() % (CSettings::GetInstance()->NUM_TILES_XAXIS - 1) / 2 + (CSettings::GetInstance()->NUM_TILES_XAXIS - 1) / 3; // no of col
 			float randrow = rand() % (CSettings::GetInstance()->NUM_TILES_YAXIS - 1); // no of rows
 			//cout << randcol << " , " << randrow << endl;
 			if (cMap2D->GetMapInfo(randrow, randcol) != 0)

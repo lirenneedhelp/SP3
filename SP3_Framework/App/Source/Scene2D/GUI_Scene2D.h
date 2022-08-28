@@ -74,6 +74,7 @@ public:
 	void updateButtonActivity(unsigned index); // If one is clicked set the rest to inactive
 
 	void reshuffleInventory(void);
+
 	int getQuantity(void);
 
 protected:
@@ -125,6 +126,7 @@ protected:
 	vector<ButtonData> playerInventory;
 	ButtonData emptyInventorySlot;
 
+	int currentSlotID;
 	int inventoryHotbar; // Size of the hotbar
 
 	int inventorySize; // Size of overall Inventory

@@ -117,7 +117,6 @@ bool CPlayer2D::Init(void)
 	shoot = false;
 
 	killCounter = 0;
-	level = 1;
 
 	//check if armour are equiped
 	helmetequip = false;
@@ -534,7 +533,7 @@ void CPlayer2D::Update(const double dElapsedTime)
 			{
 				if (CGUI_Scene2D::GetInstance()->updateSelection() == SWORD_ID || CGUI_Scene2D::GetInstance()->updateSelection() == SPEAR_ID) // Check whether player equipped the sword & play the attack animation
 				{
-					animatedSprites->PlayAnimation("SwordAttack", -1, 0.5f);
+					animatedSprites->PlayAnimation("SwordAttack", -1, 1.0f);
 					cSoundController->PlaySoundByID(9);
 				}
 				else
@@ -547,7 +546,7 @@ void CPlayer2D::Update(const double dElapsedTime)
 			{
 				if (CGUI_Scene2D::GetInstance()->updateSelection() == SWORD_ID || CGUI_Scene2D::GetInstance()->updateSelection() == SPEAR_ID)
 				{
-					animatedSprites->PlayAnimation("leftSwordAttack", -1, 0.5f);
+					animatedSprites->PlayAnimation("leftSwordAttack", -1, 1.0f);
 					cSoundController->PlaySoundByID(9);
 				}
 				else
@@ -607,7 +606,7 @@ void CPlayer2D::Update(const double dElapsedTime)
 				{
 					if (CGUI_Scene2D::GetInstance()->updateSelection() == SWORD_ID || CGUI_Scene2D::GetInstance()->updateSelection() == SPEAR_ID)
 					{
-						animatedSprites->PlayAnimation("SwordAttack", -1, 0.5f);
+						animatedSprites->PlayAnimation("SwordAttack", -1, 1.0f);
 						cSoundController->PlaySoundByID(9);
 					}
 					else
@@ -621,7 +620,7 @@ void CPlayer2D::Update(const double dElapsedTime)
 				{
 					if (CGUI_Scene2D::GetInstance()->updateSelection() == SWORD_ID || CGUI_Scene2D::GetInstance()->updateSelection() == SPEAR_ID)
 					{
-						animatedSprites->PlayAnimation("leftSwordAttack", -1, 0.5f);
+						animatedSprites->PlayAnimation("leftSwordAttack", -1, 1.0f);
 						cSoundController->PlaySoundByID(9);
 					}
 					else
@@ -850,11 +849,6 @@ int CPlayer2D::getPlayerKills(void)
 void CPlayer2D::addPlayerKills(int kill)
 {
 	killCounter += kill;
-}
-
-void CPlayer2D::updatePlayerLevel(int level)
-{
-	this->level = level;
 }
 
 /**
@@ -1325,11 +1319,14 @@ void CPlayer2D::InteractWithMap(void)
 		// Level has been completed
 		if (killCounter >= CScene2D::GetInstance()->getTotalEnemies())
 		{
-			killCounter = 0;
-			CGameManager::GetInstance()->bLevelCompleted = true;
-			if (level > 6)
+			if (cMap2D->GetCurrentLevel() == 5)
 			{
 				CGameManager::GetInstance()->bPlayerWon = true;
+			}
+			else
+			{
+				killCounter = 0;
+				CGameManager::GetInstance()->bLevelCompleted = true;
 			}
 		}
 		break;

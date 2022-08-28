@@ -85,7 +85,6 @@ public:
 
 	void addPlayerKills(int kill);
 
-	void updatePlayerLevel(int level);
 
 protected:
 	enum DIRECTION
